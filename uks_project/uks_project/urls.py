@@ -20,7 +20,8 @@ from myapp import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    url(r'^$',views.index,name='index'),
+    url(r'^wiki/', include('wiki_app.urls')),
+    url(r'^$', views.index,name='index'),
     url(r'^myapp/',include('myapp.urls'))
     
 ]
