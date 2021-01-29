@@ -19,9 +19,10 @@ from django.urls import path
 from myapp import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    url(r'^wiki/', include('wiki_app.urls')),
-    url(r'^$', views.index,name='index'),
+    url(r'^users/',include('users.urls')),
     url(r'^myapp/',include('myapp.urls')),
+    url(r'^$',views.index,name='index'),
     url(r'^issues/', include('issues_app.urls')),
+    url(r'^wiki/', include('wiki_app.urls')),
+    path('admin/', admin.site.urls), 
 ]
