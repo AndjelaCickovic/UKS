@@ -3,4 +3,4 @@ from django.http import HttpResponse
 # Create your views here.
 
 def main(request):
-    return HttpResponse("Wiki");
+    return render(request,'wiki_app/main.html');

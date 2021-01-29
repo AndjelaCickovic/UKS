@@ -8,5 +8,3 @@ class Page(models.Model):
     content = models.TextField()
     message = models.CharField(max_length=264, blank=True)
     wiki = models.ForeignKey(Wiki, on_delete=models.CASCADE)
-
-# Create your models here.
