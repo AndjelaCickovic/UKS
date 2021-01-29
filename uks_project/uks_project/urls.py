@@ -23,5 +23,6 @@ urlpatterns = [
     url(r'^myapp/',include('myapp.urls')),
     url(r'^$',views.index,name='index'),
     url(r'^issues/', include('issues_app.urls')),
+    url(r'^wiki/', include('wiki_app.urls')),
     path('admin/', admin.site.urls), 
 ]
