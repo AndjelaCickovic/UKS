@@ -5,4 +5,5 @@ from django.urls import path
 urlpatterns = [
     url(r'^$', views.main),
     path('page/<int:page_id>/', views.page),
+    path('page/new/', views.new_page),
 ]
