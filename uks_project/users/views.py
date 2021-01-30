@@ -52,6 +52,10 @@ def user_login(request):
         else:
             print("Login failed")
             return HttpResponse("Invalid login detils supplied!")
+    else:
+        return render(request,'users/login.html',{})
 
-    return render(request,'users/login.html',{})
-
+@login_required
+def user_logut(request):
+    logout(request)
+    return HttpResponseRedirect(reverse('login'))
