@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+{% extends 'wiki_app/main.html' %}
+    {% block page_block %}
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <h3 class="card-title">
+                        {{ page.title }}
+                    </h3>
+                    <div class="text-right">
+                        <button type="button" class="btn btn-primary pull-right">Edit</button>&nbsp;&nbsp;
+                        <button type="button"  class="btn btn-danger pull-right">Delete</button>
+                    </div>
+                </div>
+                <p>{{ page.content }}</p>    
+                <br/>
+                <p>{{ page.message }}</p>  
+            </div>
+        </div>
+        
+    {% endblock %}

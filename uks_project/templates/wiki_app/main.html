@@ -2,16 +2,24 @@
 {% extends 'myapp/base.html' %}
     {% block body_block %}
         <h1>Wiki page</h1>
-        {% if pages %}
-        <ul>
-            {% for page in pages %}
-            <li>
-                {{page.title}}
-            </li>
-            {% endfor %}
-        </ul>
-        {% else %}
-            There are no pages
-        {% endif %}
-        <button click()>Add new page</button>
+        <div class="row">
+            <div class="col-md-3">
+                {% if pages %}
+            <ul>
+                {% for page in pages %}
+                <li>
+                    <a href="/wiki/page/{{page.id}}">{{page.title}}</a>                    
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+                There are no pages
+            {% endif %}
+            <button type="button" class="btn btn-primary">Add new page</button>
+            </div>
+            <div class="col-md-9" style="padding: 3%;">
+                {% block page_block %}
+                {% endblock %}
+            </div>
+        </div>
     {% endblock %}
