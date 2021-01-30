@@ -8,16 +8,16 @@
             <ul>
                 {% for page in pages %}
                 <li>
-                    {{page.title}}
+                    <a href="/wiki/page/{{page.id}}">{{page.title}}</a>                    
                 </li>
                 {% endfor %}
             </ul>
             {% else %}
                 There are no pages
             {% endif %}
-            <button click()>Add new page</button>
+            <button type="button" class="btn btn-primary">Add new page</button>
             </div>
-            <div class="col-md-9">
+            <div class="col-md-9" style="padding: 3%;">
                 {% block page_block %}
                 {% endblock %}
             </div>
