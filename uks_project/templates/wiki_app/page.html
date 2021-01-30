@@ -1,0 +1,7 @@
+<!DOCTYPE html>
+{% extends 'wiki_app/main.html' %}
+    {% block page_block %}
+        <label>{{ page.title }}</label>
+        <p>{{ page.content }}</p>    
+        <p>{{ page.message }}</p>  
+    {% endblock %}
