@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse
+from django.urls import reverse
 from issues_app.models import Issue, Label
 from issues_app.serializers import IssueSerializer
 from issues_app.forms import LabelForm
@@ -11,7 +12,7 @@ def main(request):
     issues = Issue.objects.all()
     serializer = IssueSerializer(issues, many=True)
     dictionary = {'issues': serializer.data}
-    return render(request, 'issues_app/main.html', context=dictionary)
+    return render(request, 'issues_app/issues.html', context=dictionary)
 
 def labels(request):
     issues = Issue.objects.all()
@@ -36,8 +37,20 @@ def add_label(request):
             label.description = form.cleaned_data['description']
             label.colour = form.cleaned_data['colour']
             label.save()
-            dictionary = {'issues': serializer.data, 'labels': labels}
-            return render(request, 'issues_app/labels.html', context=dictionary)
+            
+            return HttpResponseRedirect(reverse('view_labels'))
+            #dictionary = {'issues': serializer.data, 'labels': labels}
+            #return render(request, 'issues_app/labels.html', context=dictionary)
             
     dictionary = {'issues': serializer.data, 'form': form}
     return render(request, 'issues_app/new_label.html', context=dictionary)
+
+def delete_label(request, label_id):
+    Label.objects.filter(id=label_id).delete()
+    issues = Issue.objects.all()
+    serializer = IssueSerializer(issues, many=True)
+    labels = Label.objects.all()
+
+    return HttpResponseRedirect(reverse('view_labels'))
+    #dictionary = {'issues': serializer.data, 'labels': labels}
+    #return render(request, 'issues_app/labels.html', context=dictionary)
