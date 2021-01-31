@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'users',
     'wiki_app',
     'issues_app',
+    'branches_app',
 ]
 
 MIDDLEWARE = [
