@@ -32,8 +32,18 @@
                                 <td>&nbsp;{{ milestone.description }}</td>
                                 <td>{{ milestone.dueDate }}</td>
                                 <td>{{ milestone.status }}</td>
-                                <td><a class="btn" href="/issues/delete-milestone/{{milestone.id}}" style="background-color: red;">X</a></td>
-                                <td><a class="btn" href="/issues/edit-milestone/{{milestone.id}}" style="background-color: blue;">Edit</a></td>
+                                <td>
+                                    <ul class="navbar-nav ml-auto">
+                                        <li class="nav-item dropdown">
+                                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
+                                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                                <a class="dropdown-item" href="#">Close</a>
+                                                <a class="dropdown-item" href="/issues/edit-milestone/{{milestone.id}}">Edit</a>
+                                                <a class="dropdown-item" href="/issues/delete-milestone/{{milestone.id}}">Delete</a>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </td>
                             </tr>
                         {% endfor %}
                     </table>
