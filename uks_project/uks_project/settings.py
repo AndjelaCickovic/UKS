@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'issues_app',
     'projects_app',
     'branches_app',
+]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
