@@ -13,9 +13,18 @@ def main(request):
     dictionary = {'issues': serializer.data}
     return render(request, 'issues_app/main.html', context=dictionary)
 
+def labels(request):
+    issues = Issue.objects.all()
+    serializer = IssueSerializer(issues, many=True)
+    labels = Label.objects.all()
+    dictionary = {'issues': serializer.data, 'labels': labels}
+    return render(request, 'issues_app/labels.html', context=dictionary)
+
+
 def add_label(request):
     issues = Issue.objects.all()
     serializer = IssueSerializer(issues, many=True)
+    labels = Label.objects.all()
     form = LabelForm()
 
     if request.method =='POST' :
@@ -27,6 +36,8 @@ def add_label(request):
             label.description = form.cleaned_data['description']
             label.colour = form.cleaned_data['colour']
             label.save()
+            dictionary = {'issues': serializer.data, 'labels': labels}
+            return render(request, 'issues_app/labels.html', context=dictionary)
             
     dictionary = {'issues': serializer.data, 'form': form}
-    return render(request, 'issues_app/label.html', context=dictionary)
+    return render(request, 'issues_app/new_label.html', context=dictionary)
