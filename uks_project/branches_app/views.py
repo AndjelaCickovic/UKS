@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from branches_app.models import Branch
+from branches_app.models import Branch, Commit
 
 # Create your views here.
 def main(request):
@@ -14,12 +14,13 @@ def branch(request, branch_id):
         branch = Branch.objects.get(id=branch_id)
     except:
         print('error')
-    
+
+    print(branch.commits)
+
     obj_dict = {
         'branches': branches,
-        'branch': branch
+        'branch': branch,
+        'commits': branch.commits.all()
     }
-
-    print(branch.parent_branch)
 
     return render(request,'branches_app/branch.html',obj_dict)

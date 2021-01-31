@@ -15,6 +15,15 @@
                 <h6>
                     Based on <b>{{branch.parent_branch.name}}</b> branch
                 </h6>
+                <ul>
+                    {% for commit in commits %}
+                        <li>
+                            {{ commit.name }}
+                            {{ commit.description }}
+                            {{ commit.date }}
+                        </li>
+                    {% endfor %}
+                </ul>
             </div>
         </div>
         
