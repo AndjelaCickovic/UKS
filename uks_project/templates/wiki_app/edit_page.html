@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+{% extends 'wiki_app/main.html' %}
+    {% block page_block %}
+        <div class="card">
+            <div class="card-body">
+                <div class="container">
+                    <form method="POST">
+                        {{form.as_p}}
+                        {% csrf_token %}
+                        <input type="submit" class="btn btn-primary" value="Submit">
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+    {% endblock %}

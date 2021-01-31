@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'wiki_app',
     'issues_app',
     'projects_app',
-]
+    'branches_app',
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
