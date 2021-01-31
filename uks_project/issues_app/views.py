@@ -39,8 +39,6 @@ def add_label(request):
             label.save()
             
             return HttpResponseRedirect(reverse('view_labels'))
-            #dictionary = {'issues': serializer.data, 'labels': labels}
-            #return render(request, 'issues_app/labels.html', context=dictionary)
             
     dictionary = {'issues': serializer.data, 'form': form}
     return render(request, 'issues_app/new_label.html', context=dictionary)
@@ -52,5 +50,24 @@ def delete_label(request, label_id):
     labels = Label.objects.all()
 
     return HttpResponseRedirect(reverse('view_labels'))
-    #dictionary = {'issues': serializer.data, 'labels': labels}
-    #return render(request, 'issues_app/labels.html', context=dictionary)
+
+def edit_label(request, label_id):
+    issues = Issue.objects.all()
+    serializer = IssueSerializer(issues, many=True)
+    labels = Label.objects.all()
+    label = Label.objects.get(id=label_id)
+    form = LabelForm(initial = {'name': label.name, 'description': label.description, 'colour': label.colour})
+
+    if request.method =='POST' :
+        form = LabelForm(request.POST)
+
+        if form.is_valid(): 
+            label.name = form.cleaned_data['name']
+            label.description = form.cleaned_data['description']
+            label.colour = form.cleaned_data['colour']
+            label.save()
+            
+            return HttpResponseRedirect(reverse('view_labels'))
+            
+    dictionary = {'issues': serializer.data, 'form': form}
+    return render(request, 'issues_app/edit_label.html', context=dictionary)

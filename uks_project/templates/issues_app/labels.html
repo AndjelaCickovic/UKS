@@ -22,12 +22,14 @@
                             <th style="width: 30%; border-right-width: 1px; border-right-style: solid; border-right-color: black;">Name</th>
                             <th style="width: 70%;">Description</th>
                             <th>&nbsp;</th>
+                            <th>&nbsp;</th>
                         </tr>
                         {% for label in labels %}
                             <tr>
                                 <td style="border-right-width: 1px; border-right-style: solid; border-right-color: black;">{{ label.name }}</td>
                                 <td>&nbsp;{{ label.description }}</td>
-                                <td><a class="btn" href="/issues/delete-label/{{label.id}}" style="color: red;">X</a></td>
+                                <td><a class="btn" href="/issues/delete-label/{{label.id}}" style="background-color: red;">X</a></td>
+                                <td><a class="btn" href="/issues/edit-label/{{label.id}}" style="background-color: blue;">Edit</a></td>
                             </tr>
                         {% endfor %}
                     </table>
