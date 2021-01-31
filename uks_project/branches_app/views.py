@@ -6,4 +6,4 @@ def main(request):
     branches = Branch.objects.order_by('id')
     obj_dict = {'branches':branches}
 
-    return render(request,'branches_app/main.html',obj_dict)
+    return render(request,'branches_app/no_branch.html',obj_dict)
