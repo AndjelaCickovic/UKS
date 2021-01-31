@@ -37,7 +37,13 @@
                                         <li class="nav-item dropdown">
                                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
                                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                                <a class="dropdown-item" href="#">Close</a>
+                                                <a class="dropdown-item" href="/issues/change-status-milestone/{{milestone.id}}">
+                                                    {% if milestone.status == 'Open' %}
+                                                        Close
+                                                    {% else %}
+                                                        Reopen
+                                                    {% endif %}
+                                                </a>
                                                 <a class="dropdown-item" href="/issues/edit-milestone/{{milestone.id}}">Edit</a>
                                                 <a class="dropdown-item" href="/issues/delete-milestone/{{milestone.id}}">Delete</a>
                                             </div>

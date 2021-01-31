@@ -120,3 +120,13 @@ def edit_milestone(request, milestone_id):
     dictionary = {'issues': serializer.data, 'form': form}
     return render(request, 'issues_app/edit_milestone.html', context=dictionary)
 
+def change_status_milestone(request, milestone_id):
+    milestone = Milestone.objects.get(id=milestone_id)
+    if milestone.status == 'Open':
+        milestone.status = 'Closed'
+    else:
+        milestone.status = 'Open'
+    milestone.save()
+
+    return HttpResponseRedirect(reverse('view_milestones'))
+
