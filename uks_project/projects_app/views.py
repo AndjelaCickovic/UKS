@@ -7,12 +7,12 @@ import io
 
 # Create your views here.
 def main(request):
-    projects = Project.objects.all()
+    projects = Project.objects.all().order_by('id')
     projects_dict = { 'projects': projects}
     return render(request, 'projects_app/main.html', projects_dict)
 
 def new_project(request):
-    projects = Project.objects.all()
+    projects = Project.objects.all().order_by('id')
     form = ProjectForm()
 
     if request.method =='POST' :
@@ -29,3 +29,14 @@ def new_project(request):
             return render(request, 'projects_app/main.html' ,{'projects':projects})
             
     return render(request,'projects_app/new_project.html',{'form': form})
+
+def close_project(request,project_id):
+    try:
+        project = Project.objects.get(id=project_id)
+    except:
+        return render(request,'projects_app/main.html',{'projects': projects})
+    project.status = "Closed"
+    project.save()
+    projects = Project.objects.all().order_by('id')
+
+    return render(request,'projects_app/main.html',{'projects': projects})

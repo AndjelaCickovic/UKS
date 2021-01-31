@@ -5,4 +5,5 @@ from django.urls import path
 urlpatterns = [
     url(r'^$', views.main, name='main'),
     path('new/', views.new_project),
+    path('close/<int:project_id>/',views.close_project),
 ]
