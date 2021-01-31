@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'issues_app',
     'projects_app',
     'branches_app',
+    'crispy_forms',
+]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -147,3 +149,5 @@ MEDIA_ROOT=MEDIA_DIR
 MEDIA_URL='/media/'
 
 LOGIN_URL = '/users/user_login/'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
