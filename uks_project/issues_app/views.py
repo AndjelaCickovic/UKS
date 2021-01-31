@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
-from issues_app.models import Issue, Label
+from issues_app.models import Issue, Label, Milestone
 from issues_app.serializers import IssueSerializer
 from issues_app.forms import LabelForm
 import sys
@@ -71,3 +71,10 @@ def edit_label(request, label_id):
             
     dictionary = {'issues': serializer.data, 'form': form}
     return render(request, 'issues_app/edit_label.html', context=dictionary)
+
+def milestones(request):
+    issues = Issue.objects.all()
+    serializer = IssueSerializer(issues, many=True)
+    milestones = Milestone.objects.all()
+    dictionary = {'issues': serializer.data, 'milestones': milestones}
+    return render(request, 'issues_app/milestones.html', context=dictionary)
