@@ -22,4 +22,16 @@ def new_page(request):
     pages = Page.objects.order_by('id')
     form = PageForm()
 
+    if request.method =='POST' :
+        form = PageForm(request.POST)
+
+        if form.is_valid(): 
+            page = Page()
+            page.title = form.cleaned_data['title']
+            page.content = form.cleaned_data['content']
+            page.message = form.cleaned_data['message']
+            wiki = Wiki.objects.get(id=1)
+            page.wiki = wiki
+            page.save()
+            
     return render(request,'wiki_app/new_page.html',{'form':form, 'pages': pages})
