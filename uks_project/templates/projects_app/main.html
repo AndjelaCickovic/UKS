@@ -38,7 +38,7 @@
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="/projects/close/{{project.id}}">Close</a>
                                 <a class="dropdown-item" href="#">Edit</a>
-                                <a class="dropdown-item" href="{% url 'users:user_logout' %}">Delete</a>
+                                <a class="dropdown-item" href="/projects/delete/{{project.id}}">Delete</a>
                             </div>
                         </li>
                     </ul>
@@ -73,7 +73,7 @@
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="/projects/reopen/{{project.id}}">Reopen</a>
                                 <a class="dropdown-item" href="#">Edit</a>
-                                <a class="dropdown-item" href="{% url 'users:user_logout' %}">Delete</a>
+                                <a class="dropdown-item" href="/projects/delete/{{project.id}}">Delete</a>
                             </div>
                         </li>
                     </ul>

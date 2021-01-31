@@ -34,10 +34,9 @@ def close_project(request,project_id):
     try:
         project = Project.objects.get(id=project_id)
     except:
-        return render(request,'projects_app/main.html',{'projects': projects})
+        return redirect('/projects')
     project.status = "Closed"
     project.save()
-    projects = Project.objects.all().order_by('id')
 
     return redirect('/projects')
 
@@ -45,9 +44,17 @@ def reopen_project(request,project_id):
     try:
         project = Project.objects.get(id=project_id)
     except:
-        return render(request,'projects_app/main.html',{'projects': projects})
+        return redirect('/projects')
     project.status = "Open"
     project.save()
-    projects = Project.objects.all().order_by('id')
+
+    return redirect('/projects')
+
+def delete_project(request,project_id):
+    try:
+        project = Project.objects.get(id=project_id)
+    except:
+        return redirect('/projects')
+    project.delete()
 
     return redirect('/projects')
