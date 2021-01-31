@@ -37,7 +37,7 @@ def new_page(request):
             page.wiki = wiki
             page.save()
 
-            return render(request,wiki_app/no_page.html,{'pages':pages})
+            return render(request, 'wiki_app/page.html' ,{'pages':pages, 'page': page})
             
     return render(request,'wiki_app/new_page.html',{'form':form, 'pages': pages})
 
@@ -58,8 +58,7 @@ def edit_page(request, page_id):
             page.message = form.cleaned_data['message']
 
             page.save()
-
-            return render(request, 'wiki_app/no_page.html' ,{'pages':pages})
+            return render(request, 'wiki_app/page.html' ,{'pages':pages, 'page': page})
             
     return render(request,'wiki_app/edit_page.html',{'form':form, 'pages': pages})
 
