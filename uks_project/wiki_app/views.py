@@ -33,5 +33,25 @@ def new_page(request):
             wiki = Wiki.objects.get(id=1)
             page.wiki = wiki
             page.save()
+
+            return render(request,wiki_app/no_page.html,{'pages':pages})
+            
+    return render(request,'wiki_app/new_page.html',{'form':form, 'pages': pages})
+
+def edit_page(request, page_id):
+    pages = Page.objects.order_by('id')
+    page = Page.objects.get(id=page_id)
+    form = PageForm(page)
+
+    if request.method =='POST' :
+        form = PageForm(request.POST)
+
+        if form.is_valid(): 
+            page.title = form.cleaned_data['title']
+            page.content = form.cleaned_data['content']
+            page.message = form.cleaned_data['message']
+            page.save()
+
+            return render(request,wiki_app/no_page.html,{'pages':pages})
             
     return render(request,'wiki_app/new_page.html',{'form':form, 'pages': pages})
