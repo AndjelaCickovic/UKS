@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from projects_app.models import Project, Column
 from projects_app.forms import ProjectForm
@@ -39,7 +39,7 @@ def close_project(request,project_id):
     project.save()
     projects = Project.objects.all().order_by('id')
 
-    return render(request,'projects_app/main.html',{'projects': projects})
+    return redirect('/projects')
 
 def reopen_project(request,project_id):
     try:
@@ -50,4 +50,4 @@ def reopen_project(request,project_id):
     project.save()
     projects = Project.objects.all().order_by('id')
 
-    return render(request,'projects_app/main.html',{'projects': projects})
+    return redirect('/projects')
