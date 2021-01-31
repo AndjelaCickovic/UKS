@@ -43,9 +43,6 @@ def add_label(request):
 
 def delete_label(request, label_id):
     Label.objects.filter(id=label_id).delete()
-    issues = Issue.objects.all()
-    serializer = IssueSerializer(issues, many=True)
-    labels = Label.objects.all()
 
     return HttpResponseRedirect(reverse('view_labels'))
 
@@ -97,3 +94,8 @@ def add_milestone(request):
             
     dictionary = {'issues': serializer.data, 'form': form}
     return render(request, 'issues_app/new_milestone.html', context=dictionary)
+
+def delete_milestone(request, milestone_id):
+    Milestone.objects.filter(id=milestone_id).delete()
+
+    return HttpResponseRedirect(reverse('view_milestones'))

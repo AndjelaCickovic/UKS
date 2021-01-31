@@ -9,5 +9,6 @@ urlpatterns = [
     path('edit-label/<int:label_id>/', views.edit_label, name='edit_label'),
     url(r'^milestones', views.milestones, name='view_milestones'),
     url(r'^add-milestone', views.add_milestone, name='add_milestone'),
+    path('delete-milestone/<int:milestone_id>', views.delete_milestone, name='delete_milestone'),
     url(r'^$', views.main, name='main')
 ]
