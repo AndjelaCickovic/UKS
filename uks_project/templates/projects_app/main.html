@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+{% extends 'myapp/base.html' %}
+{% block body_block %}
+<h1>Projects</h1>
+<br>
+ <a class="btn btn-success" style="float:right" href="/projects/new/" role="button">Add new project</a>
+ <br>
+    {% if projects %}
+    <table class="table table-striped" style="margin-top: 30px">
+        <tr>
+            <th>Name</th>
+            <th>Description</td>
+            <th>Status</th>
+            <th></th>
+        </tr>
+        {% for project in projects %}
+            <tr>
+                <td>{{ project.name }}</td>
+                <td>{{ project.description }}</td>
+                <td>{{ project.status }}</td>
+                <td>
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="#">Close</a>
+                                <a class="dropdown-item" href="#">Edit</a>
+                                <a class="dropdown-item" href="{% url 'users:user_logout' %}">Delete</a>
+                            </div>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <h3>You don't have any project </h3>
+    {% endif %}
+{% endblock %} 

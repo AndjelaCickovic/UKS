@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^home',views.index,name='index'),
     url(r'^issues/', include('issues_app.urls')),
     url(r'^wiki/', include('wiki_app.urls')),
+    url(r'^projects/',include('projects_app.urls')),
     url(r'^branches/', include('branches_app.urls')),
     path('admin/', admin.site.urls), 
 ]
