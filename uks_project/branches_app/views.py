@@ -7,3 +7,19 @@ def main(request):
     obj_dict = {'branches':branches}
 
     return render(request,'branches_app/no_branch.html',obj_dict)
+
+def branch(request, branch_id):
+    branches = Branch.objects.order_by('id')
+    try:
+        branch = Branch.objects.get(id=branch_id)
+    except:
+        print('error')
+    
+    obj_dict = {
+        'branches': branches,
+        'branch': branch
+    }
+
+    print(branch.parent_branch)
+
+    return render(request,'branches_app/branch.html',obj_dict)
