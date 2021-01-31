@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+{% extends 'myapp/base.html' %}
+    {% block body_block %}
+        <h1>Wiki page</h1>
+        <div class="row">
+            <div class="col-md-3">
+                {% if branches %}
+            <ul>
+                {% for branch in branches %}
+                <li>
+                    <a href="/branches/branch/{{branch.id}}">{{branch.name}}</a>                    
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+                There are no branches
+            {% endif %}
+            <a class="btn btn-primary" href="/branches/branch/new" role="button">Add new branch</a>
+            </div>
+            <div class="col-md-9" style="padding: 3%;">
+                {% block page_block %}
+                {% endblock %}
+            </div>
+        </div>
+    {% endblock %}
