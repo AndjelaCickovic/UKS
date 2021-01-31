@@ -13,7 +13,10 @@ def main(request):
 
 def page(request,page_id):
     pages = Page.objects.order_by('id')
-    page = Page.objects.get(id=page_id)
+    try:
+        page = Page.objects.get(id=page_id)
+    except:
+        return render(request, 'wiki_app/error.html' ,{'pages':pages})
     obj_dict = {'page':page, 'pages':pages}
 
     return render(request,'wiki_app/page.html',obj_dict)
@@ -40,7 +43,10 @@ def new_page(request):
 
 def edit_page(request, page_id):
     pages = Page.objects.order_by('id')
-    page = Page.objects.get(id=page_id)
+    try:
+        page = Page.objects.get(id=page_id)
+    except:
+        return render(request, 'wiki_app/error.html' ,{'pages':pages})
     form = PageForm(instance=page)
 
     if request.method =='POST' :
@@ -56,3 +62,14 @@ def edit_page(request, page_id):
             return render(request, 'wiki_app/no_page.html' ,{'pages':pages})
             
     return render(request,'wiki_app/edit_page.html',{'form':form, 'pages': pages})
+
+def delete_page(request, page_id):
+    pages = Page.objects.order_by('id')
+    try:
+        page = Page.objects.get(id=page_id)
+    except:
+        return render(request, 'wiki_app/error.html' ,{'pages':pages})
+
+    page.delete()
+
+    return render(request, 'wiki_app/no_page.html' ,{'pages':pages})

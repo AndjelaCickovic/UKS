@@ -6,5 +6,6 @@ urlpatterns = [
     url(r'^$', views.main),
     path('page/<int:page_id>/', views.page),
     path('page/edit/<int:page_id>/', views.edit_page),
+    path('page/delete/<int:page_id>/', views.delete_page),
     path('page/new/', views.new_page),
 ]
