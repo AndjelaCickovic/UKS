@@ -49,7 +49,6 @@ def delete_label(request, label_id):
 def edit_label(request, label_id):
     issues = Issue.objects.all()
     serializer = IssueSerializer(issues, many=True)
-    labels = Label.objects.all()
     label = Label.objects.get(id=label_id)
     form = LabelForm(initial = {'name': label.name, 'description': label.description, 'colour': label.colour})
 
@@ -99,3 +98,25 @@ def delete_milestone(request, milestone_id):
     Milestone.objects.filter(id=milestone_id).delete()
 
     return HttpResponseRedirect(reverse('view_milestones'))
+
+def edit_milestone(request, milestone_id):
+    issues = Issue.objects.all()
+    serializer = IssueSerializer(issues, many=True)
+    milestone = Milestone.objects.get(id=milestone_id)
+    form = MilestoneForm(initial = {'name': milestone.name, 'description': milestone.description, 'dueDate': milestone.dueDate, 'status': milestone.status})
+
+    if request.method =='POST' :
+        form = MilestoneForm(request.POST)
+
+        if form.is_valid():
+            milestone.name = form.cleaned_data['name']
+            milestone.dueDate = form.cleaned_data['dueDate']
+            milestone.description = form.cleaned_data['description']
+            milestone.status = form.cleaned_data['status']
+            milestone.save()
+            
+            return HttpResponseRedirect(reverse('view_milestones'))
+            
+    dictionary = {'issues': serializer.data, 'form': form}
+    return render(request, 'issues_app/edit_milestone.html', context=dictionary)
+
