@@ -40,3 +40,14 @@ def close_project(request,project_id):
     projects = Project.objects.all().order_by('id')
 
     return render(request,'projects_app/main.html',{'projects': projects})
+
+def reopen_project(request,project_id):
+    try:
+        project = Project.objects.get(id=project_id)
+    except:
+        return render(request,'projects_app/main.html',{'projects': projects})
+    project.status = "Open"
+    project.save()
+    projects = Project.objects.all().order_by('id')
+
+    return render(request,'projects_app/main.html',{'projects': projects})
