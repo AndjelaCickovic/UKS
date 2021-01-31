@@ -3,26 +3,45 @@
 {% block body_block %}
     <h1>Issues Page</h1>
     <hr>
-    {% if issues %}
-    <table>
-        <tr>
-            <th>Name</th>
-            <th>Labels</th>
-            <th>Status</th>
-        </tr>
-        {% for issue in issues %}
-            <tr>
-                <td>{{ issue.name }}</td>
-                <td>
-                    {% for label in issue.labels %}
-                        {{ label.name }},
-                    {% endfor %}
-                </td>
-                <td>{{ issue.status }}</td>
-            </tr>
-        {% endfor %}
-    </table>
-    {% else %}
-    <h3>No issues found!</h3>
-    {% endif %}
+    <div class="row">
+        <div class="col-md-2">
+            <a class="btn btn-primary" href="/issues/add-issue" role="button">Add issue</a>
+        </div>
+        <div class="col-md-2">
+            <a class="btn btn-primary" href="/issues/add-label" role="button">Add label</a>
+        </div>
+        <div class="col-md-2">
+            <a class="btn btn-primary" href="/issues/add-milestone" role="button">Add milestone</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-7">
+            {% if issues %}
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <th>Labels</th>
+                    <th>Status</th>
+                </tr>
+                {% for issue in issues %}
+                    <tr>
+                        <td>{{ issue.name }}</td>
+                        <td>
+                            {% for label in issue.labels %}
+                                {{ label.name }},
+                            {% endfor %}
+                        </td>
+                        <td>{{ issue.status }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+            {% else %}
+            <h3>No issues found!</h3>
+            {% endif %}
+        </div>
+        <div class="col-md-5">
+            {% block add_block %}
+            {% endblock %}
+        </div>
+    </div>
 {% endblock %}
