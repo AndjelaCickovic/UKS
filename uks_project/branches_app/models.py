@@ -7,5 +7,5 @@ class Branch(models.Model):
 class Commit(models.Model):
     name = models.CharField(max_length=264)
     description = models.TextField()
-    date = models.DateField()
+    date = models.DateTimeField()
     branch = models.ForeignKey(Branch, on_delete=models.DO_NOTHING)
