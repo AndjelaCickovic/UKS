@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from projects_app.models import Project, Column
+from issues_app.models import Issue
 from projects_app.forms import ProjectForm, ColumnForm
 import sys
 import io
@@ -36,9 +37,11 @@ def project(request, project_id):
     except:
         return redirect('/projects')
     
+
     objects_dict = {
         'project':project, 
-        'columns': project.columns.all()
+        'columns': project.columns.all(),
+        'issues': Issue.objects.all()
     }
     return render(request,"projects_app/project.html",objects_dict)
 
@@ -84,8 +87,14 @@ def new_column(request, project_id):
             column.save()
 
             return redirect('/projects/'+ str(project_id))
+
+    objects_dict = {
+        'project':project, 
+        'columns': project.columns.all(),
+        'form': form
+    }
     
-    return render(request,'projects_app/new_column.html',{'form': form})
+    return render(request,'projects_app/new_column.html',objects_dict)
 
 
 def close_project(request,project_id):
