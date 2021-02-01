@@ -25,6 +25,7 @@ class UserForm(forms.ModelForm):
         if password != confirm_password:
             self.add_error('confirm_password', "Passwords do not match")
 
+
 class EditUserForm(UserForm):
 
     old_password = forms.CharField(widget=forms.PasswordInput(),required=False)
