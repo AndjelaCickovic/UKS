@@ -3,8 +3,10 @@
 {% extends 'myapp/base.html' %}
 {% block body_block%}
 <div class="jumbotron">
-    <h1>Log in</h1>
-
+     <div class="page-header">
+        <h1>Log in</h1>      
+    </div>
+    <br/>
     <form action="{% url 'users:user_login' %}" method="post">
         {% csrf_token %}
         <label for="username">Username:</label>
@@ -17,7 +19,7 @@
 
         <br/><br/>
 
-        <input style="margin-left:7%" type="submit" value="Login">
+        <input style="margin-left:7%" class="btn btn-success" type="submit" value="Login">
 
     </form>
 
