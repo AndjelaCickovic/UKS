@@ -4,7 +4,7 @@
 <h2>{{project.name}}</h2>
 {% if columns %}
         <a class="btn btn-success" style="float:right" href="new_column/" role="button">Add new column</a>
-
+<br>
   <div class="board">
     <div class="board-header">
       <div class="left">
@@ -16,10 +16,30 @@
     <div class="board-list">
         <div class="list-title">
           {{column.name}}
+          <ul class="navbar-nav ml-auto dots column-dots">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="delete_column/{{column.id}}">Edit</a>
+                                <a class="dropdown-item" href="delete_column/{{column.id}}">Delete</a>
+                            </div>
+                        </li>
+                    </ul>
         </div>
         {% for issue in column.issues.all %}
             <div class="card">
                 {{issue.name}}
+            <ul class="navbar-nav ml-auto dots">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="/projects/close/{{project.id}}">Edit</a>
+                                <a class="dropdown-item" href="/projects/edit/{{project.id}}">Delete</a>
+                                <a class="dropdown-item" href="/projects/delete/{{project.id}}">Remove from project</a>
+                            </div>
+                        </li>
+                    </ul>
+
             </div>
         {% endfor %}
          <div class="add-card">

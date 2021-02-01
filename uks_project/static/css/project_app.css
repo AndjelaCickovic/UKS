@@ -116,6 +116,14 @@ base {
     padding: 10px;
   }
   
+  .dots{
+      margin-top: -2rem;
+  }
+
+  .column-dots{
+      margin-left: 14rem !important;
+  }
+
   .add-card {
     padding-top: 10px;
     padding-bottom: 5px;

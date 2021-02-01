@@ -68,6 +68,38 @@ def edit_project(request, project_id):
     return render(request,'projects_app/new_project.html',{'form': form})
 
 
+def close_project(request,project_id):
+    try:
+        project = Project.objects.get(id=project_id)
+    except:
+        return redirect('/projects')
+    project.status = "Closed"
+    project.save()
+
+    return redirect('/projects')
+
+
+def reopen_project(request,project_id):
+    try:
+        project = Project.objects.get(id=project_id)
+    except:
+        return redirect('/projects')
+    project.status = "Open"
+    project.save()
+
+    return redirect('/projects')
+
+
+def delete_project(request,project_id):
+    try:
+        project = Project.objects.get(id=project_id)
+    except:
+        return redirect('/projects')
+    project.delete()
+
+    return redirect('/projects')
+
+
 def new_column(request, project_id):
     try:
         project = Project.objects.get(id=project_id)
@@ -97,32 +129,12 @@ def new_column(request, project_id):
     return render(request,'projects_app/new_column.html',objects_dict)
 
 
-def close_project(request,project_id):
+def delete_column(request,project_id, column_id):
     try:
-        project = Project.objects.get(id=project_id)
+        column = Column.objects.get(id=column_id)
     except:
-        return redirect('/projects')
-    project.status = "Closed"
-    project.save()
+        return redirect('/projects/'+ str(project_id))
+    
+    column.delete()
 
-    return redirect('/projects')
-
-
-def reopen_project(request,project_id):
-    try:
-        project = Project.objects.get(id=project_id)
-    except:
-        return redirect('/projects')
-    project.status = "Open"
-    project.save()
-
-    return redirect('/projects')
-
-def delete_project(request,project_id):
-    try:
-        project = Project.objects.get(id=project_id)
-    except:
-        return redirect('/projects')
-    project.delete()
-
-    return redirect('/projects')
+    return redirect('/projects/' + str(project_id))
