@@ -6,6 +6,5 @@ from projects_app.models import Project
    
 class AppUser(models.Model):
     user=models.OneToOneField(User,on_delete=models.CASCADE)
-    projects = models.ManyToManyField(Project)
 
     

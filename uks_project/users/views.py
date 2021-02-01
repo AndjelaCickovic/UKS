@@ -10,7 +10,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth import update_session_auth_hash
 
-
+from users.models import AppUser
 
 # Create your views here.
 def register(request):
@@ -25,6 +25,10 @@ def register(request):
             user = user_form.save()
             user.set_password(user.password)
             user.save()
+
+            app_user = AppUser.objects.create(user=user)
+            app_user.save()
+
             print('user registered')
             registered = True
             return render(request,"users/login.html",{})
@@ -82,11 +86,14 @@ def edit_profile(request):
                 print('Password entered')
                 if request.user.check_password(old_password):
                     new_password = form.cleaned_data['password']
-                    user = form.save(commit=False)
-                    user.set_password(new_password)
-                    user.save()
-                    update_session_auth_hash(request, user)
-                    message = 'Data successfully updated'
+                    if new_password:
+                        user = form.save(commit=False)
+                        user.set_password(new_password)
+                        user.save()
+                        update_session_auth_hash(request, user)
+                        message = 'Data successfully updated'
+                    else:
+                        message = 'Inavalid value for new password submitted'
                 else:
                     message = 'Password update failed. Old password is not correct'
             else:
