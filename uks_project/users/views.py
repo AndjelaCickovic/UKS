@@ -7,8 +7,8 @@ from django.http import HttpResponseRedirect,HttpResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-
 from django.contrib.auth.hashers import check_password
+from django.contrib.auth import update_session_auth_hash
 
 
 
@@ -53,7 +53,7 @@ def user_login(request):
                 return HttpResponse("Account not active")
         else:
             print("Login failed")
-            return HttpResponse("Invalid login detils supplied!")
+            return HttpResponse("Invalid login details supplied!")
     else:
         return render(request,'users/login.html',{})
 
@@ -65,18 +65,33 @@ def user_logut(request):
 
 @login_required
 def edit_profile(request):
-    form = EditUserForm(instance=User.objects.get(username=request.user.username))
+
+    form = EditUserForm(instance=request.user)
+    user = request.user
+    message =''
 
     if request.method == 'POST':
         
-        form = EditUserForm(data=request.POST)
+        form = EditUserForm(data=request.POST,instance=request.user)
 
         if form.is_valid():
-            old_password = form.cleaned_data["old_password"]
-
-            if request.user.check_password(old_password):
-                print('Match')
+            
+            old_password = form.cleaned_data['old_password']
+            
+            if old_password:
+                print('Password entered')
+                if request.user.check_password(old_password):
+                    new_password = form.cleaned_data['password']
+                    user = form.save(commit=False)
+                    user.set_password(new_password)
+                    user.save()
+                    update_session_auth_hash(request, user)
+                    message = 'Data successfully updated'
+                else:
+                    message = 'Password update failed. Old password is not correct'
             else:
-                print('Not match')
+                user = form.save(commit=False)
+                user.save()
+                message = 'Data successfully updated'
 
-    return render(request,'users/edit_profile.html',{'form':form})
+    return render(request,'users/edit_profile.html',{'form':form,'message':message})
