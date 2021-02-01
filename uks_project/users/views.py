@@ -1,12 +1,14 @@
 from django.shortcuts import render,redirect
-from users.forms import UserForm
+from users.forms import UserForm,EditUserForm
 from django.template import RequestContext
 
 from django.contrib.auth import authenticate,login,logout
 from django.http import HttpResponseRedirect,HttpResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 
+from django.contrib.auth.hashers import check_password
 
 
 
@@ -59,3 +61,22 @@ def user_login(request):
 def user_logut(request):
     logout(request)
     return HttpResponseRedirect(reverse('login'))
+
+
+@login_required
+def edit_profile(request):
+    form = EditUserForm(instance=User.objects.get(username=request.user.username))
+
+    if request.method == 'POST':
+        
+        form = EditUserForm(data=request.POST)
+
+        if form.is_valid():
+            old_password = form.cleaned_data["old_password"]
+
+            if request.user.check_password(old_password):
+                print('Match')
+            else:
+                print('Not match')
+
+    return render(request,'users/edit_profile.html',{'form':form})
