@@ -1,19 +1,6 @@
 <!DOCTYPE html>
-{% extends 'myapp/base.html' %}
-{% block body_block %}
-    <h1>Issues Page</h1>
-    <hr>
-    <div class="row">
-        <div class="col-md-2">
-            <a class="btn btn-primary" href="/issues/add-issue" role="button">Add issue</a>
-        </div>
-        <div class="col-md-2">
-            <a class="btn btn-primary" href="/issues/labels" role="button">View labels</a>
-        </div>
-        <div class="col-md-2">
-            <a class="btn btn-primary" href="/issues/milestones" role="button">View milestone</a>
-        </div>
-    </div>
+{% extends 'issues_app/issues_page.html' %}
+{% block issues_body %}
     <div class="row">
         <div class="col-md-7">
             {% if issues %}
@@ -25,7 +12,11 @@
                 </tr>
                 {% for issue in issues %}
                     <tr>
-                        <td>{{ issue.name }}</td>
+                        <td>
+                            <a href="/issues/issue/{{issue.id}}">
+                            {{ issue.name }}
+                            </a>
+                        </td>
                         <td>
                             {% for label in issue.labels %}
                                 {{ label.name }},

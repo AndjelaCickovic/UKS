@@ -130,3 +130,10 @@ def change_status_milestone(request, milestone_id):
 
     return HttpResponseRedirect(reverse('view_milestones'))
 
+def issue(request, issue_id):
+    issue = Issue.objects.get(id=issue_id)
+    serializer = IssueSerializer(issue)
+    dictionary = {'issue': serializer.data, 'assignees': serializer.data['assignees']}
+    print(serializer.data['assignees'])
+    return render(request, 'issues_app/issue.html', context=dictionary)
+

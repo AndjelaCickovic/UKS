@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+{% extends 'issues_app/issues_page.html' %}
+{% block issues_body %}
+    <div class="row">
+        <div class="col-md-2">
+            <a class="btn btn-primary" href="/issues" role="button"><</a>
+        </div>
+        <h3 class="card-title">
+            {{ issue.name }}
+        </h3>
+        <div class="col-md-2">
+            {{ issue.status }}
+        </div>
+    </div>
+    <div class="row">
+        <table>
+            <tr>
+                <th>Comment</th>
+                <th>Column</th>
+                <th>Labels</th>
+                <th>Milestone</th>
+                <th>Assignees</th>
+            </tr>
+            <tr>
+                <td>{{ issue.comment }}</td>
+                <td>{{ issue.column.name }}</td>
+                <td>
+                    {% for label in issue.labels %}
+                        {{ label.name }},
+                    {% endfor %}
+                </td>
+                <td>{{ issue.milestone.name }}</td>
+                <td>
+                    {% for user in assignees %}
+                        {{ user.id }}, 
+                    {% endfor %}
+                </td>
+            </tr>
+        </table>
+    </div>
+{% endblock %}
