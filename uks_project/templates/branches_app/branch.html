@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+{% extends 'branches_app/main.html' %}
+    {% block branch_block %}
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <h3 class="card-title">
+                        {{ branch.name }}
+                    </h3>
+                    <div class="text-right">
+                        <a class="btn btn-primary" href="/branches/branch/edit/{{branch.id}}" role="button">Edit</a>
+                        <a class="btn btn-danger" href="/branches/branch/delete/{{branch.id}}" role="button">Delete</a>
+                    </div>
+                </div>
+                <h6>
+                    Based on <b>{{branch.parent_branch.name}}</b> branch
+                </h6>
+                <ul>
+                    {% for commit in commits %}
+                        <li>
+                            {{ commit.name }}
+                            {{ commit.description }}
+                            {{ commit.date }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        
+    {% endblock %}
