@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+{% extends 'myapp/base.html' %}
+{% block body_block %}
+<h2>{{project.name}}</h2>
+{% if columns %}
+        <a class="btn btn-success" style="float:right" href="/projects/{{project.id}}/new_column/" role="button">Add new column</a>
+<br>
+ <div class="row" style="width:100%"> 
+<div class="board col-9">
+    <div class="board-header">
+      <div class="left">
+        <div class="board-header-text">Board </div>
+      </div>
+    </div>
+    <div class="board-lists">
+    {% for column in columns %}
+    <div class="board-list">
+        <div class="list-title">
+          {{column.name}}
+          <ul class="navbar-nav ml-auto dots column-dots">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="/projects/{{project.id}}/edit_column/{{column.id}}">Edit</a>
+                                <a class="dropdown-item" href="delete_column/{{column.id}}">Delete</a>
+                            </div>
+                        </li>
+                    </ul>
+        </div>
+        {% for issue in column.issues.all %}
+            <div class="card">
+                {{issue.name}}
+            <ul class="navbar-nav ml-auto dots">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="/projects/close/{{project.id}}">Edit</a>
+                                <a class="dropdown-item" href="/projects/edit/{{project.id}}">Delete</a>
+                                <a class="dropdown-item" href="/projects/{{project.id}}/remove_issue/{{issue.id}}">Remove from project</a>
+                            </div>
+                        </li>
+                    </ul>
+
+            </div>
+        {% endfor %}
+         <div class="add-card">
+          + Add another card
+         </div>
+       </div>
+    {% endfor %}
+    </div>
+</div>
+     
+    <div class="col-3" style="margin-top:3rem">
+        {% block column_block %}
+        {% endblock %}
+    </div>
+ </div>
+  
+
+{% else %}
+    <div class="center-div">
+        <h3>This project doesn't have any columns</h3>
+        <a class="btn btn-success column-btn" href="new_column/" role="button">Add new column</a>
+    <div>
+{% endif %}
+<br>
+<br>
+{% endblock %}
