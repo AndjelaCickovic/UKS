@@ -7,14 +7,16 @@
             <h1>Thank you for registering!</h1>
         </div>
     {%else%}
-        <h3>Fill out the registartion form:</h3>
+        <div class="page-header">
+            <h1>Fill out the registartion form:</h1>      
+        </div>
         <br/>
         <form  method="POST">
         
             {% csrf_token %}
             {{ user_form.as_p }}
 
-            <input type="submit" name="" value="Register">
+            <input type="submit" name="" class="btn btn-success" value="Register">
         </form>
 
     {% endif %}
