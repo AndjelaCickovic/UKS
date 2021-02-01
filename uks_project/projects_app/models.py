@@ -12,5 +12,5 @@ class Project(models.Model):
 
 class Column(models.Model):
     name = models.CharField(max_length=264)
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='columns')
 

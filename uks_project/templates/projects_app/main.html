@@ -4,8 +4,20 @@
 <h1>Projects</h1>
 <br>
  <a class="btn btn-success" style="float:right" href="/projects/new/" role="button">Add new project</a>
- <br>
-    {% if projects %}
+ <br> 
+<div class="container">
+    <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#open">Open</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#closed">Closed</a>
+    </li>
+    </ul>
+
+    <div class="tab-content">
+    <div class="tab-pane container active" id="open">
+{% if projects %}
     <table class="table table-striped" style="margin-top: 30px">
         <tr>
             <th>Name</th>
@@ -14,6 +26,7 @@
             <th></th>
         </tr>
         {% for project in projects %}
+         {% ifequal project.status "Open" %}
             <tr>
                 <td>{{ project.name }}</td>
                 <td>{{ project.description }}</td>
@@ -23,17 +36,58 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="#">Close</a>
-                                <a class="dropdown-item" href="#">Edit</a>
-                                <a class="dropdown-item" href="{% url 'users:user_logout' %}">Delete</a>
+                                <a class="dropdown-item" href="/projects/close/{{project.id}}">Close</a>
+                                <a class="dropdown-item" href="/projects/edit/{{project.id}}">Edit</a>
+                                <a class="dropdown-item" href="/projects/delete/{{project.id}}">Delete</a>
                             </div>
                         </li>
                     </ul>
                 </td>
             </tr>
+        {% endifequal %}
         {% endfor %}
     </table>
     {% else %}
     <h3>You don't have any project </h3>
     {% endif %}
+    </div>
+    <div class="tab-pane container fade" id="closed">
+    {% if projects %}
+    <table class="table table-striped" style="margin-top: 30px">
+        <tr>
+            <th>Name</th>
+            <th>Description</td>
+            <th>Status</th>
+            <th></th>
+        </tr>
+        {% for project in projects %}
+        {% ifequal project.status "Closed" %}
+            <tr>
+                <td>{{ project.name }}</td>
+                <td>{{ project.description }}</td>
+                <td>{{ project.status }}</td>
+                <td>
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="/projects/reopen/{{project.id}}">Reopen</a>
+                                <a class="dropdown-item" href="/projects/edit/{{project.id}}">Edit</a>
+                                <a class="dropdown-item" href="/projects/delete/{{project.id}}">Delete</a>
+                            </div>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endifequal %}
+        {% endfor %}
+    </table>
+    {% else %}
+    <h3>You don't have any project </h3>
+    {% endif %}
+    </div>
+    </div>
+
+  </div>
+    
 {% endblock %} 
