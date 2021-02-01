@@ -129,6 +129,39 @@ def new_column(request, project_id):
     return render(request,'projects_app/new_column.html',objects_dict)
 
 
+def edit_column(request, project_id, column_id):
+    try:
+        column = Column.objects.get(id=column_id)
+    except:
+        return redirect('/projects/'+ str(project_id))
+
+    try:
+        project = Project.objects.get(id=project_id)
+    except:
+        return redirect('/projects/'+ str(project_id))
+
+
+    form = ColumnForm(instance=column)
+
+    if request.method =='POST' :
+        form = ColumnForm(request.POST)
+
+        if form.is_valid(): 
+            column.name = form.cleaned_data['name']
+
+            column.save()
+
+            return redirect('/projects/'+ str(project_id))
+
+    objects_dict = {
+        'project':project, 
+        'columns': project.columns.all(),
+        'form': form
+    }
+    
+    return render(request,'projects_app/new_column.html',objects_dict)
+
+
 def delete_column(request,project_id, column_id):
     try:
         column = Column.objects.get(id=column_id)

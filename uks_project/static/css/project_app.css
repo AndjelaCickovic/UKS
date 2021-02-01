@@ -109,6 +109,11 @@ base {
     font-weight: bold;
   }
   
+  .fa-times{
+    margin-left: 6rem;
+    color: gray;
+  }
+
   .card {
     background-color: white;
     border-radius: 3px;
