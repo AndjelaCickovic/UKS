@@ -1,13 +1,14 @@
 <!DOCTYPE html>
-{% extends 'myapp/base.html' %}
+{% extends 'projects_app/project.html' %}
 {% load crispy_forms_tags %}
-    {% block body_block %}
+    {% block column_block %}
         <div class="card">
             <div class="card-body">
                 <div class="row">
                     <h3 class="card-title">
-                        Project
+                        Column
                     </h3>
+                    <a href="/projects/{{project.id}}"><i class="fa fa-times" aria-hidden="true"></i></a>
                 </div>
                 <div class="container">
                     <form method="POST">

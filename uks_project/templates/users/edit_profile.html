@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+{% extends 'myapp/base.html' %}
+{% load crispy_forms_tags %}
+    {% block body_block %}
+        <div class="card" style="width:40%;margin-left:30%">
+            <div class="card-body">
+                <div class="container">
+                    <div class="page-header">
+                        <h1 style="text-align:center">My profile</h1>      
+                    </div>
+                    <br/>
+                   <div class="alert alert-dark" role="alert">{{message}}</div>
+                    <form method="POST">                     
+                        {% csrf_token %}
+                        {{form|crispy}}
+                        <input type="submit" class="btn btn-success" style="margin-left:37%" value="Submit">
+                    </form>
+                </div>
+            </div>
+        </div>    
+    {% endblock %}
