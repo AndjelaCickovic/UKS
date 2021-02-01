@@ -2,3 +2,11 @@
     color: gray;
     cursor: pointer;
 }
+
+.center-div{
+    margin-left: 23rem;
+}
+
+.column-btn{
+    margin-left: 9rem;
+}
