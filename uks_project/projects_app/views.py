@@ -171,3 +171,14 @@ def delete_column(request,project_id, column_id):
     column.delete()
 
     return redirect('/projects/' + str(project_id))
+
+def remove_issue(request,project_id, issue_id):
+    try:
+        issue = Issue.objects.get(id=issue_id)
+    except:
+        return redirect('/projects/'+ str(project_id))
+    
+    issue.column = None
+    issue.save()
+    
+    return redirect('/projects/' + str(project_id))
