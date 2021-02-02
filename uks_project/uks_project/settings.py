@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'projects_app',
     'branches_app',
     'crispy_forms',
+    'repositories_app',
 ]
 
 MIDDLEWARE = [
