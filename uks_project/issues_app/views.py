@@ -3,7 +3,8 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from issues_app.models import Issue, Label, Milestone
 from issues_app.serializers import IssueSerializer
-from issues_app.forms import LabelForm, MilestoneForm
+from issues_app.forms import LabelForm, MilestoneForm, IssueForm
+from users.models import AppUser
 import sys
 import io
 
@@ -133,7 +134,36 @@ def change_status_milestone(request, milestone_id):
 def issue(request, issue_id):
     issue = Issue.objects.get(id=issue_id)
     serializer = IssueSerializer(issue)
-    dictionary = {'issue': serializer.data, 'assignees': serializer.data['assignees']}
-    print(serializer.data['assignees'])
+    assignees = []
+    for user in serializer.data['assignees']:
+        user = AppUser.objects.get(id=user['id'])
+        assignees.append(user)
+        
+    dictionary = {'issue': serializer.data, 'assignees': assignees}
     return render(request, 'issues_app/issue.html', context=dictionary)
+
+def add_issue(request):
+    issues = Issue.objects.all()
+    serializer = IssueSerializer(issues, many=True)
+    form = IssueForm()
+
+    if request.method =='POST' :
+        form = IssueForm(request.POST)
+
+        if form.is_valid(): 
+            issue = Issue()
+            issue.name = form.cleaned_data['name']
+            issue.comment = form.cleaned_data['comment']
+            issue.status = form.cleaned_data['status']
+            issue.save()
+            issue.column = form.cleaned_data['column']
+            issue.labels.set(form.cleaned_data['labels'])
+            issue.milestone = form.cleaned_data['milestone']
+            issue.assignees.set(form.cleaned_data['assignees'])
+            issue.save()
+            
+            return HttpResponseRedirect(reverse('view_issues'))
+            
+    dictionary = {'issues': serializer.data, 'form': form}
+    return render(request, 'issues_app/new_issue.html', context=dictionary)
 
