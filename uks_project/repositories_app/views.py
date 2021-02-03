@@ -66,3 +66,24 @@ def add_repository(request):
             
     dictionary = {'repositories': serializer.data, 'form': form}
     return render(request, 'repositories_app/new_repository.html', context=dictionary)
+
+@login_required
+def edit_repository(request, repository_id):
+    #repositories = Repository.objects.all()
+    #serializer = RepositorySerializer(repositories, many=True)
+    repository = Repository.objects.get(id=repository_id)
+    form = RepositoryForm(initial = {'name': repository.name, 'description': repository.description, 'is_public': repository.is_public})
+
+    if request.method =='POST' :
+        form = RepositoryForm(request.POST)
+
+        if form.is_valid(): 
+            repository.name = form.cleaned_data['name']
+            repository.description = form.cleaned_data['description']
+            repository.is_public = form.cleaned_data['is_public']
+            repository.save()
+            
+            return HttpResponseRedirect(reverse('repositories_app:view_repository', args = [repository_id]))
+            
+    dictionary = {'form': form}
+    return render(request, 'repositories_app/edit_repository.html', context=dictionary)
