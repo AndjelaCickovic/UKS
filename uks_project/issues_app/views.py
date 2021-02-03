@@ -8,7 +8,7 @@ import sys
 import io
 
 # Create your views here.
-def main(request):
+def main(request, repository_id):
     issues = Issue.objects.all()
     serializer = IssueSerializer(issues, many=True)
     dictionary = {'issues': serializer.data}
