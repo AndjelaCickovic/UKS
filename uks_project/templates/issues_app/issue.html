@@ -11,31 +11,40 @@
         <div class="col-md-2">
             {{ issue.status }}
         </div>
+        <div class="col-md-2">
+            <a class="btn btn-primary" href="/issues/edit-issue/{{issue.id}}">Edit</a>
+        </div>
     </div>
     <div class="row">
-        <table>
-            <tr>
-                <th>Comment</th>
-                <th>Column</th>
-                <th>Labels</th>
-                <th>Milestone</th>
-                <th>Assignees</th>
-            </tr>
-            <tr>
-                <td>{{ issue.comment }}</td>
-                <td>{{ issue.column.name }}</td>
-                <td>
-                    {% for label in issue.labels %}
-                        {{ label.name }},
-                    {% endfor %}
-                </td>
-                <td>{{ issue.milestone.name }}</td>
-                <td>
-                    {% for user in assignees %}
-                        {{ user.user }}, 
-                    {% endfor %}
-                </td>
-            </tr>
-        </table>
+        <div class="col-md-7">
+            <table>
+                <tr>
+                    <th>Comment</th>
+                    <th>Column</th>
+                    <th>Labels</th>
+                    <th>Milestone</th>
+                    <th>Assignees</th>
+                </tr>
+                <tr>
+                    <td>{{ issue.comment }}</td>
+                    <td>{{ issue.column.name }}</td>
+                    <td>
+                        {% for label in issue.labels %}
+                            {{ label.name }},
+                        {% endfor %}
+                    </td>
+                    <td>{{ issue.milestone.name }}</td>
+                    <td>
+                        {% for user in assignees %}
+                            {{ user.user }}, 
+                        {% endfor %}
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-md-5">
+            {% block edit_block %}
+            {% endblock %}
+        </div>
     </div>
 {% endblock %}
