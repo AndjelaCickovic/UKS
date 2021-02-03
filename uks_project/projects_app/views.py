@@ -7,7 +7,7 @@ import sys
 import io
 
 # Create your views here.
-def main(request):
+def main(request, repository_id):
     projects = Project.objects.all().order_by('id')
     projects_dict = { 'projects': projects}
     return render(request, 'projects_app/main.html', projects_dict)
