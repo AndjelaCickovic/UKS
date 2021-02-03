@@ -2,7 +2,7 @@ from django.shortcuts import render
 from branches_app.models import Branch, Commit
 
 # Create your views here.
-def main(request):
+def main(request, repository_id):
     branches = Branch.objects.order_by('id')
     obj_dict = {'branches':branches}
 

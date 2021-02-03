@@ -5,7 +5,7 @@ from wiki_app.forms import PageForm
 
 # Create your views here.
 
-def main(request):
+def main(request, repository_id):
     pages = Page.objects.order_by('id')
     obj_dict = {'pages':pages}
 

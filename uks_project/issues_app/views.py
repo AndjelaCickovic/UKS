@@ -4,14 +4,17 @@ from django.urls import reverse
 from issues_app.models import Issue, Label, Milestone
 from issues_app.serializers import IssueSerializer
 from issues_app.forms import LabelForm, MilestoneForm
+from repositories_app.models import Repository
+from repositories_app.serializers import RepositorySerializer
 import sys
 import io
 
 # Create your views here.
-def main(request):
-    issues = Issue.objects.all()
-    serializer = IssueSerializer(issues, many=True)
-    dictionary = {'issues': serializer.data}
+def main(request, repository_id):
+    repository = Repository.objects.get(id = repository_id)
+    repo_serializer = RepositorySerializer(repository)
+    
+    dictionary = {'issues': repo_serializer.data['issues'], 'repository': repo_serializer.data}
     return render(request, 'issues_app/issues.html', context=dictionary)
 
 def labels(request):
