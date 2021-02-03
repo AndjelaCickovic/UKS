@@ -193,3 +193,18 @@ def edit_issue(request, issue_id):
     dictionary = {'issue': serializer.data, 'form': form, 'assignees': assignees}
     return render(request, 'issues_app/edit_issue.html', context=dictionary)
 
+def delete_issue(request, issue_id):
+    Issue.objects.filter(id=issue_id).delete()
+
+    return HttpResponseRedirect(reverse('view_issues'))
+
+def change_status_issue(request, issue_id):
+    issue = Issue.objects.get(id=issue_id)
+    if issue.status == 'Open':
+        issue.status = 'Closed'
+    else:
+        issue.status = 'Open'
+    issue.save()
+
+    return HttpResponseRedirect(reverse('view_issues'))
+

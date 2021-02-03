@@ -15,5 +15,7 @@ urlpatterns = [
     path('issue/<int:issue_id>', views.issue, name='view_issue'),
     url('add-issue', views.add_issue, name='add_issue'),
     path('edit-issue/<int:issue_id>', views.edit_issue, name='edit_issue'),
+    path('delete-issue/<int:issue_id>', views.delete_issue, name='delete_issue'),
+    path('change-status-issue/<int:issue_id>', views.change_status_issue, name='change_status_issue'),
     url(r'^$', views.main, name='view_issues')
 ]
