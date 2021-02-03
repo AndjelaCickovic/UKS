@@ -5,7 +5,7 @@
     <hr>
     <div class="row">
         <div class="col-md-2">
-            <a class="btn btn-primary" href="#" role="button">Add repository</a>
+            <a class="btn btn-primary" href="/repositories/add-repository" role="button">Add repository</a>
         </div>
     </div>
     <div class="row">
@@ -29,5 +29,10 @@
             <h3>No repositories found!</h3>
             {% endif %}
         </div>
+        <div class="col-md-5">
+            {% block add_block %}
+            {% endblock %} 
+        </div>
     </div>
+
 {% endblock %}

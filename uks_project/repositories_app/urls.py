@@ -10,5 +10,6 @@ urlpatterns = [
     path('repository/<int:repository_id>/branches', include('branches_app.urls')),
     path('repository/<int:repository_id>/projects', include('projects_app.urls')),
     path('repository/<int:repository_id>/wiki', include('wiki_app.urls')),
-    url(r'^$', views.main, name = 'main'),
+    url(r'^add-repository', views.add_repository, name = 'add_repository'),
+    url(r'^$', views.main, name = 'view_repositories'),
 ]
