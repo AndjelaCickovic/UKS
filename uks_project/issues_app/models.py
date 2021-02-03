@@ -1,5 +1,6 @@
 from django.db import models
 from projects_app.models import Column
+from users.models import AppUser
 from django.utils.translation import gettext_lazy as _
 
 # Create your models here.
@@ -23,6 +24,6 @@ class Issue(models.Model):
     comment = models.CharField(max_length=264, blank=True)
     status = models.CharField(max_length=6, choices=Status.choices, default=Status.OPEN)
     labels = models.ManyToManyField(to=Label, blank=True)
-    column = models.ForeignKey(Column, on_delete=models.SET_NULL, blank=True, null=True,related_name='issues')
-    #milestones = models.ForeignKey(to=Milestone, on_delete=models.DO_NOTHING, blank=True, null=True)
-    #0..* user(assignees)
+    column = models.ForeignKey(Column, related_name='column', on_delete=models.DO_NOTHING, blank=True, null=True)
+    milestone = models.ForeignKey(Milestone, related_name='milestone', on_delete=models.DO_NOTHING, blank=True, null=True)
+    assignees = models.ManyToManyField(AppUser, related_name='assignees', blank=True)

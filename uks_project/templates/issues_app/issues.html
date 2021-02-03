@@ -1,19 +1,6 @@
 <!DOCTYPE html>
-{% extends 'repositories_app/repository.html' %}
-{% block show_block %}
-    <h1>Issues Page</h1>
-    <hr>
-    <div class="row">
-        <div class="col-md-2">
-            <a class="btn btn-primary" href="/issues/add-issue" role="button">Add issue</a>
-        </div>
-        <div class="col-md-2">
-            <a class="btn btn-primary" href="/issues/labels" role="button">View labels</a>
-        </div>
-        <div class="col-md-2">
-            <a class="btn btn-primary" href="/issues/milestones" role="button">View milestone</a>
-        </div>
-    </div>
+{% extends 'issues_app/issues_page.html' %}
+{% block issues_body %}
     <div class="row">
         <div class="col-md-7">
             {% if issues %}
@@ -22,16 +9,39 @@
                     <th>Name</th>
                     <th>Labels</th>
                     <th>Status</th>
+                    <th></th>
                 </tr>
                 {% for issue in issues %}
                     <tr>
-                        <td>{{ issue.name }}</td>
+                        <td>
+                            <a href="/issues/issue/{{issue.id}}">
+                            {{ issue.name }}
+                            </a>
+                        </td>
                         <td>
                             {% for label in issue.labels %}
                                 {{ label.name }},
                             {% endfor %}
                         </td>
                         <td>{{ issue.status }}</td>
+                        <td>
+                            <ul class="navbar-nav ml-auto">
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" href="/issues/change-status-issue/{{issue.id}}">
+                                            {% if issue.status == 'Open' %}
+                                                Close
+                                            {% else %}
+                                                Reopen
+                                            {% endif %}
+                                        </a>
+                                        <a class="dropdown-item" href="/issues/edit-issue/{{issue.id}}">Edit</a>
+                                        <a class="dropdown-item" href="/issues/delete-issue/{{issue.id}}">Delete</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </td>
                     </tr>
                 {% endfor %}
             </table>

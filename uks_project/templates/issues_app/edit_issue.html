@@ -1,21 +1,21 @@
 <!DOCTYPE html>
-{% extends 'issues_app/issues.html' %}
-{% block help_block %}
+{% extends 'issues_app/issue.html' %}
+{% block edit_block %}
     <div class="card">
         <div class="card-body">
             <div class="row">
-                <div class="col-md-2">
-                    <a class="btn btn-primary" href="/issues/labels" role="button"><</a>
+                <div class="col-md-3">
+                    <a class="btn btn-primary" href="/issues/issue/{{issue.id}}" role="button">Cancel</a>
                 </div>
                 <h3 class="card-title">
-                    New label
+                    Edit issue
                 </h3>
             </div>
             <div class="container">
                 <form method="POST">
                     {{form.as_p}}
                     {% csrf_token %}
-                    <input type="submit" class="btn btn-primary" value="Submit">
+                    <input type="submit" class="btn btn-primary" value="Save">
                 </form>
             </div>
         </div>

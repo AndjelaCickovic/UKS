@@ -12,5 +12,10 @@ urlpatterns = [
     path('delete-milestone/<int:milestone_id>', views.delete_milestone, name='delete_milestone'),
     path('edit-milestone/<int:milestone_id>', views.edit_milestone, name='edit_milestone'),
     path('change-status-milestone/<int:milestone_id>', views.change_status_milestone, name='change_status_milestone'),
-    url(r'^$', views.main, name='main')
+    path('issue/<int:issue_id>', views.issue, name='view_issue'),
+    url('add-issue', views.add_issue, name='add_issue'),
+    path('edit-issue/<int:issue_id>', views.edit_issue, name='edit_issue'),
+    path('delete-issue/<int:issue_id>', views.delete_issue, name='delete_issue'),
+    path('change-status-issue/<int:issue_id>', views.change_status_issue, name='change_status_issue'),
+    url(r'^$', views.main, name='view_issues')
 ]
