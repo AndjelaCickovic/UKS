@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+{% extends 'myapp/base.html' %}
+{% block body_block %}
+    <h1>Repositories Page</h1>
+    <hr>
+    <div class="row">
+        <div class="col-md-2">
+            <a class="btn btn-primary" href="#" role="button">Add repository</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-7">
+            {% if repositories %}
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Public</th>
+                </tr>
+                {% for repository in repositories %}
+                    <tr>
+                        <td><a href="/repositories/repository/{{repository.id}}">{{ repository.name }}</a></td>
+                        <td>{{ repository.description }}</td>
+                        <td>{{ repository.is_public }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+            {% else %}
+            <h3>No repositories found!</h3>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

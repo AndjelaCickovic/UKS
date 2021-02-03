@@ -4,4 +4,5 @@ from django.urls import path
 
 urlpatterns = [
     url(r'^$', views.main),
+    path('branch/<int:branch_id>/', views.branch),
 ]

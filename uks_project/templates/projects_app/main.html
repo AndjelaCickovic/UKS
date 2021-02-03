@@ -28,7 +28,7 @@
         {% for project in projects %}
          {% ifequal project.status "Open" %}
             <tr>
-                <td>{{ project.name }}</td>
+                <td><a style="color:black" href="/projects/{{project.id}}">{{project.name}}</a></td>
                 <td>{{ project.description }}</td>
                 <td>{{ project.status }}</td>
                 <td>
@@ -63,7 +63,7 @@
         {% for project in projects %}
         {% ifequal project.status "Closed" %}
             <tr>
-                <td>{{ project.name }}</td>
+                <td><a style="color:black" href="/projects/{{project.id}}">{{project.name}}</a></td>
                 <td>{{ project.description }}</td>
                 <td>{{ project.status }}</td>
                 <td>
