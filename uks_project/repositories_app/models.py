@@ -13,8 +13,9 @@ class Role(models.TextChoices):
 
 
 class RepositoryUser(models.Model):
-    user = models.ForeignKey(AppUser, related_name = 'app_user')
-    Repository = models.ForeignKey(Repository, related_name = 'repository')
+    user = models.ForeignKey(AppUser, related_name = 'app_user', on_delete = models.DO_NOTHING)
+    #repository = models.ForeignKey(Repository, related_name = 'repository', on_delete = models.DO_NOTHING)
+    # user treba prosiriti sa repositories 
     role = models.CharField(max_length=11, choices=Role.choices)
 
 
