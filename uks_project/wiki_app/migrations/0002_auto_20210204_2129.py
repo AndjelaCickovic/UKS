@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='wiki',
             name='repository',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, related_name='wiki', to='repositories_app.repository'),
+            field=models.ForeignKey(default=17, on_delete=django.db.models.deletion.CASCADE, related_name='wiki', to='repositories_app.repository'),
             preserve_default=False,
         ),
         migrations.AlterField(
