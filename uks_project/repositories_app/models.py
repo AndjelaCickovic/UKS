@@ -13,8 +13,6 @@ class Role(models.TextChoices):
 
 class RepositoryUser(models.Model):
     user = models.ForeignKey(User, related_name = 'app_user', on_delete = models.DO_NOTHING)
-    #repository = models.ForeignKey(Repository, related_name = 'repository', on_delete = models.DO_NOTHING)
-    # user treba prosiriti sa repositories 
     role = models.CharField(max_length=11, choices=Role.choices)
 
 
@@ -22,7 +20,3 @@ class Repository(models.Model):
     name = models.CharField(max_length = 264)
     description = models.CharField(max_length = 264, blank = True)
     is_public = models.BooleanField()
-    wiki = models.ForeignKey(Wiki, related_name = 'wiki', on_delete = models.DO_NOTHING, blank = True, null = True)
-    projects = models.ManyToManyField(Project, related_name = 'projects', blank = True)
-    repository_users = models.ManyToManyField(RepositoryUser, related_name = 'repository_users', blank = True)
-    branches = models.ManyToManyField(Branch, related_name = 'branches', blank = True)
