@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-{% extends 'myapp/base.html' %}
-{% block body_block %}
+{% extends 'repositories_app/repository.html' %}
+{% block show_block %}
     <h1>Issues Page</h1>
     <hr>
     <div class="row">
         <div class="col-md-2">
-            <a class="btn btn-primary" href="/issues/add-issue" role="button">Add issue</a>
+            <a class="btn btn-primary" href="/repositories/repository/{{repository.id}}/issues/add-issue" role="button">Add issue</a>
         </div>
         <div class="col-md-2">
-            <a class="btn btn-primary" href="/issues/labels" role="button">View labels</a>
+            <a class="btn btn-primary" href="/repositories/repository/{{repository.id}}/issues/labels" role="button">View labels</a>
         </div>
         <div class="col-md-2">
-            <a class="btn btn-primary" href="/issues/milestones" role="button">View milestone</a>
+            <a class="btn btn-primary" href="/repositories/repository/{{repository.id}}/issues/milestones" role="button">View milestone</a>
         </div>
     </div>
     <hr>

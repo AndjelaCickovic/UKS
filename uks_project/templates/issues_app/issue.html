@@ -3,7 +3,7 @@
 {% block issues_body %}
     <div class="row">
         <div class="col-md-2">
-            <a class="btn btn-primary" href="/issues" role="button"><</a>
+            <a class="btn btn-primary" href="/repositories/repository/{{repository.id}}/issues" role="button"><</a>
         </div>
         <h3 class="card-title">
             {{ issue.name }}
@@ -12,7 +12,7 @@
             {{ issue.status }}
         </div>
         <div class="col-md-2">
-            <a class="btn btn-primary" href="/issues/edit-issue/{{issue.id}}">Edit</a>
+            <a class="btn btn-primary" href="/repositories/repository/{{repository.id}}/issues/edit-issue/{{issue.id}}">Edit</a>
         </div>
     </div>
     <div class="row">
