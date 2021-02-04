@@ -5,7 +5,7 @@
     <hr>
     <div class="row">
         <div class="col-md-2">
-            <a class="btn btn-primary" href="#" role="button">Add repository</a>
+            <a class="btn btn-primary" href="/repositories/add-repository" role="button">Add repository</a>
         </div>
     </div>
     <div class="row">
@@ -16,12 +16,14 @@
                     <th>Name</th>
                     <th>Description</th>
                     <th>Public</th>
+                    <th> </th>
                 </tr>
                 {% for repository in repositories %}
                     <tr>
                         <td><a href="/repositories/repository/{{repository.id}}">{{ repository.name }}</a></td>
                         <td>{{ repository.description }}</td>
                         <td>{{ repository.is_public }}</td>
+                        <td><a href="/repositories/delete-repository/{{repository.id}}">Delete</a></td>
                     </tr>
                 {% endfor %}
             </table>
@@ -29,5 +31,10 @@
             <h3>No repositories found!</h3>
             {% endif %}
         </div>
+        <div class="col-md-5">
+            {% block add_block %}
+            {% endblock %} 
+        </div>
     </div>
+
 {% endblock %}

@@ -15,26 +15,14 @@
             <li><a class="nav-link" href="#">Team</a></li>
         </ul>
     </div>
+    <div class="row">
+        <div class="col-md-5">
+            <a class="btn btn-primary" href="/repositories/edit-repository/{{repository.id}}" role="button">Edit repository</a>
+        </div>
+    </div>
 </nav>
+
 {% block show_block %}
 {% endblock %}
-<table>
-    <tr>
-        <th>Description</th>
-        <th>Issues</th>
-        <th>branches</th>
-        <th>Projects</th>
-        <th>Wiki</th>
-        <th>Teams</th>
-    </tr>
-    <tr>
-        <td>{{repository.description}}</td>
-    </tr>
-        {% for issue in repository.issues %}
-            <tr>
-                <td>{{ issue.name }}</td>
-                <td>{{ issue.status }}</td>
-            </tr>
-        {% endfor %}
-</table>
+
 {% endblock %}

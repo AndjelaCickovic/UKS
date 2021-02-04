@@ -3,7 +3,7 @@ from wiki_app.models import Wiki
 from projects_app.models import Project 
 from issues_app.models import Issue, Label, Milestone
 from branches_app.models import Branch 
-from users.models import AppUser
+from users.models import User
 from django.utils.translation import gettext_lazy as _
 # Create your models here.
 
@@ -13,7 +13,7 @@ class Role(models.TextChoices):
 
 
 class RepositoryUser(models.Model):
-    user = models.ForeignKey(AppUser, related_name = 'app_user', on_delete = models.DO_NOTHING)
+    user = models.ForeignKey(User, related_name = 'app_user', on_delete = models.DO_NOTHING)
     #repository = models.ForeignKey(Repository, related_name = 'repository', on_delete = models.DO_NOTHING)
     # user treba prosiriti sa repositories 
     role = models.CharField(max_length=11, choices=Role.choices)
