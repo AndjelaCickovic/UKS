@@ -87,3 +87,9 @@ def edit_repository(request, repository_id):
             
     dictionary = {'form': form}
     return render(request, 'repositories_app/edit_repository.html', context=dictionary)
+
+@login_required
+def delete_repository(request, repository_id):
+    Repository.objects.filter(id=repository_id).delete()
+    return HttpResponseRedirect(reverse('repositories_app:view_repositories'))
+            

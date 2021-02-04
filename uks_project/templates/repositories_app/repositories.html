@@ -16,12 +16,14 @@
                     <th>Name</th>
                     <th>Description</th>
                     <th>Public</th>
+                    <th> </th>
                 </tr>
                 {% for repository in repositories %}
                     <tr>
                         <td><a href="/repositories/repository/{{repository.id}}">{{ repository.name }}</a></td>
                         <td>{{ repository.description }}</td>
                         <td>{{ repository.is_public }}</td>
+                        <td><a href="/repositories/delete-repository/{{repository.id}}">Delete</a></td>
                     </tr>
                 {% endfor %}
             </table>

@@ -12,5 +12,6 @@ urlpatterns = [
     path('repository/<int:repository_id>/wiki', include('wiki_app.urls')),
     url(r'^add-repository', views.add_repository, name = 'add_repository'),
     path('edit-repository/<int:repository_id>', views.edit_repository, name = 'edit_repository'),
+    path('delete-repository/<int:repository_id>/', views.delete_repository, name='delete_repository'),
     url(r'^$', views.main, name = 'view_repositories'),
 ]
