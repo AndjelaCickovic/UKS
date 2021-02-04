@@ -1,5 +1,4 @@
 from django.db import models
-from wiki_app.models import Wiki 
 from projects_app.models import Project
 from branches_app.models import Branch 
 from users.models import User
