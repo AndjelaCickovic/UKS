@@ -1,27 +1,45 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from wiki_app.models import Wiki, Page
 from wiki_app.forms import PageForm
+from repositories_app.models import Repository
+from repositories_app.serializers import RepositorySerializer
 
 # Create your views here.
 
 def main(request, repository_id):
     pages = Page.objects.order_by('id')
-    obj_dict = {'pages':pages}
+    repository = Repository.objects.get(id=repository_id)
+    repo = RepositorySerializer(repository)
+
+    obj_dict = {'pages':pages, 'repository': repo.data}
 
     return render(request,'wiki_app/no_page.html',obj_dict)
 
-def page(request,page_id):
+def error(request, repository_id):
+    pages = Page.objects.order_by('id')
+    repository = Repository.objects.get(id=repository_id)
+    repo = RepositorySerializer(repository)
+
+    obj_dict = {'pages':pages, 'repository': repo.data}
+
+    return render(request,'wiki_app/error.html',obj_dict)
+
+def page(request,page_id, repository_id):
     pages = Page.objects.order_by('id')
     try:
         page = Page.objects.get(id=page_id)
     except:
-        return render(request, 'wiki_app/error.html' ,{'pages':pages})
-    obj_dict = {'page':page, 'pages':pages}
+        return redirect('/repositories/repository/' + str(repository_id) + '/wiki/error')
+    
+    repository = Repository.objects.get(id=repository_id)
+    repo = RepositorySerializer(repository)
+
+    obj_dict = {'page':page, 'pages':pages, 'repository': repo.data}
 
     return render(request,'wiki_app/page.html',obj_dict)
 
-def new_page(request):
+def new_page(request, repository_id):
     pages = Page.objects.order_by('id')
     form = PageForm()
 
@@ -37,16 +55,19 @@ def new_page(request):
             page.wiki = wiki
             page.save()
 
-            return render(request, 'wiki_app/page.html' ,{'pages':pages, 'page': page})
-            
-    return render(request,'wiki_app/new_page.html',{'form':form, 'pages': pages})
+            return redirect('/repositories/repository/' + str(repository_id) + '/wiki/page/' + str(page.id))
 
-def edit_page(request, page_id):
+    repository = Repository.objects.get(id=repository_id)
+    repo = RepositorySerializer(repository)
+
+    return render(request,'wiki_app/new_page.html',{'form':form, 'pages': pages, 'repository': repo.data})
+
+def edit_page(request, page_id, repository_id):
     pages = Page.objects.order_by('id')
     try:
         page = Page.objects.get(id=page_id)
     except:
-        return render(request, 'wiki_app/error.html' ,{'pages':pages})
+        return redirect('/repositories/repository/' + str(repository_id) + '/wiki/error')
     form = PageForm(instance=page)
 
     if request.method =='POST' :
@@ -58,17 +79,23 @@ def edit_page(request, page_id):
             page.message = form.cleaned_data['message']
 
             page.save()
-            return render(request, 'wiki_app/page.html' ,{'pages':pages, 'page': page})
-            
-    return render(request,'wiki_app/edit_page.html',{'form':form, 'pages': pages})
+            return redirect('/repositories/repository/' + str(repository_id) + '/wiki/page/' + str(page.id))
 
-def delete_page(request, page_id):
+    repository = Repository.objects.get(id=repository_id)
+    repo = RepositorySerializer(repository)
+
+    return render(request,'wiki_app/new_page.html',{'form':form, 'pages': pages, 'repository': repo.data})
+
+def delete_page(request, page_id, repository_id):
     pages = Page.objects.order_by('id')
     try:
         page = Page.objects.get(id=page_id)
     except:
-        return render(request, 'wiki_app/error.html' ,{'pages':pages})
+        repository = Repository.objects.get(id=repository_id)
+        repo = RepositorySerializer(repository)
+
+        return render(request, 'wiki_app/error.html' ,{'pages':pages, 'repository': repo.data})
 
     page.delete()
 
-    return render(request, 'wiki_app/no_page.html' ,{'pages':pages})
+    return redirect('/repositories/repository/' + str(repository_id) + '/wiki')
