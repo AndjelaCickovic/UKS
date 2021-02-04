@@ -1,7 +1,6 @@
 from django.db import models
 from wiki_app.models import Wiki 
-from projects_app.models import Project 
-#from issues_app.models import Issue, Label, Milestone
+from projects_app.models import Project
 from branches_app.models import Branch 
 from users.models import User
 from django.utils.translation import gettext_lazy as _
@@ -27,8 +26,3 @@ class Repository(models.Model):
     projects = models.ManyToManyField(Project, related_name = 'projects', blank = True)
     repository_users = models.ManyToManyField(RepositoryUser, related_name = 'repository_users', blank = True)
     branches = models.ManyToManyField(Branch, related_name = 'branches', blank = True)
-
-    #Moze da se brise
-    #labels = models.ManyToManyField(Label, related_name = 'labels', blank = True)
-    #milestones = models.ManyToManyField(Milestone, related_name = 'milestones', blank = True)
-    #issues = models.ManyToManyField(Issue, related_name = 'issues', blank = True)

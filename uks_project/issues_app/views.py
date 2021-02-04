@@ -49,9 +49,6 @@ def add_label(request, repository_id):
             label.colour = form.cleaned_data['colour']
             label.repository = repository
             label.save()
-
-            #repository.labels.add(label)
-            #repository.save()
             
             return HttpResponseRedirect(reverse('repositories_app:issues_app:view_labels', kwargs={'repository_id':repository_id}))
             
@@ -116,9 +113,6 @@ def add_milestone(request, repository_id):
             milestone.status = form.cleaned_data['status']
             milestone.repository = repository
             milestone.save()
-
-            #repository.milestones.add(milestone)
-            #repository.save()
             
             return HttpResponseRedirect(reverse('repositories_app:issues_app:view_milestones', kwargs={'repository_id':repository_id}))
             
@@ -195,15 +189,10 @@ def add_issue(request, repository_id):
             issue.comment = form.cleaned_data['comment']
             issue.status = form.cleaned_data['status']
             issue.save()
-            #issue.column = form.cleaned_data['column']
             issue.labels.set(form.cleaned_data['labels'])
-            #issue.milestone = form.cleaned_data['milestone']
             issue.assignees.set(form.cleaned_data['assignees'])
             issue.repository = repository
             issue.save()
-
-            #repository.issues.add(issue)
-            #repository.save()
             
             return HttpResponseRedirect(reverse('repositories_app:issues_app:view_issues', kwargs={'repository_id':repository_id}))
             
@@ -231,8 +220,6 @@ def edit_issue(request, repository_id, issue_id):
             issue.comment = form.cleaned_data['comment']
             issue.status = form.cleaned_data['status']
             issue.labels.set(form.cleaned_data['labels'])
-            #issue.column = form.cleaned_data['column']
-            #issue.milestone = form.cleaned_data['milestone']
             issue.assignees.set(form.cleaned_data['assignees'])
             issue.save()
 
