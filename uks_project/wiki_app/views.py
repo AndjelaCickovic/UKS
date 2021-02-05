@@ -36,6 +36,7 @@ def page(request,page_id, repository_id):
     return render(request,'wiki_app/page.html',obj_dict)
 
 def new_page(request, repository_id):
+    repository = Repository.objects.get(id=repository_id)
     form = PageForm()
 
     if request.method =='POST' :
@@ -46,8 +47,7 @@ def new_page(request, repository_id):
             page.title = form.cleaned_data['title']
             page.content = form.cleaned_data['content']
             page.message = form.cleaned_data['message']
-            wiki = Wiki.objects.get(id=1)
-            page.wiki = wiki
+            page.wiki = repository.wiki.all()[0]
             page.save()
 
             return redirect('/repositories/repository/' + str(repository_id) + '/wiki/page/' + str(page.id))

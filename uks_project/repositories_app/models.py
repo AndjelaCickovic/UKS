@@ -13,7 +13,7 @@ class Repository(models.Model):
     name = models.CharField(max_length = 264)
     description = models.CharField(max_length = 264, blank = True)
     is_public = models.BooleanField()
-    members = models.ManyToManyField(AppUser, through = 'RepositoryUser' )
+    members = models.ManyToManyField(AppUser, through = 'RepositoryUser')
 
 class RepositoryUser(models.Model):
     user = models.ForeignKey(AppUser, on_delete = models.CASCADE)

@@ -16,8 +16,8 @@ urlpatterns = [
     url(r'change-status-milestone/(?P<milestone_id>\d+)', views.change_status_milestone, name='change_status_milestone'),
     url(r'issue/(?P<issue_id>\d+)', views.issue, name='view_issue'),
     url('add-issue', views.add_issue, name='add_issue'),
-    url(r'edit-issue/(?P<issue_id>\d+)', views.edit_issue, name='edit_issue'),
-    url(r'delete-issue/(?P<issue_id>\d+)', views.delete_issue, name='delete_issue'),
-    url(r'change-status-issue/(?P<issue_id>\d+)', views.change_status_issue, name='change_status_issue'),
+    url(r'edit/(?P<issue_id>\d+)', views.edit_issue, name='edit_issue'),
+    url(r'delete/(?P<issue_id>\d+)', views.delete_issue, name='delete_issue'),
+    url(r'change-status/(?P<issue_id>\d+)', views.change_status_issue, name='change_status_issue'),
     url(r'^$', views.main, name='view_issues')
 ]

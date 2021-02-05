@@ -42,26 +42,21 @@ def add_repository(request):
             
             branch = Branch()
             branch.name = 'main'
+            #Kad se prosiri branch sa repository, ovde treba da se popuni to polje
             branch.save()
 
-            repository.branches.set([branch])
-            repository.save()
-
             repository_user = RepositoryUser()
-            repository_user.user = request.user
+            repository_user.user = AppUser.objects.get(user=request.user)
             repository_user.role = 'Owner'
+            repository_user.repository = repository
             repository_user.save()
 
-            repository.repository_users.set([repository_user])
+            repository.members.add(AppUser.objects.get(user=request.user))
             repository.save()
 
             wiki = Wiki()
             wiki.repository = repository
             wiki.save()
-
-            repository.wiki = wiki
-            repository.save()
-
 
             return HttpResponseRedirect(reverse('repositories_app:view_repositories'))
             

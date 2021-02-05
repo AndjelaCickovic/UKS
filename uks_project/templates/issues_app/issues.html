@@ -29,15 +29,15 @@
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
                                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <a class="dropdown-item" href="/repositories/repository/{{repository.id}}/issues/change-status-issue/{{issue.id}}">
+                                        <a class="dropdown-item" href="/repositories/repository/{{repository.id}}/issues/change-status/{{issue.id}}">
                                             {% if issue.status == 'Open' %}
                                                 Close
                                             {% else %}
                                                 Reopen
                                             {% endif %}
                                         </a>
-                                        <a class="dropdown-item" href="/repositories/repository/{{repository.id}}/issues/edit-issue/{{issue.id}}">Edit</a>
-                                        <a class="dropdown-item" href="/repositories/repository/{{repository.id}}/issues/delete-issue/{{issue.id}}">Delete</a>
+                                        <a class="dropdown-item" href="/repositories/repository/{{repository.id}}/issues/edit/{{issue.id}}">Edit</a>
+                                        <a class="dropdown-item" href="/repositories/repository/{{repository.id}}/issues/delete/{{issue.id}}">Delete</a>
                                     </div>
                                 </li>
                             </ul>
