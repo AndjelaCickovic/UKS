@@ -8,4 +8,4 @@ class Page(models.Model):
     title = models.CharField(max_length=264)
     content = models.TextField()
     message = models.CharField(max_length=264, blank=True)
-    wiki = models.ForeignKey(Wiki, related_name='pages', on_delete=models.CASCADE)
+    wiki = models.ForeignKey(Wiki, related_name='pages', null = True, on_delete=models.CASCADE)
