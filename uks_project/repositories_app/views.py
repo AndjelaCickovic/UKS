@@ -42,7 +42,7 @@ def add_repository(request):
             
             branch = Branch()
             branch.name = 'main'
-            #Kad se prosiri branch sa repository, ovde treba da se popuni to polje
+            branch.repository = repository
             branch.save()
 
             repository_user = RepositoryUser()

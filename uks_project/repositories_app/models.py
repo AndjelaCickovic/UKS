@@ -1,6 +1,5 @@
 from django.db import models
 from projects_app.models import Project
-from branches_app.models import Branch 
 from users.models import AppUser
 from django.utils.translation import gettext_lazy as _
 # Create your models here.

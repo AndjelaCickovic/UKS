@@ -3,7 +3,7 @@
     {% block show_block %}
         <h1>Branches</h1>
         <br>
-        <a class="btn btn-success" style="float:right" href="/branches/new" role="button">Add new branch</a>
+        <a class="btn btn-success" style="float:right" href="/repositories/repository/{{repository.id}}/branches/new" role="button">Add new branch</a>
         <br> 
         {% if branches %}
             <table class="table table-striped" style="margin-top: 30px; width:60% ;margin-left:20%">
@@ -14,16 +14,16 @@
                 </tr>
                 {% for branch in branches %}
                     <tr>
-                        <td><a style="color:black" href="/branches/{{branch.id}}">{{branch.name}}</a></td>
+                        <td><a style="color:black" href="/repositories/repository/{{repository.id}}/branches/{{branch.id}}">{{branch.name}}</a></td>
                         <td>{{ branch.parent_branch.name}}</td>
                         <td>    
                             <ul class="navbar-nav ml-auto">
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
                                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <a class="dropdown-item" href="/branches/{{branch.id}}">Commits</a>
-                                        <a class="dropdown-item" href="/branches/branch/edit/{{branch.id}}">Edit</a>
-                                        <a class="dropdown-item" href="/branches/branch/delete/{{branch.id}}">Delete</a>
+                                        <a class="dropdown-item" href="/repositories/repository/{{repository.id}}/branches/{{branch.id}}">Commits</a>
+                                        <a class="dropdown-item" href="/repositories/repository/{{repository.id}}/branches/branch/edit/{{branch.id}}">Edit</a>
+                                        <a class="dropdown-item" href="/repositories/repository/{{repository.id}}/branches/branch/delete/{{branch.id}}">Delete</a>
                                     </div>
                                 </li>
                             </ul>
