@@ -43,6 +43,7 @@ def add_repository(request):
             branch = Branch()
             branch.name = 'main'
             branch.repository = repository
+            branch.default = True
             branch.save()
 
             repository_user = RepositoryUser()

@@ -93,9 +93,30 @@ def edit_branch(request,repository_id,branch_id):
             try:
                 branch.save()
             except:
-                obj_dict['err']='Updating branch name failed. Branch with that name already exists.'
+                obj_dict['error']='Updating branch name failed. Branch with that name already exists.'
                 return render(request,'branches_app/new_branch.html',obj_dict)
 
             return redirect('/repositories/repository/{}/branches'.format(str(repository_id)))
 
     return render(request,'branches_app/new_branch.html',obj_dict)
+
+
+def delete_branch(request,repository_id,branch_id):
+
+    try:
+        repository = Repository.objects.get(id=repository_id)
+    except:
+        return redirect('/repositories')
+
+    try:
+        branch = Branch.objects.get(id=branch_id)
+    except:
+        return redirect('repositories/repository/{}/branches'.format(str(repository_id)))
+
+    if branch.default:
+        branches = Branch.objects.filter(repository=repository)
+        obj_dict = {'branches':branches,'repository':repository,'error':'Unable to delete default branch {}'.format(branch.name)}
+        return render(request,'branches_app/main.html',obj_dict)
+
+    branch.delete()
+    return redirect('repositories/repository/{}/branches'.format(str(repository_id)))
