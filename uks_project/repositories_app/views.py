@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from repositories_app.models import Repository, RepositoryUser
 from repositories_app.serializers import RepositorySerializer
 from django.urls import reverse
-from repositories_app.forms import RepositoryForm
+from repositories_app.forms import RepositoryForm, RepositoryUserForm
 from branches_app.models import Branch
 from django.contrib.auth.decorators import login_required
 from users.models import AppUser
@@ -20,7 +20,7 @@ def repository(request, repository_id):
     repository = Repository.objects.get(id = repository_id)
     #serializer = RepositorySerializer(repository)
     app_user = AppUser.objects.get(user = request.user)
-    repository_user = RepositoryUser.objects.get(user = app_user)
+    repository_user = RepositoryUser.objects.get(user = app_user, repository = repository)
     if(repository_user.role == 'Owner'):
         is_owner = True
     else:
@@ -97,4 +97,30 @@ def delete_repository(request, repository_id):
 def delete_member(request, member_id, repository_id):
     RepositoryUser.objects.filter(id=member_id).delete()
     return HttpResponseRedirect(reverse('repositories_app:view_repository',args = [repository_id]))
+
+@login_required
+def add_member(request, repository_id):
+    repository = Repository.objects.get(id = repository_id)
+    serializer = RepositorySerializer(repository)
+    existing_members = serializer.data['members']
+    print(serializer)
+    print(existing_members)
+    form = RepositoryUserForm(my_arg = existing_members)
+
+    if request.method =='POST' :
+        form = RepositoryUserForm(request.POST, my_arg = existing_members)
+
+        if form.is_valid(): 
+            repository_user = RepositoryUser()
+            repository_user.user = form.cleaned_data['user']
+            repository_user.role = form.cleaned_data['role']
+            repository_user.repository = repository
+            repository_user.save()
+
+            repository.members.add(repository_user.user)
+            repository.save()
+
+            return HttpResponseRedirect(reverse('repositories_app:view_repository', args = [repository_id]))
             
+    dictionary = {'repository': repository, 'form': form}
+    return render(request, 'repositories_app/new_member.html', context=dictionary)

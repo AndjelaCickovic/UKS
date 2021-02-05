@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+{% extends 'repositories_app/repository.html' %}
+{% block add_block %}
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <a class="btn btn-primary" href="/repositories/repository/{{repository.id}}" role="button">Cancel</a>
+                </div>
+                <h3 class="card-title">
+                    New Member
+                </h3>
+            </div>
+            <div class="container">
+                <form method="POST">
+                    {{form.as_p}}
+                    {% csrf_token %}
+                    <input type="submit" class="btn btn-primary" value="Submit">
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

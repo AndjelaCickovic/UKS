@@ -24,6 +24,8 @@
 
 {% block show_block %}
 {{repository.description}}
+<div class="row">
+    <div class="col-md-5">
 <table>
     <tr>
         <th>Member</th>
@@ -39,6 +41,17 @@
     </tr>
     {% endfor %}
 </table>
+</div>
+<div class="col-md-7">
+    {% block add_block %}
+    <a class="btn btn-primary" href="/repositories/repository/{{repository.id}}/add-member" role="button">Add member</a>
+    {% endblock %} 
+</div>
+</div>
 {% endblock %}
+
+
+
+
 
 {% endblock %}
