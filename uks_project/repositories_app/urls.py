@@ -13,5 +13,6 @@ urlpatterns = [
     url(r'^add-repository', views.add_repository, name = 'add_repository'),
     path('edit-repository/<int:repository_id>', views.edit_repository, name = 'edit_repository'),
     path('delete-repository/<int:repository_id>/', views.delete_repository, name='delete_repository'),
+    path('repository/<int:repository_id>/delete-member/<int:member_id>/', views.delete_member, name='delete_member'),
     url(r'^$', views.main, name = 'view_repositories'),
 ]

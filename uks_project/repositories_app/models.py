@@ -7,6 +7,7 @@ from django.utils.translation import gettext_lazy as _
 
 class Role(models.TextChoices):
     OWNER = 'Owner', _('Owner')
+    COOWNER = 'Coowner', _('Coowner')
     COLABORATOR = 'Colaborator', _('Colaborator')
 
 class Repository(models.Model):

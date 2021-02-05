@@ -19,9 +19,13 @@ def main(request):
 def repository(request, repository_id):
     repository = Repository.objects.get(id = repository_id)
     #serializer = RepositorySerializer(repository)
-    app_user = AppUser()
-    app_user.user = request.user
-    dictionary = {'repository': repository }
+    app_user = AppUser.objects.get(user = request.user)
+    repository_user = RepositoryUser.objects.get(user = app_user)
+    if(repository_user.role == 'Owner'):
+        is_owner = True
+    else:
+        is_owner = False
+    dictionary = {'repository': repository, 'is_owner' : is_owner }
     return render(request, 'repositories_app/repository.html', context = dictionary)
 
 @login_required
@@ -88,4 +92,9 @@ def edit_repository(request, repository_id):
 def delete_repository(request, repository_id):
     Repository.objects.filter(id=repository_id).delete()
     return HttpResponseRedirect(reverse('repositories_app:view_repositories'))
+
+@login_required
+def delete_member(request, member_id, repository_id):
+    RepositoryUser.objects.filter(id=member_id).delete()
+    return HttpResponseRedirect(reverse('repositories_app:view_repository',args = [repository_id]))
             
