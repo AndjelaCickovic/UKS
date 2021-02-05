@@ -1,25 +1,39 @@
 <!DOCTYPE html>
 {% extends 'repositories_app/repository.html' %}
-    {% block body_block %}
-        <h1>Branches page</h1>
-        <div class="row">
-            <div class="col-md-3">
-                {% if branches %}
-            <ul>
+    {% block show_block %}
+        <h1>Branches</h1>
+        <br>
+        <a class="btn btn-success" style="float:right" href="/branches/new" role="button">Add new branch</a>
+        <br> 
+        {% if branches %}
+            <table class="table table-striped" style="margin-top: 30px; width:60% ;margin-left:20%">
+                <tr>
+                    <th>Name</th>
+                    <th>Parent branch</th>
+                    <th>More</th>
+                </tr>
                 {% for branch in branches %}
-                <li>
-                    <a href="/branches/branch/{{branch.id}}">{{branch.name}}</a>                    
-                </li>
+                    <tr>
+                        <td><a style="color:black" href="/branches/{{branch.id}}">{{branch.name}}</a></td>
+                        <td>{{ branch.parent_branch.name}}</td>
+                        <td>    
+                            <ul class="navbar-nav ml-auto">
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" href="/branches/{{branch.id}}">Commits</a>
+                                        <a class="dropdown-item" href="/branches/branch/edit/{{branch.id}}">Edit</a>
+                                        <a class="dropdown-item" href="/branches/branch/delete/{{branch.id}}">Delete</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
                 {% endfor %}
-            </ul>
-            {% else %}
-                There are no branches
-            {% endif %}
-            <a class="btn btn-success" href="/branches/branch/new" role="button">Add new branch</a>
-            </div>
-            <div class="col-md-9" style="padding: 3%;">
-                {% block branch_block %}
-                {% endblock %}
-            </div>
-        </div>
+            </table>
+
+        {% else %}
+            <h3>There are no branches</h3>
+        {% endif %}
+
     {% endblock %}
