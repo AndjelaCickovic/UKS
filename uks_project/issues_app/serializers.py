@@ -16,7 +16,7 @@ class ColumnSerializer(serializers.ModelSerializer):
 class MilestoneSerializer(serializers.ModelSerializer):
     class Meta:
         model = Milestone
-        fields = ('id', 'name')
+        fields = ('id', 'name', 'dueDate', 'description', 'status')
 
 class AppUserSerializer(serializers.ModelSerializer):
     class Meta:

@@ -27,10 +27,10 @@ class CustomMCF(forms.ModelChoiceField):
 
 class IssueForm(ModelForm):
     labels = CustomMMCF(queryset=Label.objects.all())
-    column = CustomMCF(queryset=Column.objects.all(), empty_label='None')
-    milestone = CustomMCF(queryset=Milestone.objects.all(), empty_label='None')
+    #column = CustomMCF(queryset=Column.objects.all(), empty_label='None')
+    #milestone = CustomMCF(queryset=Milestone.objects.all(), empty_label='None')
     assignees = CustomMMCF(queryset=AppUser.objects.all(), widget = forms.CheckboxSelectMultiple)
 
     class Meta:
         model = Issue
-        fields = ['name', 'comment', 'status', 'labels', 'column', 'milestone', 'assignees']
+        fields = ['name', 'comment', 'status', 'labels', 'assignees']

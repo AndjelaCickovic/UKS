@@ -23,6 +23,11 @@
 </nav>
 
 {% block show_block %}
+{{repository.description}}
+{% for member in repository.users.all %}
+{{member.user.user}}
+{{member.role}}
+{% endfor %}
 {% endblock %}
 
 {% endblock %}

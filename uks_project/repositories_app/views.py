@@ -12,20 +12,22 @@ from wiki_app.models import Wiki
 # Create your views here.
 def main(request):
     repositories = Repository.objects.all()
-    serializer = RepositorySerializer(repositories, many=True)
-    dictionary = {'repositories': serializer.data}
+    #serializer = RepositorySerializer(repositories, many=True)
+    dictionary = {'repositories': repositories}
     return render(request, 'repositories_app/repositories.html', context = dictionary)
 
 def repository(request, repository_id):
     repository = Repository.objects.get(id = repository_id)
-    serializer = RepositorySerializer(repository)
-    dictionary = {'repository': serializer.data}
+    #serializer = RepositorySerializer(repository)
+    app_user = AppUser()
+    app_user.user = request.user
+    dictionary = {'repository': repository }
     return render(request, 'repositories_app/repository.html', context = dictionary)
 
 @login_required
 def add_repository(request):
     repositories = Repository.objects.all()
-    serializer = RepositorySerializer(repositories, many=True)
+    #serializer = RepositorySerializer(repositories, many=True)
     form = RepositoryForm()
 
     if request.method =='POST' :
@@ -40,31 +42,25 @@ def add_repository(request):
             
             branch = Branch()
             branch.name = 'main'
-            #branch.parent_branch = null
+            #Kad se prosiri branch sa repository, ovde treba da se popuni to polje
             branch.save()
 
-            repository.branches.set([branch])
-            repository.save()
-
             repository_user = RepositoryUser()
-            repository_user.user = request.user
+            repository_user.user = AppUser.objects.get(user=request.user)
             repository_user.role = 'Owner'
+            repository_user.repository = repository
             repository_user.save()
 
-            repository.repository_users.set([repository_user])
+            repository.members.add(AppUser.objects.get(user=request.user))
             repository.save()
 
             wiki = Wiki()
-            wiki.title = repository.name + ' Wiki'
+            wiki.repository = repository
             wiki.save()
-
-            repository.wiki = wiki
-            repository.save()
-
 
             return HttpResponseRedirect(reverse('repositories_app:view_repositories'))
             
-    dictionary = {'repositories': serializer.data, 'form': form}
+    dictionary = {'repositories': repositories, 'form': form}
     return render(request, 'repositories_app/new_repository.html', context=dictionary)
 
 @login_required

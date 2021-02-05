@@ -5,7 +5,7 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-10">
-                    <a class="btn btn-primary" href="/issues/add-milestone" role="button">Add milestone</a>
+                    <a class="btn btn-primary" href="/repositories/repository/{{repository.id}}/issues/add-milestone" role="button">Add milestone</a>
                 </div>
             </div>
             <hr>
@@ -37,15 +37,15 @@
                                         <li class="nav-item dropdown">
                                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
                                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                                <a class="dropdown-item" href="/issues/change-status-milestone/{{milestone.id}}">
+                                                <a class="dropdown-item" href="/repositories/repository/{{repository.id}}/issues/change-status-milestone/{{milestone.id}}">
                                                     {% if milestone.status == 'Open' %}
                                                         Close
                                                     {% else %}
                                                         Reopen
                                                     {% endif %}
                                                 </a>
-                                                <a class="dropdown-item" href="/issues/edit-milestone/{{milestone.id}}">Edit</a>
-                                                <a class="dropdown-item" href="/issues/delete-milestone/{{milestone.id}}">Delete</a>
+                                                <a class="dropdown-item" href="/repositories/repository/{{repository.id}}/issues/edit-milestone/{{milestone.id}}">Edit</a>
+                                                <a class="dropdown-item" href="/repositories/repository/{{repository.id}}/issues/delete-milestone/{{milestone.id}}">Delete</a>
                                             </div>
                                         </li>
                                     </ul>
