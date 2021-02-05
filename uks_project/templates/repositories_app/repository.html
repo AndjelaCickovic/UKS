@@ -24,10 +24,34 @@
 
 {% block show_block %}
 {{repository.description}}
-{% for member in repository.users.all %}
-{{member.user.user}}
-{{member.role}}
-{% endfor %}
+<div class="row">
+    <div class="col-md-5">
+<table>
+    <tr>
+        <th>Member</th>
+        <th>Role</th>
+    </tr>
+    {% for member in repository.users.all %}
+    <tr>
+        <td>{{member.user.user}}</td>
+        <td>{{member.role}}</td>
+        {% if member.role != 'Owner' and is_owner %}
+        <td><a href="/repositories/repository/{{repository.id}}/delete-member/{{member.id}}">Delete</a></td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+</table>
+</div>
+<div class="col-md-7">
+    {% block add_block %}
+    <a class="btn btn-primary" href="/repositories/repository/{{repository.id}}/add-member" role="button">Add member</a>
+    {% endblock %} 
+</div>
+</div>
 {% endblock %}
+
+
+
+
 
 {% endblock %}
