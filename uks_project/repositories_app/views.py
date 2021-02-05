@@ -12,13 +12,11 @@ from wiki_app.models import Wiki
 # Create your views here.
 def main(request):
     repositories = Repository.objects.all()
-    #serializer = RepositorySerializer(repositories, many=True)
     dictionary = {'repositories': repositories}
     return render(request, 'repositories_app/repositories.html', context = dictionary)
 
 def repository(request, repository_id):
     repository = Repository.objects.get(id = repository_id)
-    #serializer = RepositorySerializer(repository)
     app_user = AppUser.objects.get(user = request.user)
     repository_user = RepositoryUser.objects.get(user = app_user, repository = repository)
     if(repository_user.role == 'Owner'):
@@ -31,7 +29,6 @@ def repository(request, repository_id):
 @login_required
 def add_repository(request):
     repositories = Repository.objects.all()
-    #serializer = RepositorySerializer(repositories, many=True)
     form = RepositoryForm()
 
     if request.method =='POST' :
@@ -69,8 +66,6 @@ def add_repository(request):
 
 @login_required
 def edit_repository(request, repository_id):
-    #repositories = Repository.objects.all()
-    #serializer = RepositorySerializer(repositories, many=True)
     repository = Repository.objects.get(id=repository_id)
     form = RepositoryForm(initial = {'name': repository.name, 'description': repository.description, 'is_public': repository.is_public})
 
@@ -103,8 +98,6 @@ def add_member(request, repository_id):
     repository = Repository.objects.get(id = repository_id)
     serializer = RepositorySerializer(repository)
     existing_members = serializer.data['members']
-    print(serializer)
-    print(existing_members)
     form = RepositoryUserForm(my_arg = existing_members)
 
     if request.method =='POST' :

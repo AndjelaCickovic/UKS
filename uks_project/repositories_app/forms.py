@@ -19,7 +19,6 @@ class RepositoryUserForm(ModelForm):
         fields = ['user', 'role']
     def __init__(self, *args, **kwargs):
         my_arg = kwargs.pop('my_arg')
-        print(my_arg)
         super(RepositoryUserForm, self).__init__(*args, **kwargs)
         users= CustomMCF(queryset=AppUser.objects.all().exclude(id__in=my_arg))
         self.fields['user'] = users
