@@ -2,41 +2,96 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from wiki_app.models import Wiki, Page
 from wiki_app.forms import PageForm
-from repositories_app.models import Repository
+from repositories_app.models import Repository, RepositoryUser
+from users.models import AppUser
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
+def get_role(request, repository):
+    if request.user.is_authenticated:
+        try:
+            app_user = AppUser.objects.get(user=request.user)
+            repository_user = RepositoryUser.objects.get(user=app_user, repository=repository)
+            return True
+        except:
+            return False
+    else:
+        return False
+
+    return role
+
 def main(request, repository_id):
-    repository = Repository.objects.get(id=repository_id)
+    
+    try:
+        repository = Repository.objects.get(id=repository_id)
+    except:
+        return redirect('/repositories')
+    
+    role = get_role(request, repository)
+
+    if repository.is_public == False and role == False:
+        return redirect('/repositories')
+
     pages = repository.wiki.all()[0].pages.all()
 
-    obj_dict = {'pages':pages, 'repository': repository}
+    obj_dict = {'pages':pages, 'repository': repository, 'role': role}
 
     return render(request,'wiki_app/no_page.html',obj_dict)
 
 def error(request, repository_id):
-    repository = Repository.objects.get(id=repository_id)
+    try:
+        repository = Repository.objects.get(id=repository_id)
+    except:
+        return redirect('/repositories')
+    
+    role = get_role(request, repository)
+
+    if repository.is_public == False and role == False:
+        return redirect('/repositories')
+
     pages = repository.wiki.all()[0].pages.all()
 
-    obj_dict = {'pages':pages, 'repository': repository}
+    obj_dict = {'pages':pages, 'repository': repository, 'role': role}
 
     return render(request,'wiki_app/error.html',obj_dict)
 
 def page(request,page_id, repository_id):
     try:
+        repository = Repository.objects.get(id=repository_id)
+    except:
+        return redirect('/repositories')
+    
+    role = get_role(request, repository)
+
+    if repository.is_public == False and role == False:
+        return redirect('/repositories')
+
+    pages = repository.wiki.all()[0].pages.all()
+
+    try:
         page = Page.objects.get(id=page_id)
     except:
         return redirect('/repositories/repository/' + str(repository_id) + '/wiki/error')
-    
-    repository = Repository.objects.get(id=repository_id)
-    pages = repository.wiki.all()[0].pages.all()
 
-    obj_dict = {'page':page, 'pages':pages, 'repository': repository}
+    obj_dict = {'page':page, 'pages':pages, 'repository': repository, 'role': role}
 
     return render(request,'wiki_app/page.html',obj_dict)
 
+@login_required
 def new_page(request, repository_id):
-    repository = Repository.objects.get(id=repository_id)
+    try:
+        repository = Repository.objects.get(id=repository_id)
+    except:
+        return redirect('/repositories/repository/' + str(repository_id) + '/wiki')
+    
+    role = get_role(request, repository)
+
+    if repository.is_public == False and role == False:
+        return redirect('/repositories') 
+    elif role == False:
+        return redirect('/repositories/repository/' + str(repository_id) + '/wiki')
+
     form = PageForm()
 
     if request.method =='POST' :
@@ -55,9 +110,22 @@ def new_page(request, repository_id):
     repository = Repository.objects.get(id=repository_id)
     pages = repository.wiki.all()[0].pages.all()
 
-    return render(request,'wiki_app/new_page.html',{'form':form, 'pages': pages, 'repository': repository})
+    return render(request,'wiki_app/new_page.html',{'form':form, 'pages': pages, 'repository': repository, 'role': role})
 
+@login_required
 def edit_page(request, page_id, repository_id):
+    try:
+        repository = Repository.objects.get(id=repository_id)
+    except:
+        return redirect('/repositories/repository/' + str(repository_id) + '/wiki')
+    
+    role = get_role(request, repository)
+
+    if repository.is_public == False and role == False:
+        return redirect('/repositories') 
+    elif role == False:
+        return redirect('/repositories/repository/' + str(repository_id) + '/wiki')
+
     try:
         page = Page.objects.get(id=page_id)
     except:
@@ -75,19 +143,30 @@ def edit_page(request, page_id, repository_id):
             page.save()
             return redirect('/repositories/repository/' + str(repository_id) + '/wiki/page/' + str(page.id))
 
-    repository = Repository.objects.get(id=repository_id)
     pages = repository.wiki.all()[0].pages.all()
 
-    return render(request,'wiki_app/new_page.html',{'form':form, 'pages': pages, 'repository': repository})
+    return render(request,'wiki_app/new_page.html',{'form':form, 'pages': pages, 'repository': repository, 'role': role})
 
+@login_required
 def delete_page(request, page_id, repository_id):
+    try:
+        repository = Repository.objects.get(id=repository_id)
+    except:
+        return redirect('/repositories/repository/' + str(repository_id) + '/wiki')
+    
+    role = get_role(request, repository)
+
+    if repository.is_public == False and role == False:
+        return redirect('/repositories') 
+    elif role == False:
+        return redirect('/repositories/repository/' + str(repository_id) + '/wiki')
+
     try:
         page = Page.objects.get(id=page_id)
     except:
-        repository = Repository.objects.get(id=repository_id)
         pages = repository.wiki.all()[0].pages.all()
 
-        return render(request, 'wiki_app/error.html' ,{'pages':pages, 'repository': repository})
+        return render(request, 'wiki_app/error.html' ,{'pages':pages, 'repository': repository, 'role': role})
 
     page.delete()
 
