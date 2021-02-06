@@ -1,16 +1,24 @@
 <!DOCTYPE html>
 {% extends 'repositories_app/repository.html' %}
     {% block show_block %}
+    <div class='row' style='margin-top:3%'>
+        <div class='col-md-7'>
+        <div class='row'>
+        <div class='col'>
         <h1>Branches</h1>
-        <br>
-        <a class="btn btn-success" style="float:right" href="/repositories/repository/{{repository.id}}/branches/new" role="button">Add new branch</a>
+        {% comment %} <br> {% endcomment %}
+        </div>
+        <div class='col'>
+        <a class="btn btn-success" style="float:right;margin-top:2%" href="/repositories/repository/{{repository.id}}/branches/new" role="button">Add new branch</a>
+        </div>
+        </div>
         <br> 
         {% if error %}
             <div class="alert alert-danger" style='margin-top:3%' role="alert">{{error}}</div>
         {% endif %}
 
         {% if branches %}
-            <table class="table table-striped" style="margin-top: 30px; width:60% ;margin-left:20%">
+            <table class="table table-striped" style="margin-top: 30px; ">
                 <tr>
                     <th>Name</th>
                     <th>Parent branch</th>
@@ -45,5 +53,13 @@
         {% else %}
             <h3>There are no branches</h3>
         {% endif %}
+
+    </div>
+    <div class='col-md-5'>
+        {% block column_block %}
+        {% endblock %}
+
+    </div>
+    </div>
 
     {% endblock %}

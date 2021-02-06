@@ -2,15 +2,18 @@
 {% extends 'myapp/base.html' %}
 {% load crispy_forms_tags %}
     {% block body_block %}
-        <div class="card" style="width:40%;margin-left:30%">
+        <div class="card" style="width:40%;margin-left:30%;margin-top:2%">
             <div class="card-body">
                 <div class="container">
                     <div class="page-header">
                         <h1 style="text-align:center">My profile</h1>      
                     </div>
                     <br/>
-                    {% if message%}
-                        <div class="alert alert-danger" role="alert">{{message}}</div>
+                    {% if success_message%}
+                        <div class="alert alert-success" role="alert">{{success_message}}</div>
+                    {% endif %}
+                    {% if error_message%}
+                        <div class="alert alert-danger" role="alert">{{error_message}}</div>
                     {% endif %}
                     <form method="POST">                     
                         {% csrf_token %}

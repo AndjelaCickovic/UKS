@@ -42,11 +42,15 @@ def new_branch(request,repository_id):
     except:
         return redirect('/repositories')
 
+    branches = Branch.objects.filter(repository=repository)
+
     form = BranchForm(repository_id)
 
     obj_dict = {
+        'title' : 'New branch',
         'form': form,
-        'repository':repository
+        'repository':repository,
+        'branches':branches
     }
 
 
@@ -59,7 +63,7 @@ def new_branch(request,repository_id):
             try:
                 branch.save()
             except:
-                obj_dict['err']='Adding branch failed. Branch with that name already exists.'
+                obj_dict['error_add']='Adding branch failed. Branch with that name already exists.'
                 return render(request,'branches_app/new_branch.html',obj_dict)
 
             return redirect('/repositories/repository/{}/branches'.format(str(repository_id)))
@@ -73,6 +77,8 @@ def edit_branch(request,repository_id,branch_id):
     except:
         return redirect('/repositories')
 
+    branches = Branch.objects.filter(repository=repository)
+
     try:
         branch = Branch.objects.get(id=branch_id)
     except:
@@ -81,8 +87,10 @@ def edit_branch(request,repository_id,branch_id):
     form = EditBranchForm(instance=branch)
 
     obj_dict = {
+        'title' : 'Edit branch',
         'form': form,
-        'repository':repository
+        'repository':repository,
+        'branches':branches
     }
 
     if request.method == 'POST':
@@ -99,7 +107,6 @@ def edit_branch(request,repository_id,branch_id):
             return redirect('/repositories/repository/{}/branches'.format(str(repository_id)))
 
     return render(request,'branches_app/new_branch.html',obj_dict)
-
 
 def delete_branch(request,repository_id,branch_id):
 
