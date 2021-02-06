@@ -2,8 +2,10 @@ from django.shortcuts import render,redirect
 from branches_app.models import Branch, Commit
 from branches_app.forms import BranchForm,EditBranchForm
 from repositories_app.models import Repository
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
+@login_required
 def main(request, repository_id):
 
     try:
@@ -16,6 +18,7 @@ def main(request, repository_id):
 
     return render(request,'branches_app/main.html',obj_dict)
 
+@login_required
 def branch(request, repository_id, branch_id):
    
     try:
@@ -35,6 +38,7 @@ def branch(request, repository_id, branch_id):
 
     return render(request,'branches_app/branch.html',obj_dict)
 
+@login_required
 def new_branch(request,repository_id):
 
     try:
@@ -70,6 +74,7 @@ def new_branch(request,repository_id):
 
     return render(request,'branches_app/new_branch.html',obj_dict)
 
+@login_required
 def edit_branch(request,repository_id,branch_id):
 
     try:
@@ -108,6 +113,7 @@ def edit_branch(request,repository_id,branch_id):
 
     return render(request,'branches_app/new_branch.html',obj_dict)
 
+@login_required
 def delete_branch(request,repository_id,branch_id):
 
     try:
