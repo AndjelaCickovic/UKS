@@ -15,7 +15,7 @@ def main(request, repository_id):
     try:
         repository = Repository.objects.get(id=repository_id)
     except:
-        return redirect('/projects')
+        return redirect('/home')
 
     objects_dict = { 'projects': projects, 'repository': repository}
     return render(request, 'projects_app/main.html', objects_dict)
@@ -25,7 +25,7 @@ def new_project(request, repository_id):
     try:
         repository = Repository.objects.get(id=repository_id)
     except:
-        return redirect('/projects')
+        return redirect('/home')
 
     if request.method =='POST' :
         form = ProjectForm(request.POST)
@@ -48,11 +48,11 @@ def project(request, project_id,repository_id):
     try:
         project = Project.objects.get(id=project_id)
     except:
-        return redirect('/projects')
+        return redirect('/home')
     try:
         repository = Repository.objects.get(id=repository_id)
     except:
-        return redirect('/projects')
+        return redirect('/home')
 
     objects_dict = {
         'repository': repository,
@@ -66,7 +66,7 @@ def edit_project(request, project_id,repository_id):
     try:
         project = Project.objects.get(id=project_id)
     except:
-        return redirect('/projects')
+        return redirect('/home')
 
     form = ProjectForm(instance=project)
 
@@ -88,7 +88,7 @@ def close_project(request,project_id, repository_id):
     try:
         project = Project.objects.get(id=project_id)
     except:
-        return redirect('/projects')
+        return redirect('/home')
     project.status = "Closed"
     project.save()
 
@@ -99,7 +99,7 @@ def reopen_project(request,project_id,repository_id):
     try:
         project = Project.objects.get(id=project_id)
     except:
-        return redirect('/projects')
+        return redirect('/home')
     project.status = "Open"
     project.save()
 
@@ -110,7 +110,7 @@ def delete_project(request,project_id,repository_id):
     try:
         project = Project.objects.get(id=project_id)
     except:
-        return redirect('/projects')
+        return redirect('/home')
     project.delete()
 
     return HttpResponseRedirect(reverse('repositories_app:projects_app:main', kwargs={'repository_id':repository_id}))
@@ -120,11 +120,11 @@ def new_column(request, repository_id, project_id):
     try:
         project = Project.objects.get(id=project_id)
     except:
-        return redirect('/projects')
+        return redirect('/home')
     try:
         repository = Repository.objects.get(id=repository_id)
     except:
-        return redirect('/projects')
+        return redirect('/home')
 
     form = ColumnForm()
 
@@ -154,12 +154,12 @@ def edit_column(request, repository_id, project_id, column_id):
     try:
         column = Column.objects.get(id=column_id)
     except:
-        return redirect('/projects/'+ str(project_id))
+        return redirect('/home')
 
     try:
         project = Project.objects.get(id=project_id)
     except:
-        return redirect('/projects/'+ str(project_id))
+        return redirect('/home')
 
 
     form = ColumnForm(instance=column)
@@ -187,7 +187,7 @@ def delete_column(request, repository_id, project_id, column_id):
     try:
         column = Column.objects.get(id=column_id)
     except:
-        return redirect('/projects/'+ str(project_id))
+        return redirect('/home')
     
     column.delete()
 
@@ -197,7 +197,7 @@ def remove_issue(request, repository_id, project_id, issue_id):
     try:
         issue = Issue.objects.get(id=issue_id)
     except:
-        return redirect('/projects/'+ str(project_id))
+        return redirect('/home')
     
     issue.column = None
     issue.save()
