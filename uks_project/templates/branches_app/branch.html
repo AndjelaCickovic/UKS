@@ -1,30 +1,21 @@
 <!DOCTYPE html>
-{% extends 'branches_app/main.html' %}
-    {% block branch_block %}
-        <div class="card">
-            <div class="card-body">
-                <div class="row">
-                    <h3 class="card-title">
-                        {{ branch.name }}
-                    </h3>
-                    <div class="text-right">
-                        <a class="btn btn-primary" href="/branches/branch/edit/{{branch.id}}" role="button">Edit</a>
-                        <a class="btn btn-danger" href="/branches/branch/delete/{{branch.id}}" role="button">Delete</a>
-                    </div>
+{% extends 'repositories_app/repository.html' %}
+    {% block show_block %}
+     <div class="card border-dark" style="margin-top:30px" >
+        <div class="card-header" >Branch name: {{ branch.name }}</div>
+        {% if commits %}
+            {% for commit in commits %}
+            <hr style="margin-botoom:0px;margin-top:0px">
+                <div class="card-body" style="margin-top:0px">
+                    <h5 class="card-title">{{commit.name}}</h5>
+                    {%if commit.description%}
+                        <p class="card-text" style="margin-top:1px">{{commit.description}}</p>
+                    {%endif%}
+                    <footer class="blockquote-footer">Name and surname <cite title="Source Title">authored on {{commit.date}}</cite></footer>
                 </div>
-                <h6>
-                    Based on <b>{{branch.parent_branch.name}}</b> branch
-                </h6>
-                <ul>
-                    {% for commit in commits %}
-                        <li>
-                            {{ commit.name }}
-                            {{ commit.description }}
-                            {{ commit.date }}
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
-        
+            {% endfor %}
+        {%else%}
+            <h7 style="margin-top:3%">There are no any commits on this branch.</h7>
+        {%endif%}
+    </div>         
     {% endblock %}

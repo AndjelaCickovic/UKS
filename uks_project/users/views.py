@@ -72,33 +72,40 @@ def edit_profile(request):
 
     form = EditUserForm(instance=request.user)
     user = request.user
-    message =''
+
+    obj_dict ={
+        'form':form
+    }
 
     if request.method == 'POST':
         
         form = EditUserForm(data=request.POST,instance=request.user)
-
+        obj_dict['form']=form
         if form.is_valid():
             
             old_password = form.cleaned_data['old_password']
-            
+            new_password = form.cleaned_data['password']
+
+
             if old_password:
-                print('Password entered')
-                if request.user.check_password(old_password):
-                    new_password = form.cleaned_data['password']
+                if request.user.check_password(old_password):                    
                     if new_password:
                         user = form.save(commit=False)
                         user.set_password(new_password)
                         user.save()
                         update_session_auth_hash(request, user)
-                        message = 'Data successfully updated'
+                        obj_dict['success_message'] = 'Data successfully updated'
                     else:
-                        message = 'Inavalid value for new password submitted'
+                        obj_dict['error_message'] = 'Invalid value for new password submitted'
                 else:
-                    message = 'Password update failed. Old password is not correct'
+                    obj_dict['error_message'] = 'Update failed. Old password is not correct'
             else:
-                user = form.save(commit=False)
-                user.save()
-                message = 'Data successfully updated'
+                if not new_password:
+                    user = form.save(commit=False)
+                    user.save()
+                    obj_dict['success_message'] = 'Data successfully updated'
+                else:
+                    obj_dict['error_message'] = 'Please submit value for old password'
 
-    return render(request,'users/edit_profile.html',{'form':form,'message':message})
+
+    return render(request,'users/edit_profile.html',obj_dict)
