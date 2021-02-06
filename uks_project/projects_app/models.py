@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from repositories_app.models import Repository
 
 class Status(models.TextChoices):
     OPEN = 'Open', _('Opened')
@@ -9,6 +10,7 @@ class Project(models.Model):
     name = models.CharField(max_length=264)
     description = models.TextField(max_length=264, blank=True)
     status = models.CharField(max_length=6, choices=Status.choices, default=Status.OPEN)
+    repository = models.ForeignKey(Repository, on_delete=models.CASCADE, related_name='projects',null=True)
 
 class Column(models.Model):
     name = models.CharField(max_length=264)
