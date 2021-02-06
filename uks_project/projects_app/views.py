@@ -12,8 +12,13 @@ import io
 # Create your views here.
 def main(request, repository_id):
     projects = Project.objects.all().order_by('id')
-    projects_dict = { 'projects': projects}
-    return render(request, 'projects_app/main.html', projects_dict)
+    try:
+        repository = Repository.objects.get(id=repository_id)
+    except:
+        return redirect('/projects')
+
+    objects_dict = { 'projects': projects, 'repository': repository}
+    return render(request, 'projects_app/main.html', objects_dict)
 
 def new_project(request, repository_id):
     form = ProjectForm()
@@ -39,7 +44,7 @@ def new_project(request, repository_id):
     return render(request,'projects_app/new_project.html',{'form': form})
 
 
-def project(request, project_id):
+def project(request, project_id,repository_id):
     try:
         project = Project.objects.get(id=project_id)
     except:
@@ -54,7 +59,7 @@ def project(request, project_id):
     return render(request,"projects_app/project.html",objects_dict)
 
 
-def edit_project(request, project_id):
+def edit_project(request, project_id,repository_id):
     try:
         project = Project.objects.get(id=project_id)
     except:
@@ -71,12 +76,12 @@ def edit_project(request, project_id):
 
             project.save()
 
-            return redirect('/projects')
+            return HttpResponseRedirect(reverse('repositories_app:projects_app:main', kwargs={'repository_id':repository_id}))
             
     return render(request,'projects_app/new_project.html',{'form': form})
 
 
-def close_project(request,project_id):
+def close_project(request,project_id, repository_id):
     try:
         project = Project.objects.get(id=project_id)
     except:
@@ -84,10 +89,10 @@ def close_project(request,project_id):
     project.status = "Closed"
     project.save()
 
-    return redirect('/projects')
+    return HttpResponseRedirect(reverse('repositories_app:projects_app:main', kwargs={'repository_id':repository_id}))
 
 
-def reopen_project(request,project_id):
+def reopen_project(request,project_id,repository_id):
     try:
         project = Project.objects.get(id=project_id)
     except:
@@ -95,17 +100,17 @@ def reopen_project(request,project_id):
     project.status = "Open"
     project.save()
 
-    return redirect('/projects')
+    return HttpResponseRedirect(reverse('repositories_app:projects_app:main', kwargs={'repository_id':repository_id}))
 
 
-def delete_project(request,project_id):
+def delete_project(request,project_id,repository_id):
     try:
         project = Project.objects.get(id=project_id)
     except:
         return redirect('/projects')
     project.delete()
 
-    return redirect('/projects')
+    return HttpResponseRedirect(reverse('repositories_app:projects_app:main', kwargs={'repository_id':repository_id}))
 
 
 def new_column(request, project_id):
