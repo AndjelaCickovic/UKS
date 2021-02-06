@@ -5,6 +5,8 @@ from issues_app.models import Issue
 from repositories_app.models import Repository
 from projects_app.forms import ProjectForm, ColumnForm
 from django.http import HttpResponseRedirect, HttpResponse
+from django.contrib.auth.decorators import login_required
+
 
 import sys
 import io
@@ -20,6 +22,7 @@ def main(request, repository_id):
     objects_dict = { 'projects': projects, 'repository': repository}
     return render(request, 'projects_app/main.html', objects_dict)
 
+@login_required
 def new_project(request, repository_id):
     form = ProjectForm()
     try:
@@ -61,7 +64,7 @@ def project(request, project_id,repository_id):
     }
     return render(request,"projects_app/project.html",objects_dict)
 
-
+@login_required
 def edit_project(request, project_id,repository_id):
     try:
         project = Project.objects.get(id=project_id)
@@ -83,7 +86,7 @@ def edit_project(request, project_id,repository_id):
             
     return render(request,'projects_app/new_project.html',{'form': form})
 
-
+@login_required
 def close_project(request,project_id, repository_id):
     try:
         project = Project.objects.get(id=project_id)
@@ -94,7 +97,7 @@ def close_project(request,project_id, repository_id):
 
     return HttpResponseRedirect(reverse('repositories_app:projects_app:main', kwargs={'repository_id':repository_id}))
 
-
+@login_required
 def reopen_project(request,project_id,repository_id):
     try:
         project = Project.objects.get(id=project_id)
@@ -105,7 +108,7 @@ def reopen_project(request,project_id,repository_id):
 
     return HttpResponseRedirect(reverse('repositories_app:projects_app:main', kwargs={'repository_id':repository_id}))
 
-
+@login_required
 def delete_project(request,project_id,repository_id):
     try:
         project = Project.objects.get(id=project_id)
@@ -115,7 +118,7 @@ def delete_project(request,project_id,repository_id):
 
     return HttpResponseRedirect(reverse('repositories_app:projects_app:main', kwargs={'repository_id':repository_id}))
 
-
+@login_required
 def new_column(request, repository_id, project_id):
     try:
         project = Project.objects.get(id=project_id)
@@ -149,7 +152,7 @@ def new_column(request, repository_id, project_id):
     
     return render(request,'projects_app/new_column.html',objects_dict)
 
-
+@login_required
 def edit_column(request, repository_id, project_id, column_id):
     try:
         column = Column.objects.get(id=column_id)
@@ -182,7 +185,7 @@ def edit_column(request, repository_id, project_id, column_id):
     
     return render(request,'projects_app/new_column.html',objects_dict)
 
-
+@login_required
 def delete_column(request, repository_id, project_id, column_id):
     try:
         column = Column.objects.get(id=column_id)
@@ -193,6 +196,7 @@ def delete_column(request, repository_id, project_id, column_id):
 
     return HttpResponseRedirect(reverse('repositories_app:projects_app:project', kwargs={'project_id': project_id,'repository_id':repository_id}))
 
+@login_required
 def remove_issue(request, repository_id, project_id, issue_id):
     try:
         issue = Issue.objects.get(id=issue_id)
