@@ -19,7 +19,7 @@ def main(request, repository_id):
     return render(request,'branches_app/main.html',obj_dict)
 
 @login_required
-def branch(request, repository_id, branch_id):
+def commits(request, repository_id, branch_id):
    
     try:
         repository = Repository.objects.get(id=repository_id)
@@ -36,7 +36,7 @@ def branch(request, repository_id, branch_id):
         'repository':repository
     }
 
-    return render(request,'branches_app/branch.html',obj_dict)
+    return render(request,'branches_app/commits.html',obj_dict)
 
 @login_required
 def new_branch(request,repository_id):
