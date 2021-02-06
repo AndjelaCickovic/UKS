@@ -58,7 +58,6 @@ def project(request, project_id,repository_id):
         'repository': repository,
         'project':project, 
         'columns': project.columns.all(),
-        'issues': Issue.objects.all()
     }
     return render(request,"projects_app/project.html",objects_dict)
 
@@ -145,7 +144,6 @@ def new_column(request, repository_id, project_id):
         'repository': repository,
         'project':project, 
         'columns': project.columns.all(),
-        'issues': Issue.objects.all(),
         'form': form
     }
     
