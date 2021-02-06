@@ -49,9 +49,13 @@ def project(request, project_id,repository_id):
         project = Project.objects.get(id=project_id)
     except:
         return redirect('/projects')
-    
+    try:
+        repository = Repository.objects.get(id=repository_id)
+    except:
+        return redirect('/projects')
 
     objects_dict = {
+        'repository': repository,
         'project':project, 
         'columns': project.columns.all(),
         'issues': Issue.objects.all()
@@ -113,9 +117,13 @@ def delete_project(request,project_id,repository_id):
     return HttpResponseRedirect(reverse('repositories_app:projects_app:main', kwargs={'repository_id':repository_id}))
 
 
-def new_column(request, project_id):
+def new_column(request, repository_id, project_id):
     try:
         project = Project.objects.get(id=project_id)
+    except:
+        return redirect('/projects')
+    try:
+        repository = Repository.objects.get(id=repository_id)
     except:
         return redirect('/projects')
 
@@ -131,18 +139,20 @@ def new_column(request, project_id):
 
             column.save()
 
-            return redirect('/projects/'+ str(project_id))
+            return HttpResponseRedirect(reverse('repositories_app:projects_app:project', kwargs={'project_id': project_id,'repository_id':repository_id}))
 
     objects_dict = {
+        'repository': repository,
         'project':project, 
         'columns': project.columns.all(),
+        'issues': Issue.objects.all(),
         'form': form
     }
     
     return render(request,'projects_app/new_column.html',objects_dict)
 
 
-def edit_column(request, project_id, column_id):
+def edit_column(request, repository_id, project_id, column_id):
     try:
         column = Column.objects.get(id=column_id)
     except:
