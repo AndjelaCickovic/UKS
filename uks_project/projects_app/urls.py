@@ -2,6 +2,9 @@ from django.conf.urls import url
 from projects_app import views
 from django.urls import path
 
+app_name='projects_app'
+
+
 urlpatterns = [
     url(r'^$', views.main, name='main'),
     path('<int:project_id>/',views.project),

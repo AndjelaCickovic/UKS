@@ -1,8 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse
 from projects_app.models import Project, Column
 from issues_app.models import Issue
+from repositories_app.models import Repository
 from projects_app.forms import ProjectForm, ColumnForm
+from django.http import HttpResponseRedirect, HttpResponse
+
 import sys
 import io
 
@@ -12,8 +15,12 @@ def main(request, repository_id):
     projects_dict = { 'projects': projects}
     return render(request, 'projects_app/main.html', projects_dict)
 
-def new_project(request):
+def new_project(request, repository_id):
     form = ProjectForm()
+    try:
+        repository = Repository.objects.get(id=repository_id)
+    except:
+        return redirect('/projects')
 
     if request.method =='POST' :
         form = ProjectForm(request.POST)
@@ -22,11 +29,12 @@ def new_project(request):
             project = Project()
             project.name = form.cleaned_data['name']
             project.description = form.cleaned_data['description']
+            project.repository = repository
             project.status = 'Open'
 
             project.save()
 
-            return redirect('/projects')
+            return HttpResponseRedirect(reverse('repositories_app:projects_app:main', kwargs={'repository_id':repository_id}))
     
     return render(request,'projects_app/new_project.html',{'form': form})
 
