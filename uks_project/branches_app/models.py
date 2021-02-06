@@ -13,10 +13,10 @@ class Commit(models.Model):
 
 class Branch(models.Model):
 
-    name = models.CharField(max_length=264,null=True,blank=True)
-    parent_branch = models.ForeignKey('self',null=True,on_delete=models.CASCADE)
+    name = models.CharField(max_length=264)
+    parent_branch = models.ForeignKey('self',null=True,on_delete=models.SET_NULL)
     default = models.BooleanField(default=False)
-    repository = models.ForeignKey(Repository,on_delete=models.CASCADE,blank=True,null=True,default=None)
+    repository = models.ForeignKey(Repository,on_delete=models.CASCADE)
     commits = models.ManyToManyField(Commit,related_name='commits',blank=True, default=None)
 
     class Meta:
