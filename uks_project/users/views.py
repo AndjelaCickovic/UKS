@@ -52,7 +52,7 @@ def user_login(request):
         if user:
             if user.is_active:
                 login(request,user)
-                return HttpResponseRedirect(reverse('index'))
+                return redirect('/repositories')
             else:
                 return HttpResponse("Account not active")
         else:
