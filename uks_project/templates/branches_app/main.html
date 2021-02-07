@@ -3,15 +3,14 @@
     {% block show_block %}
     <div class='row' style='margin-top:3%'>
         <div class='col-md-7'>
-        <div class='row'>
-        <div class='col'>
-        <h1>Branches</h1>
-        {% comment %} <br> {% endcomment %}
-        </div>
-        <div class='col'>
-        <a class="btn btn-success" style="float:right;margin-top:2%" href="/repositories/repository/{{repository.id}}/branches/new" role="button">Add new branch</a>
-        </div>
-        </div>
+            <div class='row'>
+                <div class='col'>
+                    <h1>Branches</h1>
+                </div>
+                <div class='col'>
+                    <a class="btn btn-success" style="float:right;margin-top:2%" href="/repositories/repository/{{repository.id}}/branches/new" role="button">Add new branch</a>
+                </div>
+            </div>
         <br> 
         {% if error %}
             <div class="alert alert-danger" style='margin-top:3%' role="alert">{{error}}</div>
@@ -27,7 +26,7 @@
                 </tr>
                 {% for branch in branches %}
                     <tr>
-                        <td><a style="color:black" href="/repositories/repository/{{repository.id}}/branches/{{branch.id}}">{{branch.name}}</a></td>
+                        <td><a style="color:black" href="/repositories/repository/{{repository.id}}/branches/{{branch.id}}/commits">{{branch.name}}</a></td>
                         <td>{{ branch.parent_branch.name}}</td>
                         {% if branch.default  %}
                             <td>default</td>
@@ -39,7 +38,7 @@
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
                                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <a class="dropdown-item" href="/repositories/repository/{{repository.id}}/branches/{{branch.id}}">Commits</a>
+                                        <a class="dropdown-item" href="/repositories/repository/{{repository.id}}/branches/{{branch.id}}/commits">Commits</a>
                                         <a class="dropdown-item" href="/repositories/repository/{{repository.id}}/branches/edit/{{branch.id}}">Edit</a>
                                         <a class="dropdown-item" href="/repositories/repository/{{repository.id}}/branches/delete/{{branch.id}}">Delete</a>
                                     </div>

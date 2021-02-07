@@ -1,8 +1,9 @@
 from django.shortcuts import render,redirect
 from branches_app.models import Branch, Commit
-from branches_app.forms import BranchForm,EditBranchForm
+from branches_app.forms import BranchForm,EditBranchForm,CommitForm
 from repositories_app.models import Repository
 from django.contrib.auth.decorators import login_required
+from users.models import AppUser 
 
 # Create your views here.
 @login_required
@@ -17,26 +18,6 @@ def main(request, repository_id):
     obj_dict = {'branches':branches,'repository':repository}
 
     return render(request,'branches_app/main.html',obj_dict)
-
-@login_required
-def branch(request, repository_id, branch_id):
-   
-    try:
-        repository = Repository.objects.get(id=repository_id)
-    except:
-        return redirect('/repositories')
-
-    try:
-        branch = Branch.objects.get(id=branch_id)
-    except:
-        return redirect('/repositories/repository/{}/branches'.format(str(repository_id)))
-
-    obj_dict = {
-        'branch': branch,
-        'repository':repository
-    }
-
-    return render(request,'branches_app/branch.html',obj_dict)
 
 @login_required
 def new_branch(request,repository_id):
@@ -64,6 +45,7 @@ def new_branch(request,repository_id):
         if form_data.is_valid():
             branch = Branch(**form_data.cleaned_data)
             branch.repository = repository
+
             try:
                 branch.save()
             except:
@@ -116,6 +98,49 @@ def edit_branch(request,repository_id,branch_id):
 @login_required
 def delete_branch(request,repository_id,branch_id):
 
+
+    try:
+        repository = Repository.objects.get(id=repository_id)
+    except:
+        return redirect('/repositories')
+
+    try:
+        branch = Branch.objects.get(id=branch_id)
+    except:
+        return redirect('/repositories/repository/{}/branches'.format(str(repository_id)))
+
+    if branch.default:
+        branches = Branch.objects.filter(repository=repository)
+        obj_dict = {'branches':branches,'repository':repository,'error':'Unable to delete default branch {}'.format(branch.name)}
+        return render(request,'branches_app/main.html',obj_dict)
+
+    branch.delete()
+    return redirect('/repositories/repository/{}/branches'.format(str(repository_id)))
+
+@login_required
+def commits(request, repository_id, branch_id):
+   
+    try:
+        repository = Repository.objects.get(id=repository_id)
+    except:
+        return redirect('/repositories')
+
+    try:
+        branch = Branch.objects.get(id=branch_id)
+    except:
+        return redirect('/repositories/repository/{}/branches'.format(str(repository_id)))
+
+
+    obj_dict = {
+        'branch': branch,
+        'repository':repository
+    }
+
+    return render(request,'branches_app/commits.html',obj_dict)
+
+@login_required
+def new_commit(request,repository_id,branch_id):
+
     try:
         repository = Repository.objects.get(id=repository_id)
     except:
@@ -126,10 +151,38 @@ def delete_branch(request,repository_id,branch_id):
     except:
         return redirect('repositories/repository/{}/branches'.format(str(repository_id)))
 
-    if branch.default:
-        branches = Branch.objects.filter(repository=repository)
-        obj_dict = {'branches':branches,'repository':repository,'error':'Unable to delete default branch {}'.format(branch.name)}
-        return render(request,'branches_app/main.html',obj_dict)
+    form = CommitForm()
 
-    branch.delete()
-    return redirect('repositories/repository/{}/branches'.format(str(repository_id)))
+    obj_dict = {
+        'title' : 'New commit',
+        'form': form,
+        'repository':repository,
+        'branch':branch
+    }
+
+
+    if request.method == 'POST':
+        form_data = CommitForm(request.POST)
+
+        if form_data.is_valid():
+            commit = Commit(**form_data.cleaned_data)
+            commit.user = AppUser.objects.get(user=request.user)
+            print(commit.user)
+            try:
+                commit.save()
+            except:
+                obj_dict['error_add']='Adding commit failed.'
+                return render(request,'branches_app/new_commit.html',obj_dict)
+
+            branch.commits.add(commit)
+
+            try:
+                branch.save()
+            except:
+                obj_dict['error_add']='Adding commit to branch {} failed.'.format(branch.name)
+                return render(request,'branches_app/new_commit.html',obj_dict)
+
+            return redirect('/repositories/repository/{}/branches/{}/commits'.format(str(repository_id),str(branch_id)))
+
+    print(form)
+    return render(request,'branches_app/new_commit.html',obj_dict)
