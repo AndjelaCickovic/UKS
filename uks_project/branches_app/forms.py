@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from branches_app.models import Branch
+from branches_app.models import Branch,Commit
 from repositories_app.models import Repository
 
 
@@ -22,3 +22,10 @@ class EditBranchForm(ModelForm):
     class Meta:
         model=Branch
         fields=['name']
+
+
+class CommitForm(ModelForm):
+
+    class Meta:
+        model=Commit
+        fields=['name','description']

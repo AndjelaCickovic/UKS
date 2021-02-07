@@ -130,7 +130,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'CET'
 
 USE_I18N = True
 
@@ -149,6 +149,6 @@ STATICFILES_DIRS=[STATIC_DIR,]
 MEDIA_ROOT=MEDIA_DIR
 MEDIA_URL='/media/'
 
-LOGIN_URL = '/users/user_login/'
+LOGIN_URL = '/users/login'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

@@ -1,12 +1,13 @@
 from django.db import models
 from django.contrib import admin
 from repositories_app.models import Repository
-
+from users.models import AppUser
 
 class Commit(models.Model):
     name = models.CharField(max_length=264,default=None)
-    description = models.TextField(default=None)
-    date = models.DateTimeField(default=None)
+    description = models.TextField(default=None,blank=True,null=True)
+    date = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(AppUser,on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
