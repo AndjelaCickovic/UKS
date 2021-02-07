@@ -7,10 +7,12 @@
                     <h3 class="card-title">
                         {{ page.title }}
                     </h3>
-                    <div class="text-right">
-                        <a class="btn btn-primary" href="/repositories/repository/{{repository.id}}/wiki/page/{{page.id}}/edit" role="button">Edit</a>
-                        <a class="btn btn-danger" href="/repositories/repository/{{repository.id}}/wiki/page/{{page.id}}/delete" role="button">Delete</a>
-                    </div>
+                    {% if role %}
+                        <div class="text-right">
+                            <a class="btn btn-primary" href="/repositories/repository/{{repository.id}}/wiki/page/{{page.id}}/edit" role="button">Edit</a>
+                            <a class="btn btn-danger" href="/repositories/repository/{{repository.id}}/wiki/page/{{page.id}}/delete" role="button">Delete</a>
+                        </div>
+                    {% endif %}
                 </div>
                 <p>{{ page.content }}</p>    
                 <br/>
