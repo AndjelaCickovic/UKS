@@ -44,7 +44,7 @@ def new_project(request, repository_id):
 
             return HttpResponseRedirect(reverse('repositories_app:projects_app:main', kwargs={'repository_id':repository_id}))
     
-    return render(request,'projects_app/new_project.html',{'form': form})
+    return render(request,'projects_app/new_project.html',{'repository': repository,'form': form})
 
 
 def project(request, project_id,repository_id):
@@ -70,7 +70,11 @@ def edit_project(request, project_id,repository_id):
         project = Project.objects.get(id=project_id)
     except:
         return redirect('/home')
-
+    try:
+        repository = Repository.objects.get(id=repository_id)
+    except:
+        return redirect('/home')
+        
     form = ProjectForm(instance=project)
 
     if request.method =='POST' :
@@ -84,7 +88,7 @@ def edit_project(request, project_id,repository_id):
 
             return HttpResponseRedirect(reverse('repositories_app:projects_app:main', kwargs={'repository_id':repository_id}))
             
-    return render(request,'projects_app/new_project.html',{'form': form})
+    return render(request,'projects_app/new_project.html',{'repository': repository,'form': form})
 
 @login_required
 def close_project(request,project_id, repository_id):
