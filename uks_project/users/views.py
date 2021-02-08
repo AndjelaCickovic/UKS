@@ -54,10 +54,12 @@ def user_login(request):
                 login(request,user)
                 return redirect('/repositories')
             else:
-                return HttpResponse("Account not active")
+               # return HttpResponse("Account not active")
+                return render(request,'users/login.html',{'err':'Account not active!'})
+
         else:
-            print("Login failed")
-            return HttpResponse("Invalid login details supplied!")
+            #return HttpResponse("Invalid login details supplied!")
+            return render(request,'users/login.html',{'error':'Invalid login details supplied!'})
     else:
         return render(request,'users/login.html',{})
 

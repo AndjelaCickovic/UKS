@@ -8,7 +8,9 @@
                     <h1>Branches</h1>
                 </div>
                 <div class='col'>
-                    <a class="btn btn-success" style="float:right;margin-top:2%" href="/repositories/repository/{{repository.id}}/branches/new" role="button">Add new branch</a>
+                    {% if can_edit%}
+                        <a class="btn btn-success" style="float:right;margin-top:2%" href="/repositories/repository/{{repository.id}}/branches/new" role="button">Add new branch</a>
+                    {%endif%}
                 </div>
             </div>
         <br> 
@@ -39,8 +41,10 @@
                                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
                                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                         <a class="dropdown-item" href="/repositories/repository/{{repository.id}}/branches/{{branch.id}}/commits">Commits</a>
-                                        <a class="dropdown-item" href="/repositories/repository/{{repository.id}}/branches/edit/{{branch.id}}">Edit</a>
-                                        <a class="dropdown-item" href="/repositories/repository/{{repository.id}}/branches/delete/{{branch.id}}">Delete</a>
+                                        {% if  can_edit%}
+                                            <a class="dropdown-item" href="/repositories/repository/{{repository.id}}/branches/edit/{{branch.id}}">Edit</a>
+                                            <a class="dropdown-item" href="/repositories/repository/{{repository.id}}/branches/delete/{{branch.id}}">Delete</a>
+                                        {% endif %}
                                     </div>
                                 </li>
                             </ul>
