@@ -12,6 +12,7 @@ urlpatterns = [
     path('<int:project_id>/remove_issue/<int:issue_id>',views.remove_issue),
     path('<int:project_id>/edit_column/<int:column_id>',views.edit_column),
     path('<int:project_id>/new_column',views.new_column),
+    path('<int:project_id>/new_issue',views.new_issue),
     path('new/', views.new_project),
     path('close/<int:project_id>/',views.close_project),
     path('reopen/<int:project_id>/',views.reopen_project),
