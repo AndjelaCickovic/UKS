@@ -8,6 +8,10 @@
         <h1 style="margin-left:37%">Log in</h1>      
     </div>
     <br/>
+    {% if error %}
+        <div class="alert alert-danger" style="margin-left:20%;margin-right:30%;text-align:center" role="alert">{{error}}</div>
+        <br/>
+    {% endif %}
     <form action="{% url 'users:user_login' %}" method="post">
         {% csrf_token %}
         <div style="margin-left:30%">
