@@ -163,12 +163,14 @@ def edit_column(request, repository_id, project_id, column_id):
         column = Column.objects.get(id=column_id)
     except:
         return redirect('/home')
-
     try:
         project = Project.objects.get(id=project_id)
     except:
         return redirect('/home')
-
+    try:
+        repository = Repository.objects.get(id=repository_id)
+    except:
+        return redirect('/home') 
 
     form = ColumnForm(instance=column)
 
@@ -183,6 +185,7 @@ def edit_column(request, repository_id, project_id, column_id):
             return HttpResponseRedirect(reverse('repositories_app:projects_app:project', kwargs={'project_id': project_id,'repository_id':repository_id}))
 
     objects_dict = {
+        'repository': repository,
         'project':project, 
         'columns': project.columns.all(),
         'form': form
@@ -247,6 +250,7 @@ def edit_issue(request, repository_id, project_id, issue_id):
             return HttpResponseRedirect(reverse('repositories_app:projects_app:project', kwargs={'project_id': project_id,'repository_id':repository_id}))
             
     objects_dict = {
+        'repository': repository,
         'project':project, 
         'columns': project.columns.all(),
         'form': form
@@ -270,8 +274,8 @@ def change_column_issue(request, repository_id, project_id, issue_id):
         return redirect('/home')    
 
     columns = project.columns.all()
-    form = IssueColumnForm(instance=issue)
-    form.fields['columns'] = CustomMCF(queryset=columns)
+    form = IssueColumnForm(instance=issue,initial={'columns':issue.column.id})
+    form.fields['columns'] = CustomMCF(queryset=columns,empty_label=None)
     if request.method =='POST' :
         form = IssueColumnForm(request.POST)
 
@@ -282,6 +286,7 @@ def change_column_issue(request, repository_id, project_id, issue_id):
             return HttpResponseRedirect(reverse('repositories_app:projects_app:project', kwargs={'project_id': project_id,'repository_id':repository_id}))
             
     objects_dict = {
+        'repository' : repository,
         'project':project, 
         'columns': project.columns.all(),
         'form': form
@@ -337,6 +342,7 @@ def new_issue(request, repository_id, project_id, column_id):
             return HttpResponseRedirect(reverse('repositories_app:projects_app:project', kwargs={'project_id': project_id,'repository_id':repository_id}))
             
     objects_dict = {
+        'repository': repository,
         'project':project, 
         'columns': project.columns.all(),
         'form': form

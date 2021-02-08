@@ -18,7 +18,6 @@ class CustomMCF(forms.ModelChoiceField):
         return '%s' % field.name
 
 class IssueColumnForm(ModelForm):
-    # columns = CustomMCF(queryset=self.columns)
     columns = CustomMCF(queryset = Column.objects.all())
 
     class Meta:

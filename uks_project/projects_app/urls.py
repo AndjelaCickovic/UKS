@@ -10,7 +10,7 @@ urlpatterns = [
     path('<int:project_id>/',views.project, name='project'),
     path('<int:project_id>/delete_column/<int:column_id>',views.delete_column),
     path('<int:project_id>/edit_column/<int:column_id>',views.edit_column),
-    path('<int:project_id>/new_column',views.new_column),
+    path('<int:project_id>/new_column/',views.new_column),
     path('<int:project_id>/<int:column_id>/new_issue',views.new_issue),
     path('<int:project_id>/edit_issue/<int:issue_id>',views.edit_issue),
     path('<int:project_id>/change_column_issue/<int:issue_id>',views.change_column_issue),
