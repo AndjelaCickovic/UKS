@@ -4,7 +4,7 @@ from projects_app.models import Project, Column
 from issues_app.models import Issue
 from issues_app.forms import IssueForm
 from repositories_app.models import Repository
-from projects_app.forms import ProjectForm, ColumnForm
+from projects_app.forms import ProjectForm, ColumnForm, IssueColumnForm, CustomMCF
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 
@@ -242,6 +242,41 @@ def edit_issue(request, repository_id, project_id, issue_id):
             issue.labels.set(form.cleaned_data['labels'])
             issue.assignees.set(form.cleaned_data['assignees'])
             issue.repository = repository
+            issue.save()
+            
+            return HttpResponseRedirect(reverse('repositories_app:projects_app:project', kwargs={'project_id': project_id,'repository_id':repository_id}))
+            
+    objects_dict = {
+        'project':project, 
+        'columns': project.columns.all(),
+        'form': form
+    }
+    return render(request, 'projects_app/new_issue.html', objects_dict)
+
+
+@login_required
+def change_column_issue(request, repository_id, project_id, issue_id):
+    try:
+        issue = Issue.objects.get(id=issue_id)
+    except:
+        return redirect('/home')
+    try:
+        project = Project.objects.get(id=project_id)
+    except:
+        return redirect('/home')
+    try:
+        repository = Repository.objects.get(id=repository_id)
+    except:
+        return redirect('/home')    
+
+    columns = project.columns.all()
+    form = IssueColumnForm(instance=issue)
+    form.fields['columns'] = CustomMCF(queryset=columns)
+    if request.method =='POST' :
+        form = IssueColumnForm(request.POST)
+
+        if form.is_valid(): 
+            issue.column = form.cleaned_data['columns']
             issue.save()
             
             return HttpResponseRedirect(reverse('repositories_app:projects_app:project', kwargs={'project_id': project_id,'repository_id':repository_id}))

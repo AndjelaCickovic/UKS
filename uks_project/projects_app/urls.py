@@ -13,6 +13,7 @@ urlpatterns = [
     path('<int:project_id>/new_column',views.new_column),
     path('<int:project_id>/<int:column_id>/new_issue',views.new_issue),
     path('<int:project_id>/edit_issue/<int:issue_id>',views.edit_issue),
+    path('<int:project_id>/change_column_issue/<int:issue_id>',views.change_column_issue),
     path('<int:project_id>/delete_issue/<int:issue_id>',views.delete_issue),
     path('<int:project_id>/remove_issue/<int:issue_id>',views.remove_issue),
     path('new/', views.new_project),
