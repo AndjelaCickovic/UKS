@@ -12,7 +12,9 @@
             {{ issue.status }}
         </div>
         <div class="col-md-2">
-            <a class="btn btn-primary" href="/repositories/repository/{{repository.id}}/issues/edit/{{issue.id}}">Edit</a>
+            {% if in_repo %}
+                <a class="btn btn-primary" href="/repositories/repository/{{repository.id}}/issues/edit/{{issue.id}}">Edit</a>
+            {% endif %}
         </div>
     </div>
     <div class="row">

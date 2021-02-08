@@ -6,7 +6,6 @@ from django.contrib.auth.decorators import login_required
 from users.models import AppUser 
 
 # Create your views here.
-@login_required
 def main(request, repository_id):
 
     try:
