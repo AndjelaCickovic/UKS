@@ -255,6 +255,18 @@ def edit_issue(request, repository_id, project_id, issue_id):
 
 
 @login_required
+def delete_issue(request, repository_id, project_id, issue_id):
+    try:
+        issue = Issue.objects.get(id=issue_id)
+    except:
+        return redirect('/home')
+    
+    issue.delete()
+            
+    return HttpResponseRedirect(reverse('repositories_app:projects_app:project', kwargs={'project_id': project_id,'repository_id':repository_id}))
+
+
+@login_required
 def new_issue(request, repository_id, project_id, column_id):
     try:
         project = Project.objects.get(id=project_id)
