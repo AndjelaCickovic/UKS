@@ -214,13 +214,59 @@ def remove_issue(request, repository_id, project_id, issue_id):
     return HttpResponseRedirect(reverse('repositories_app:projects_app:project', kwargs={'project_id': project_id,'repository_id':repository_id}))
 
 @login_required
-def new_issue(request, repository_id, project_id):
+def edit_issue(request, repository_id, project_id, issue_id):
+    try:
+        issue = Issue.objects.get(id=issue_id)
+    except:
+        return redirect('/home')
     try:
         project = Project.objects.get(id=project_id)
     except:
         return redirect('/home')
     try:
         repository = Repository.objects.get(id=repository_id)
+    except:
+        return redirect('/home')    
+
+    form = IssueForm(instance=issue)
+
+    if request.method =='POST' :
+        form = IssueForm(request.POST)
+
+        if form.is_valid(): 
+            issue.name = form.cleaned_data['name']
+            issue.comment = form.cleaned_data['comment']
+            issue.status = form.cleaned_data['status']
+            issue.save()
+            # issue.column = column
+            issue.labels.set(form.cleaned_data['labels'])
+            issue.assignees.set(form.cleaned_data['assignees'])
+            issue.repository = repository
+            issue.save()
+            
+            return HttpResponseRedirect(reverse('repositories_app:projects_app:project', kwargs={'project_id': project_id,'repository_id':repository_id}))
+            
+    objects_dict = {
+        'project':project, 
+        'columns': project.columns.all(),
+        'form': form
+    }
+    return render(request, 'projects_app/new_issue.html', objects_dict)
+
+
+@login_required
+def new_issue(request, repository_id, project_id, column_id):
+    try:
+        project = Project.objects.get(id=project_id)
+    except:
+        return redirect('/home')
+    try:
+        repository = Repository.objects.get(id=repository_id)
+    except:
+        return redirect('/home')
+
+    try:
+        column = Column.objects.get(id=column_id)
     except:
         return redirect('/home')
 
@@ -235,6 +281,7 @@ def new_issue(request, repository_id, project_id):
             issue.comment = form.cleaned_data['comment']
             issue.status = form.cleaned_data['status']
             issue.save()
+            issue.column = column
             issue.labels.set(form.cleaned_data['labels'])
             issue.assignees.set(form.cleaned_data['assignees'])
             issue.repository = repository

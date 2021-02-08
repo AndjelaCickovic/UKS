@@ -34,8 +34,8 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="#">Edit</a>
-                                <a class="dropdown-item" href="#">Delete</a>
+                                <a class="dropdown-item" href="edit_issue/{{issue.id}}">Edit</a>
+                                <a class="dropdown-item" href="delete_issue/{{issue.id}}">Delete</a>
                                 <a class="dropdown-item" href="remove_issue/{{issue.id}}">Remove from project</a>
                             </div>
                         </li>
@@ -44,7 +44,7 @@
             </div>
         {% endfor %}
          <div class="add-card">
-            <a style="color:black" href="new_issue">+ Add new issue</a>
+            <a style="color:black" href="{{column.id}}/new_issue">+ Add new issue</a>
          </div>
        </div>
     {% endfor %}
