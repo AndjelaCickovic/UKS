@@ -15,11 +15,13 @@
             <li><a class="nav-link" href="#">Team</a></li>
         </ul>
     </div>
+    {% if is_owner %}
     <div class="row">
         <div class="col-md-5">
             <a class="btn btn-primary" href="/repositories/edit-repository/{{repository.id}}" role="button">Edit repository</a>
         </div>
     </div>
+    {% endif %}
 </nav>
 
 {% block show_block %}
@@ -42,11 +44,13 @@
     {% endfor %}
 </table>
 </div>
+{% if is_owner %}
 <div class="col-md-7">
     {% block add_block %}
     <a class="btn btn-primary" href="/repositories/repository/{{repository.id}}/add-member" role="button">Add member</a>
     {% endblock %} 
 </div>
+{% endif %}
 </div>
 {% endblock %}
 
