@@ -19,6 +19,12 @@ def check_if_in_repository(request, repository):
     except:
         return False
 
+def check_if_app_user(request):
+    return request.user.is_authenticated
+
+def check_if_valid_user(request, repository):
+    return check_if_app_user(request) and (check_if_in_repository(request, repository) or repository.is_public)
+
 # Create your views here.
 def main(request, repository_id):
     try:
@@ -30,8 +36,8 @@ def main(request, repository_id):
     issues = Issue.objects.filter(repository = repository)
     issue_serializer = IssueSerializer(issues, many=True)
     
-    in_repository = check_if_in_repository(request, repository)
-    dictionary = {'issues': issue_serializer.data, 'repository': repo_serializer.data, 'in_repo': in_repository}
+    valid_user = check_if_valid_user(request, repository)
+    dictionary = {'issues': issue_serializer.data, 'repository': repo_serializer.data, 'in_repo': valid_user}
     return render(request, 'issues_app/issues.html', context=dictionary)
 
 def labels(request, repository_id):
@@ -46,8 +52,8 @@ def labels(request, repository_id):
     labels = Label.objects.filter(repository = repository)
     label_serializer = LabelSerializer(labels, many=True)
 
-    in_repository = check_if_in_repository(request, repository)
-    dictionary = {'issues': issue_serializer.data, 'labels': label_serializer.data, 'repository': repo_serializer.data, 'in_repo': in_repository}
+    valid_user = check_if_valid_user(request, repository)
+    dictionary = {'issues': issue_serializer.data, 'labels': label_serializer.data, 'repository': repo_serializer.data, 'in_repo': valid_user}
     return render(request, 'issues_app/labels.html', context=dictionary)
 
 @login_required
@@ -76,8 +82,8 @@ def add_label(request, repository_id):
             
             return HttpResponseRedirect(reverse('repositories_app:issues_app:view_labels', kwargs={'repository_id':repository_id}))
             
-    in_repository = check_if_in_repository(request, repository)
-    dictionary = {'issues': issue_serializer.data, 'form': form, 'repository': repo_serializer.data, 'in_repo': in_repository}
+    valid_user = check_if_valid_user(request, repository)
+    dictionary = {'issues': issue_serializer.data, 'form': form, 'repository': repo_serializer.data, 'in_repo': valid_user}
     return render(request, 'issues_app/new_label.html', context=dictionary)
 
 @login_required
@@ -111,8 +117,8 @@ def edit_label(request, repository_id, label_id):
             
             return HttpResponseRedirect(reverse('repositories_app:issues_app:view_labels', kwargs={'repository_id':repository_id}))
             
-    in_repository = check_if_in_repository(request, repository)
-    dictionary = {'issues': issue_serializer.data, 'form': form, 'repository': repo_serializer.data, 'in_repo': in_repository}
+    valid_user = check_if_valid_user(request, repository)
+    dictionary = {'issues': issue_serializer.data, 'form': form, 'repository': repo_serializer.data, 'in_repo': valid_user}
     return render(request, 'issues_app/edit_label.html', context=dictionary)
 
 def milestones(request, repository_id):
@@ -127,8 +133,8 @@ def milestones(request, repository_id):
     milestones = Milestone.objects.filter(repository = repository)
     milestone_serializer = MilestoneSerializer(milestones, many=True)
 
-    in_repository = check_if_in_repository(request, repository)
-    dictionary = {'issues': issue_serializer.data, 'milestones': milestone_serializer.data, 'repository': repo_serializer.data, 'in_repo': in_repository}
+    valid_user = check_if_valid_user(request, repository)
+    dictionary = {'issues': issue_serializer.data, 'milestones': milestone_serializer.data, 'repository': repo_serializer.data, 'in_repo': valid_user}
     return render(request, 'issues_app/milestones.html', context=dictionary)
 
 @login_required
@@ -158,8 +164,8 @@ def add_milestone(request, repository_id):
             
             return HttpResponseRedirect(reverse('repositories_app:issues_app:view_milestones', kwargs={'repository_id':repository_id}))
 
-    in_repository = check_if_in_repository(request, repository)     
-    dictionary = {'issues': issue_serializer.data, 'form': form, 'repository': repo_serializer.data, 'in_repo': in_repository}
+    valid_user = check_if_valid_user(request, repository)
+    dictionary = {'issues': issue_serializer.data, 'form': form, 'repository': repo_serializer.data, 'in_repo': valid_user}
     return render(request, 'issues_app/new_milestone.html', context=dictionary)
 
 @login_required
@@ -194,8 +200,8 @@ def edit_milestone(request, repository_id, milestone_id):
             
             return HttpResponseRedirect(reverse('repositories_app:issues_app:view_milestones', kwargs={'repository_id':repository_id}))
 
-    in_repository = check_if_in_repository(request, repository)      
-    dictionary = {'issues': issue_serializer.data, 'form': form, 'repository': repo_serializer.data, 'in_repo': in_repository}
+    valid_user = check_if_valid_user(request, repository) 
+    dictionary = {'issues': issue_serializer.data, 'form': form, 'repository': repo_serializer.data, 'in_repo': valid_user}
     return render(request, 'issues_app/edit_milestone.html', context=dictionary)
 
 @login_required
@@ -223,8 +229,8 @@ def issue(request, repository_id, issue_id):
         user = AppUser.objects.get(id=user['id'])
         assignees.append(user)
 
-    in_repository = check_if_in_repository(request, repository)
-    dictionary = {'issue': serializer.data, 'assignees': assignees, 'repository': repo_serializer.data, 'in_repo': in_repository}
+    valid_user = check_if_valid_user(request, repository)
+    dictionary = {'issue': serializer.data, 'assignees': assignees, 'repository': repo_serializer.data, 'in_repo': valid_user}
     return render(request, 'issues_app/issue.html', context=dictionary)
 
 @login_required
@@ -261,8 +267,8 @@ def add_issue(request, repository_id):
             
             return HttpResponseRedirect(reverse('repositories_app:issues_app:view_issues', kwargs={'repository_id':repository_id}))
             
-    in_repository = check_if_in_repository(request, repository)
-    dictionary = {'issues': issue_serializer.data, 'form': form, 'repository': repo_serializer.data, 'in_repo': in_repository}
+    valid_user = check_if_valid_user(request, repository)
+    dictionary = {'issues': issue_serializer.data, 'form': form, 'repository': repo_serializer.data, 'in_repo': valid_user}
     return render(request, 'issues_app/new_issue.html', context=dictionary)
 
 @login_required
@@ -299,8 +305,8 @@ def edit_issue(request, repository_id, issue_id):
 
             return HttpResponseRedirect(reverse('repositories_app:issues_app:view_issue', kwargs={'repository_id': repository_id, 'issue_id':issue.id}))
             
-    in_repository = check_if_in_repository(request, repository)
-    dictionary = {'issue': serializer.data, 'form': form, 'assignees': assignees, 'repository': repo_serializer.data, 'in_repo': in_repository}
+    valid_user = check_if_valid_user(request, repository)
+    dictionary = {'issue': serializer.data, 'form': form, 'assignees': assignees, 'repository': repo_serializer.data, 'in_repo': valid_user}
     return render(request, 'issues_app/edit_issue.html', context=dictionary)
 
 @login_required
