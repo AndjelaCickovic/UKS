@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from branches_app.models import Branch, Commit
 from branches_app.forms import BranchForm,EditBranchForm,CommitForm
-from repositories_app.models import Repository
+from repositories_app.models import Repository,RepositoryUser
 from django.contrib.auth.decorators import login_required
 from users.models import AppUser 
 
@@ -14,7 +14,7 @@ def main(request, repository_id):
         return redirect('/repositories')
 
     branches = Branch.objects.filter(repository=repository)
-    obj_dict = {'branches':branches,'repository':repository}
+    obj_dict = {'branches':branches,'repository':repository,'can_edit':repository.is_public or is_in_role(request.user,repository)}
 
     return render(request,'branches_app/main.html',obj_dict)
 
@@ -27,6 +27,9 @@ def new_branch(request,repository_id):
         return redirect('/repositories')
 
     branches = Branch.objects.filter(repository=repository)
+
+    if not repository.is_public and not is_in_role(request.user,repository):
+        return redirect('/repositories')
 
     form = BranchForm(repository_id)
 
@@ -132,7 +135,8 @@ def commits(request, repository_id, branch_id):
 
     obj_dict = {
         'branch': branch,
-        'repository':repository
+        'repository':repository,
+        'can_edit':repository.is_public or is_in_role(request.user,repository)
     }
 
     return render(request,'branches_app/commits.html',obj_dict)
@@ -148,6 +152,9 @@ def new_commit(request,repository_id,branch_id):
     try:
         branch = Branch.objects.get(id=branch_id)
     except:
+        return redirect('repositories/repository/{}/branches'.format(str(repository_id)))
+
+    if not repository.is_public and not is_in_role(request.user,repository):
         return redirect('repositories/repository/{}/branches'.format(str(repository_id)))
 
     form = CommitForm()
@@ -185,3 +192,13 @@ def new_commit(request,repository_id,branch_id):
 
     print(form)
     return render(request,'branches_app/new_commit.html',obj_dict)
+
+def is_in_role(user, repository):
+    if user.is_authenticated:
+        try:
+            app_user = AppUser.objects.get(user=user)
+        except:
+            return False
+        return RepositoryUser.objects.filter(user=app_user, repository=repository).exists()
+    else:
+        return False
