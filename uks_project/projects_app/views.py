@@ -3,7 +3,8 @@ from django.http import HttpResponse
 from projects_app.models import Project, Column
 from issues_app.models import Issue
 from issues_app.forms import IssueForm
-from repositories_app.models import Repository
+from users.models import AppUser
+from repositories_app.models import Repository, RepositoryUser
 from projects_app.forms import ProjectForm, ColumnForm, IssueColumnForm, CustomMCF
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
@@ -12,7 +13,17 @@ from django.contrib.auth.decorators import login_required
 import sys
 import io
 
-# Create your views here.
+def get_role(request, repository):
+    if request.user.is_authenticated:
+        try:
+            app_user = AppUser.objects.get(user=request.user)
+            repository_user = RepositoryUser.objects.get(user=app_user, repository=repository)
+            return True
+        except:
+            return False
+    else:
+        return False
+    
 def main(request, repository_id):
     projects = Project.objects.all().order_by('id')
     try:
@@ -20,7 +31,17 @@ def main(request, repository_id):
     except:
         return redirect('/home')
 
-    objects_dict = { 'projects': projects, 'repository': repository}
+    role = get_role(request, repository)
+
+    if repository.is_public == False and role == False:
+        return redirect('/repositories')
+
+    objects_dict = { 
+        'projects': projects,
+        'repository': repository,
+        'role': role
+        }
+
     return render(request, 'projects_app/main.html', objects_dict)
 
 @login_required
@@ -30,6 +51,11 @@ def new_project(request, repository_id):
         repository = Repository.objects.get(id=repository_id)
     except:
         return redirect('/home')
+
+    role = get_role(request, repository)
+
+    if repository.is_public == False and role == False:
+        return redirect('/repositories')
 
     form = ProjectForm(initial={'repository':repository})
 
@@ -57,10 +83,16 @@ def project(request, project_id,repository_id):
     except:
         return redirect('/home')
 
+    role = get_role(request, repository)
+
+    if repository.is_public == False and role == False:
+        return redirect('/repositories')
+
     objects_dict = {
         'repository': repository,
         'project':project, 
         'columns': project.columns.all(),
+        'role': role
     }
     return render(request,"projects_app/project.html",objects_dict)
 
@@ -71,6 +103,11 @@ def edit_project(request, project_id,repository_id):
         repository = Repository.objects.get(id=repository_id)
     except:
         return redirect('/home')
+
+    role = get_role(request, repository)
+
+    if repository.is_public == False and role == False:
+        return redirect('/repositories')
 
     form = ProjectForm(instance=project,initial={'project': project})
 
@@ -91,8 +128,14 @@ def edit_project(request, project_id,repository_id):
 def close_project(request,project_id, repository_id):
     try:
         project = Project.objects.get(id=project_id)
+        repository = Repository.objects.get(id=repository_id)
     except:
         return redirect('/home')
+
+    role = get_role(request, repository)
+
+    if repository.is_public == False and role == False:
+        return redirect('/repositories')
 
     project.status = "Closed"
     project.save()
@@ -102,9 +145,15 @@ def close_project(request,project_id, repository_id):
 @login_required
 def reopen_project(request,project_id,repository_id):
     try:
-        project = Project.objects.get(id=project_id)
+        project = Project.objects.get(id=project_id)       
+        repository = Repository.objects.get(id=repository_id)
     except:
         return redirect('/home')
+
+    role = get_role(request, repository)
+
+    if repository.is_public == False and role == False:
+        return redirect('/repositories')
 
     project.status = "Open"
     project.save()
@@ -115,8 +164,14 @@ def reopen_project(request,project_id,repository_id):
 def delete_project(request,project_id,repository_id):
     try:
         project = Project.objects.get(id=project_id)
+        repository = Repository.objects.get(id=repository_id)
     except:
         return redirect('/home')
+
+    role = get_role(request, repository)
+
+    if repository.is_public == False and role == False:
+        return redirect('/repositories')
 
     project.delete()
 
@@ -129,6 +184,11 @@ def new_column(request, repository_id, project_id):
         repository = Repository.objects.get(id=repository_id)
     except:
         return redirect('/home')
+
+    role = get_role(request, repository)
+
+    if repository.is_public == False and role == False:
+        return redirect('/repositories')
 
     form = ColumnForm(initial={'project': project})
 
@@ -162,6 +222,11 @@ def edit_column(request, repository_id, project_id, column_id):
     except:
         return redirect('/home') 
 
+    role = get_role(request, repository)
+
+    if repository.is_public == False and role == False:
+        return redirect('/repositories')
+
     form = ColumnForm(instance=column,initial={'project': project})
 
     if request.method =='POST' :
@@ -187,9 +252,15 @@ def edit_column(request, repository_id, project_id, column_id):
 def delete_column(request, repository_id, project_id, column_id):
     try:
         column = Column.objects.get(id=column_id)
+        repository = Repository.objects.get(id=repository_id)
     except:
         return redirect('/home')
-    
+
+    role = get_role(request, repository)
+
+    if repository.is_public == False and role == False:
+        return redirect('/repositories')
+
     column.delete()
 
     return HttpResponseRedirect(reverse('repositories_app:projects_app:project', kwargs={'project_id': project_id,'repository_id':repository_id}))
@@ -198,9 +269,15 @@ def delete_column(request, repository_id, project_id, column_id):
 def remove_issue(request, repository_id, project_id, issue_id):
     try:
         issue = Issue.objects.get(id=issue_id)
+        repository = Repository.objects.get(id=repository_id)
     except:
         return redirect('/home')
-    
+
+    role = get_role(request, repository)
+
+    if repository.is_public == False and role == False:
+        return redirect('/repositories')
+
     issue.column = None
     issue.save()
     
@@ -214,6 +291,11 @@ def edit_issue(request, repository_id, project_id, issue_id):
         repository = Repository.objects.get(id=repository_id)
     except:
         return redirect('/home')    
+
+    role = get_role(request, repository)
+
+    if repository.is_public == False and role == False:
+        return redirect('/repositories')
 
     form = IssueForm(instance=issue)
 
@@ -249,7 +331,12 @@ def change_column_issue(request, repository_id, project_id, issue_id):
         project = Project.objects.get(id=project_id)
         repository = Repository.objects.get(id=repository_id)
     except:
-        return redirect('/home')    
+        return redirect('/home')   
+
+    role = get_role(request, repository)
+
+    if repository.is_public == False and role == False:
+        return redirect('/repositories')
 
     columns = project.columns.all()
     form = IssueColumnForm(instance=issue,initial={'columns':issue.column.id})
@@ -276,9 +363,15 @@ def change_column_issue(request, repository_id, project_id, issue_id):
 def delete_issue(request, repository_id, project_id, issue_id):
     try:
         issue = Issue.objects.get(id=issue_id)
+        repository = Repository.objects.get(id=repository_id)
     except:
         return redirect('/home')
-    
+
+    role = get_role(request, repository)
+
+    if repository.is_public == False and role == False:
+        return redirect('/repositories')
+
     issue.delete()
             
     return HttpResponseRedirect(reverse('repositories_app:projects_app:project', kwargs={'project_id': project_id,'repository_id':repository_id}))
@@ -292,6 +385,11 @@ def new_issue(request, repository_id, project_id, column_id):
         column = Column.objects.get(id=column_id)
     except:
         return redirect('/home')
+
+    role = get_role(request, repository)
+
+    if repository.is_public == False and role == False:
+        return redirect('/repositories')
 
     form = IssueForm()
 
