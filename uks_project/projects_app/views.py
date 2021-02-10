@@ -31,8 +31,10 @@ def new_project(request, repository_id):
     except:
         return redirect('/home')
 
+    form = ProjectForm(initial={'repository':repository})
     if request.method =='POST' :
         form = ProjectForm(request.POST)
+        # form.fields['repository'] = repository
 
         if form.is_valid(): 
             project = Project()
