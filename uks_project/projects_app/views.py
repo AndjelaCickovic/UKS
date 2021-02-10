@@ -53,9 +53,6 @@ def new_project(request, repository_id):
 def project(request, project_id,repository_id):
     try:
         project = Project.objects.get(id=project_id)
-    except:
-        return redirect('/home')
-    try:
         repository = Repository.objects.get(id=repository_id)
     except:
         return redirect('/home')
@@ -71,9 +68,6 @@ def project(request, project_id,repository_id):
 def edit_project(request, project_id,repository_id):
     try:
         project = Project.objects.get(id=project_id)
-    except:
-        return redirect('/home')
-    try:
         repository = Repository.objects.get(id=repository_id)
     except:
         return redirect('/home')
@@ -99,6 +93,7 @@ def close_project(request,project_id, repository_id):
         project = Project.objects.get(id=project_id)
     except:
         return redirect('/home')
+
     project.status = "Closed"
     project.save()
 
@@ -110,6 +105,7 @@ def reopen_project(request,project_id,repository_id):
         project = Project.objects.get(id=project_id)
     except:
         return redirect('/home')
+
     project.status = "Open"
     project.save()
 
@@ -121,6 +117,7 @@ def delete_project(request,project_id,repository_id):
         project = Project.objects.get(id=project_id)
     except:
         return redirect('/home')
+
     project.delete()
 
     return HttpResponseRedirect(reverse('repositories_app:projects_app:main', kwargs={'repository_id':repository_id}))
@@ -129,9 +126,6 @@ def delete_project(request,project_id,repository_id):
 def new_column(request, repository_id, project_id):
     try:
         project = Project.objects.get(id=project_id)
-    except:
-        return redirect('/home')
-    try:
         repository = Repository.objects.get(id=repository_id)
     except:
         return redirect('/home')
@@ -163,13 +157,7 @@ def new_column(request, repository_id, project_id):
 def edit_column(request, repository_id, project_id, column_id):
     try:
         column = Column.objects.get(id=column_id)
-    except:
-        return redirect('/home')
-    try:
         project = Project.objects.get(id=project_id)
-    except:
-        return redirect('/home')
-    try:
         repository = Repository.objects.get(id=repository_id)
     except:
         return redirect('/home') 
@@ -222,13 +210,7 @@ def remove_issue(request, repository_id, project_id, issue_id):
 def edit_issue(request, repository_id, project_id, issue_id):
     try:
         issue = Issue.objects.get(id=issue_id)
-    except:
-        return redirect('/home')
-    try:
         project = Project.objects.get(id=project_id)
-    except:
-        return redirect('/home')
-    try:
         repository = Repository.objects.get(id=repository_id)
     except:
         return redirect('/home')    
@@ -264,13 +246,7 @@ def edit_issue(request, repository_id, project_id, issue_id):
 def change_column_issue(request, repository_id, project_id, issue_id):
     try:
         issue = Issue.objects.get(id=issue_id)
-    except:
-        return redirect('/home')
-    try:
         project = Project.objects.get(id=project_id)
-    except:
-        return redirect('/home')
-    try:
         repository = Repository.objects.get(id=repository_id)
     except:
         return redirect('/home')    
@@ -312,14 +288,7 @@ def delete_issue(request, repository_id, project_id, issue_id):
 def new_issue(request, repository_id, project_id, column_id):
     try:
         project = Project.objects.get(id=project_id)
-    except:
-        return redirect('/home')
-    try:
         repository = Repository.objects.get(id=repository_id)
-    except:
-        return redirect('/home')
-
-    try:
         column = Column.objects.get(id=column_id)
     except:
         return redirect('/home')
