@@ -25,9 +25,17 @@ def is_owner_or_coowner(request, repository):
         return False
 
 def main(request):
-    repositories = Repository.objects.all()
-    dictionary = {'repositories': repositories}
-    return render(request, 'repositories_app/repositories.html', context = dictionary)
+    if request.user.is_authenticated:
+        try:
+            app_user = AppUser.objects.get(user=request.user)
+            repositories = Repository.objects.filter(members.include(app_user))
+            dictionary = {'repositories': repositories}
+            return render(request, 'repositories_app/repositories.html', context = dictionary)
+        except:
+            return False
+    else:
+        return False
+   
 
 def repository(request, repository_id):
     try:
