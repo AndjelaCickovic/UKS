@@ -3,7 +3,9 @@
 {% block show_block %}
 <h1>Projects</h1>
 <br>
- <a class="btn btn-success" style="float:right" href="new/" role="button">Add new project</a>
+{% if role %}
+    <a class="btn btn-success" style="float:right" href="new/" role="button">Add new project</a>
+{% endif %}
  <br> 
 <div class="container">
     <ul class="nav nav-tabs">
@@ -32,6 +34,7 @@
                 <td>{{ project.description }}</td>
                 <td>{{ project.status }}</td>
                 <td>
+                 {% if role %}
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
@@ -42,13 +45,14 @@
                             </div>
                         </li>
                     </ul>
+                 {% endif %}
                 </td>
             </tr>
         {% endifequal %}
         {% endfor %}
     </table>
     {% else %}
-    <h3>You don't have any project </h3>
+    <h3>This repository doesn't have any project </h3>
     {% endif %}
     </div>
     <div class="tab-pane container fade" id="closed">
@@ -67,6 +71,7 @@
                 <td>{{ project.description }}</td>
                 <td>{{ project.status }}</td>
                 <td>
+                    {% if role %}
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
@@ -77,13 +82,14 @@
                             </div>
                         </li>
                     </ul>
+                    {% endif %}
                 </td>
             </tr>
         {% endifequal %}
         {% endfor %}
     </table>
     {% else %}
-    <h3>You don't have any project </h3>
+    <h3>This repository doesn't have any project </h3>
     {% endif %}
     </div>
     </div>
