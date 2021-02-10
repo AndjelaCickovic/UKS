@@ -23,7 +23,17 @@ class ProjectForm(ModelForm):
 class ColumnForm(ModelForm):
     class Meta:
         model = Column
-        fields=['name']
+        fields=['name', 'project']
+        widgets = {'project': forms.HiddenInput()}
+
+    def clean(self):
+        data = self.cleaned_data
+
+        if Column.objects.filter(name=self.cleaned_data['name'],project=self.cleaned_data['project']).exists():
+            raise ValidationError('Column with this name already exists in this project')
+        
+        return data    
+
 
 class CustomMCF(forms.ModelChoiceField):
     def column_from_instance(self, field):

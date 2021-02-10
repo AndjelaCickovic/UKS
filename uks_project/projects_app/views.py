@@ -32,9 +32,9 @@ def new_project(request, repository_id):
         return redirect('/home')
 
     form = ProjectForm(initial={'repository':repository})
+
     if request.method =='POST' :
         form = ProjectForm(request.POST)
-        # form.fields['repository'] = repository
 
         if form.is_valid(): 
             project = Project()
@@ -78,7 +78,7 @@ def edit_project(request, project_id,repository_id):
     except:
         return redirect('/home')
 
-    form = ProjectForm(instance=project)
+    form = ProjectForm(instance=project,initial={'project': project})
 
     if request.method =='POST' :
         form = ProjectForm(request.POST)
@@ -136,7 +136,7 @@ def new_column(request, repository_id, project_id):
     except:
         return redirect('/home')
 
-    form = ColumnForm()
+    form = ColumnForm(initial={'project': project})
 
     if request.method =='POST' :
         form = ColumnForm(request.POST)
@@ -174,7 +174,7 @@ def edit_column(request, repository_id, project_id, column_id):
     except:
         return redirect('/home') 
 
-    form = ColumnForm(instance=column)
+    form = ColumnForm(instance=column,initial={'project': project})
 
     if request.method =='POST' :
         form = ColumnForm(request.POST)
