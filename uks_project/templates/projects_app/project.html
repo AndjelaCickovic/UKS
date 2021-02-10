@@ -2,10 +2,15 @@
 {% extends 'repositories_app/repository.html' %}
 {% block show_block %}
 <h2>{{project.name}}</h2>
+
+ 
+
 {% if columns %}
-        <a class="btn btn-success" style="float:right" href="new_column" role="button">Add new column</a>
+    {% if role %}
+        <a class="btn btn-success" style="float:right" href="/repositories/repository/{{repository.id}}/projects/{{project.id}}/new_column" role="button">Add new column</a>
+    {% endif %}
 <br>
- <div class="row" style="width:100%"> 
+<div class="row" style="width:100%"> 
 <div class="board col-9">
     <div class="board-header">
       <div class="left">
@@ -17,51 +22,59 @@
     <div class="board-list">
         <div class="list-title">
           {{column.name}}
+            {% if role %}
           <ul class="navbar-nav ml-auto dots column-dots">
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="edit_column/{{column.id}}">Edit</a>
-                                <a class="dropdown-item" href="delete_column/{{column.id}}">Delete</a>
+                                <a class="dropdown-item" href="/repositories/repository/{{repository.id}}/projects/{{project.id}}/edit_column/{{column.id}}">Edit</a>
+                                <a class="dropdown-item" href="/repositories/repository/{{repository.id}}/projects/{{project.id}}/delete_column/{{column.id}}">Delete</a>
                             </div>
                         </li>
-                    </ul>
+            </ul>
+            {% endif %}
         </div>
         {% for issue in column.issues.all %}
             <div class="card">
                 {{issue.name}}
+            {% if role %}
             <ul class="navbar-nav ml-auto dots">
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="#">Edit</a>
-                                <a class="dropdown-item" href="#">Delete</a>
-                                <a class="dropdown-item" href="remove_issue/{{issue.id}}">Remove from project</a>
+                                <a class="dropdown-item" href="/repositories/repository/{{repository.id}}/projects/{{project.id}}/edit_issue/{{issue.id}}">Edit</a>
+                                <a class="dropdown-item" href="/repositories/repository/{{repository.id}}/projects/{{project.id}}/change_column_issue/{{issue.id}}">Change column</a>
+                                <a class="dropdown-item" href="/repositories/repository/{{repository.id}}/projects/{{project.id}}/delete_issue/{{issue.id}}">Delete</a>
+                                <a class="dropdown-item" href="/repositories/repository/{{repository.id}}/projects/{{project.id}}/remove_issue/{{issue.id}}">Remove from project</a>
                             </div>
                         </li>
-                    </ul>
-
+            </ul>
+            {% endif %}
             </div>
         {% endfor %}
          <div class="add-card">
-          + Add another card
+            {% if role %}
+                <a style="color:black" href="/repositories/repository/{{repository.id}}/projects/{{project.id}}/{{column.id}}/new_issue">+ Add new issue</a>
+            {% endif %}
          </div>
        </div>
     {% endfor %}
     </div>
-</div>
- </div>
   
 
 {% else %}
+    <div class="col-9"></div>
     <div class="center-div">
         <h3>This project doesn't have any columns</h3>
-        <a class="btn btn-success column-btn" href="new_column" role="button">Add new column</a>
+        {% if role %}
+            <a class="btn btn-success column-btn" href="/repositories/repository/{{repository.id}}/projects/{{project.id}}/new_column" role="button">Add new column</a>
+        {% endif %}
     <div>
 {% endif %}
 
      
-    <div class="col-3" style="margin-top:3rem">
+ </div>
+    <div class="col-3" style="margin-top:3rem; max-width:40%">
         {% block column_block %}
         {% endblock %}
     </div>

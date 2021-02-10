@@ -5,7 +5,9 @@
     <hr>
     <div class="row">
         <div class="col-md-2">
-            <a class="btn btn-primary" href="/repositories/repository/{{repository.id}}/issues/add-issue" role="button">Add issue</a>
+            {% if in_repo %}
+                <a class="btn btn-primary" href="/repositories/repository/{{repository.id}}/issues/add-issue" role="button">Add issue</a>
+            {% endif %}
         </div>
         <div class="col-md-2">
             <a class="btn btn-primary" href="/repositories/repository/{{repository.id}}/issues/labels" role="button">View labels</a>

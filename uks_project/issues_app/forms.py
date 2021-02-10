@@ -16,21 +16,16 @@ class MilestoneForm(ModelForm):
 
 class CustomMMCF(forms.ModelMultipleChoiceField):
     def label_from_instance(self, field):
-        if hasattr(field, 'name'):
-            return '%s' % field.name
-        else:
-            return '%s' % field.user
-
-class CustomMCF(forms.ModelChoiceField):
-    def label_from_instance(self, field):
-        return '%s' % field.name
+        return '%s' % field.user.user
 
 class IssueForm(ModelForm):
-    labels = CustomMMCF(queryset=Label.objects.all())
-    #column = CustomMCF(queryset=Column.objects.all(), empty_label='None')
-    #milestone = CustomMCF(queryset=Milestone.objects.all(), empty_label='None')
-    assignees = CustomMMCF(queryset=AppUser.objects.all(), widget = forms.CheckboxSelectMultiple)
-
     class Meta:
         model = Issue
-        fields = ['name', 'comment', 'status', 'labels', 'assignees']
+        fields = ['name', 'comment', 'status', 'labels', 'milestone', 'assignees']
+
+    def __init__(self, *args, **kwargs):
+        repo = kwargs.pop('repository')
+        super(IssueForm, self).__init__(*args, **kwargs)
+        self.fields['labels'] = forms.ModelMultipleChoiceField(queryset = repo.labels.all(), required = False)
+        self.fields['milestone'] = forms.ModelChoiceField(queryset = repo.milestones.all(), required = False)
+        self.fields['assignees'] = CustomMMCF(queryset = repo.users.all(), widget = forms.CheckboxSelectMultiple, required = False)
