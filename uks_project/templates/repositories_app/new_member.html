@@ -1,21 +1,33 @@
 <!DOCTYPE html>
 {% extends 'repositories_app/repository.html' %}
+{% load crispy_forms_tags %}
 {% block add_block %}
     <div class="card">
         <div class="card-body">
             <div class="row">
-                <div class="col-md-3">
-                    <a class="btn btn-primary" href="/repositories/repository/{{repository.id}}" role="button">Cancel</a>
+                <div class="col-sm-7">
+                    <h3 class="card-title">
+                        Member
+                    </h3>
                 </div>
-                <h3 class="card-title">
-                    New Member
-                </h3>
+                 <div class='col-sm-3' style="margin-left:5%">
+                        <a href="/repositories/repository/{{repository.id}}"><i class="fa fa-times" aria-hidden="true"></i></a>
+                    </div>
             </div>
             <div class="container">
+                {% if member %}
+                
+                   Username:  <b>{{member.user.user}}</b>
+
+                {% endif %}
                 <form method="POST">
-                    {{form.as_p}}
+                    {{form|crispy}}
                     {% csrf_token %}
-                    <input type="submit" class="btn btn-primary" value="Submit">
+                    <div class="row">
+                        <div class="col-md-9">
+                            <input type="submit" class="btn btn-success" value="Submit">
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>

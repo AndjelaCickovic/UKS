@@ -4,14 +4,9 @@
     <h1>Repositories Page</h1>
     <hr>
     <div class="row">
-        <div class="col-md-2">
-            <a class="btn btn-primary" href="/repositories/add-repository" role="button">Add repository</a>
-        </div>
-    </div>
-    <div class="row">
         <div class="col-md-7">
             {% if repositories %}
-            <table>
+            <table class="table table-striped" style="margin-top: 30px">
                 <tr>
                     <th>Name</th>
                     <th>Description</th>
@@ -20,10 +15,10 @@
                 </tr>
                 {% for repository in repositories %}
                     <tr>
-                        <td><a href="/repositories/repository/{{repository.id}}">{{ repository.name }}</a></td>
-                        <td>{{ repository.description }}</td>
-                        <td>{{ repository.is_public }}</td>
-                        <td><a href="/repositories/delete-repository/{{repository.id}}">Delete</a></td>
+                        <td style="vertical-align: middle;"><a style="color:green" href="/repositories/repository/{{repository.id}}">{{ repository.name }}</a></td>
+                        <td style="vertical-align: middle;">{{ repository.description }}</td>
+                        <td style="vertical-align: middle;">{{ repository.is_public }}</td>
+                        <td style="vertical-align: middle;" ><a class="btn btn-danger" href="/repositories/delete-repository/{{repository.id}}">Delete</a></td>
                     </tr>
                 {% endfor %}
             </table>
@@ -33,6 +28,7 @@
         </div>
         <div class="col-md-5">
             {% block add_block %}
+                <a class="btn btn-success" style="margin-top: 30px;" href="/repositories/add-repository" role="button">Add repository</a>
             {% endblock %} 
         </div>
     </div>

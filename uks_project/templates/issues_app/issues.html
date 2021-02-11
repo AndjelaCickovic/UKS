@@ -2,9 +2,8 @@
 {% extends 'issues_app/issues_page.html' %}
 {% block issues_body %}
     <div class="row">
-        <div class="col-md-7">
             {% if issues %}
-            <table>
+            <table class="table table-striped" style="margin-top:30px;width:80%;margin-left:10% ">
                 <tr>
                     <th>Name</th>
                     <th>Labels</th>
@@ -14,7 +13,7 @@
                 {% for issue in issues %}
                     <tr>
                         <td>
-                            <a href="/repositories/repository/{{repository.id}}/issues/issue/{{issue.id}}">
+                            <a style="color:green" href="/repositories/repository/{{repository.id}}/issues/issue/{{issue.id}}">
                             {{ issue.name }}
                             </a>
                         </td>
@@ -50,10 +49,5 @@
             {% else %}
             <h3>No issues found!</h3>
             {% endif %}
-        </div>
-        <div class="col-md-5">
-            {% block help_block %}
-            {% endblock %}
-        </div>
     </div>
 {% endblock %}

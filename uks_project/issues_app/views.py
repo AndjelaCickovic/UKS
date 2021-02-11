@@ -23,7 +23,7 @@ def check_if_app_user(request):
     return request.user.is_authenticated
 
 def check_if_valid_user(request, repository):
-    return check_if_app_user(request) and (check_if_in_repository(request, repository) or repository.is_public)
+    return check_if_app_user(request) and check_if_in_repository(request, repository)
 
 # Create your views here.
 def main(request, repository_id):
@@ -37,6 +37,10 @@ def main(request, repository_id):
     issue_serializer = IssueSerializer(issues, many=True)
     
     valid_user = check_if_valid_user(request, repository)
+    
+    if not repository.is_public and not valid_user:
+        return redirect('/repositories')
+
     dictionary = {'issues': issue_serializer.data, 'repository': repo_serializer.data, 'in_repo': valid_user}
     return render(request, 'issues_app/issues.html', context=dictionary)
 
@@ -53,7 +57,7 @@ def labels(request, repository_id):
     label_serializer = LabelSerializer(labels, many=True)
 
     valid_user = check_if_valid_user(request, repository)
-    dictionary = {'issues': issue_serializer.data, 'labels': label_serializer.data, 'repository': repo_serializer.data, 'in_repo': valid_user}
+    dictionary = {'issues': issue_serializer.data, 'test_labels': labels, 'labels': label_serializer.data, 'repository': repo_serializer.data, 'in_repo': valid_user}
     return render(request, 'issues_app/labels.html', context=dictionary)
 
 @login_required
@@ -67,7 +71,7 @@ def add_label(request, repository_id):
     issues = Issue.objects.filter(repository = repository)
     issue_serializer = IssueSerializer(issues, many=True)
     
-    form = LabelForm()
+    form = LabelForm(initial={'repository': repository})
 
     if request.method =='POST' :
         form = LabelForm(request.POST)
@@ -104,10 +108,10 @@ def edit_label(request, repository_id, label_id):
     issue_serializer = IssueSerializer(issues, many=True)
 
     label = Label.objects.get(id=label_id)
-    form = LabelForm(initial = {'name': label.name, 'description': label.description, 'colour': label.colour})
+    form = LabelForm(initial = {'name': label.name, 'description': label.description, 'colour': label.colour, 'repository': repository})
 
     if request.method =='POST' :
-        form = LabelForm(request.POST)
+        form = LabelForm(request.POST, instance=label)
 
         if form.is_valid(): 
             label.name = form.cleaned_data['name']
@@ -134,7 +138,7 @@ def milestones(request, repository_id):
     milestone_serializer = MilestoneSerializer(milestones, many=True)
 
     valid_user = check_if_valid_user(request, repository)
-    dictionary = {'issues': issue_serializer.data, 'milestones': milestone_serializer.data, 'repository': repo_serializer.data, 'in_repo': valid_user}
+    dictionary = {'issues': issue_serializer.data, 'test_milestones': milestones, 'milestones': milestone_serializer.data, 'repository': repo_serializer.data, 'in_repo': valid_user}
     return render(request, 'issues_app/milestones.html', context=dictionary)
 
 @login_required
@@ -148,7 +152,7 @@ def add_milestone(request, repository_id):
     issues = Issue.objects.filter(repository = repository)
     issue_serializer = IssueSerializer(issues, many=True)
     
-    form = MilestoneForm()
+    form = MilestoneForm(initial={'repository': repository})
 
     if request.method =='POST' :
         form = MilestoneForm(request.POST)
@@ -186,10 +190,10 @@ def edit_milestone(request, repository_id, milestone_id):
     issue_serializer = IssueSerializer(issues, many=True)
     
     milestone = Milestone.objects.get(id=milestone_id)
-    form = MilestoneForm(initial = {'name': milestone.name, 'description': milestone.description, 'dueDate': milestone.dueDate, 'status': milestone.status})
+    form = MilestoneForm(initial = {'name': milestone.name, 'description': milestone.description, 'dueDate': milestone.dueDate, 'status': milestone.status, 'repository': repository})
 
     if request.method =='POST' :
-        form = MilestoneForm(request.POST)
+        form = MilestoneForm(request.POST, instance=milestone)
 
         if form.is_valid():
             milestone.name = form.cleaned_data['name']
@@ -303,7 +307,7 @@ def edit_issue(request, repository_id, issue_id):
             issue.assignees.set(choosen_assignees)
             issue.save()
 
-            return HttpResponseRedirect(reverse('repositories_app:issues_app:view_issue', kwargs={'repository_id': repository_id, 'issue_id':issue.id}))
+            return HttpResponseRedirect(reverse('repositories_app:issues_app:view_issues', kwargs={'repository_id': repository_id}))
             
     valid_user = check_if_valid_user(request, repository)
     dictionary = {'issue': serializer.data, 'form': form, 'assignees': assignees, 'repository': repo_serializer.data, 'in_repo': valid_user}

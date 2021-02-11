@@ -12,9 +12,14 @@ def main(request, repository_id):
         repository = Repository.objects.get(id=repository_id)
     except:
         return redirect('/repositories')
+    
+    if not repository.is_public and not is_in_role(request.user,repository):
+        return redirect('/repositories')
 
     branches = Branch.objects.filter(repository=repository)
-    obj_dict = {'branches':branches,'repository':repository,'can_edit':repository.is_public or is_in_role(request.user,repository)}
+    obj_dict = {'branches':branches,'repository':repository,'can_edit':is_in_role(request.user,repository)}
+
+    print(repository.is_public or is_in_role(request.user,repository))
 
     return render(request,'branches_app/main.html',obj_dict)
 
@@ -37,7 +42,8 @@ def new_branch(request,repository_id):
         'title' : 'New branch',
         'form': form,
         'repository':repository,
-        'branches':branches
+        'branches':branches,
+        'can_edit':is_in_role(request.user,repository)
     }
 
 
@@ -66,6 +72,9 @@ def edit_branch(request,repository_id,branch_id):
     except:
         return redirect('/repositories')
 
+    if not repository.is_public and not is_in_role(request.user,repository):
+        return redirect('/repositories')
+
     branches = Branch.objects.filter(repository=repository)
 
     try:
@@ -79,7 +88,8 @@ def edit_branch(request,repository_id,branch_id):
         'title' : 'Edit branch',
         'form': form,
         'repository':repository,
-        'branches':branches
+        'branches':branches,
+        'can_edit':is_in_role(request.user,repository)
     }
 
     if request.method == 'POST':
@@ -100,7 +110,6 @@ def edit_branch(request,repository_id,branch_id):
 @login_required
 def delete_branch(request,repository_id,branch_id):
 
-
     try:
         repository = Repository.objects.get(id=repository_id)
     except:
@@ -111,15 +120,22 @@ def delete_branch(request,repository_id,branch_id):
     except:
         return redirect('/repositories/repository/{}/branches'.format(str(repository_id)))
 
+    if not repository.is_public and not is_in_role(request.user,repository):
+        return redirect('/repositories')
+
     if branch.default:
         branches = Branch.objects.filter(repository=repository)
-        obj_dict = {'branches':branches,'repository':repository,'error':'Unable to delete default branch {}'.format(branch.name)}
+        obj_dict = {
+            'branches':branches,
+            'repository':repository,
+            'can_edit':is_in_role(request.user,repository),
+            'error':'Unable to delete default branch {}'.format(branch.name)}
+
         return render(request,'branches_app/main.html',obj_dict)
 
     branch.delete()
     return redirect('/repositories/repository/{}/branches'.format(str(repository_id)))
 
-@login_required
 def commits(request, repository_id, branch_id):
    
     try:
@@ -133,10 +149,13 @@ def commits(request, repository_id, branch_id):
         return redirect('/repositories/repository/{}/branches'.format(str(repository_id)))
 
 
+    if not repository.is_public and not is_in_role(request.user,repository):
+        return redirect('/repositories')
+
     obj_dict = {
         'branch': branch,
         'repository':repository,
-        'can_edit':repository.is_public or is_in_role(request.user,repository)
+        'can_edit':is_in_role(request.user,repository)
     }
 
     return render(request,'branches_app/commits.html',obj_dict)
@@ -163,7 +182,8 @@ def new_commit(request,repository_id,branch_id):
         'title' : 'New commit',
         'form': form,
         'repository':repository,
-        'branch':branch
+        'branch':branch,
+        'can_edit':is_in_role(request.user,repository)
     }
 
 
@@ -173,7 +193,6 @@ def new_commit(request,repository_id,branch_id):
         if form_data.is_valid():
             commit = Commit(**form_data.cleaned_data)
             commit.user = AppUser.objects.get(user=request.user)
-            print(commit.user)
             try:
                 commit.save()
             except:
@@ -190,7 +209,6 @@ def new_commit(request,repository_id,branch_id):
 
             return redirect('/repositories/repository/{}/branches/{}/commits'.format(str(repository_id),str(branch_id)))
 
-    print(form)
     return render(request,'branches_app/new_commit.html',obj_dict)
 
 def is_in_role(user, repository):

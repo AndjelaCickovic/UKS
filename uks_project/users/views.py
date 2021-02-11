@@ -18,22 +18,23 @@ def register(request):
     registered = False
     
     if request.method == "POST":
-        user_form = UserForm(data=request.POST)
+        user_form = UserForm(request.POST)
 
         if user_form.is_valid():
-
+            print('USER')
             user = user_form.save()
             user.set_password(user.password)
             user.save()
 
             app_user = AppUser.objects.create(user=user)
+
+            if 'profile_picture' in request.FILES:  
+                app_user.profile_picture = request.FILES['profile_picture']
+
             app_user.save()
 
-            print('user registered')
             registered = True
-            return render(request,"users/login.html",{})
-        else:
-            print(user_form.errors)
+            return render(request,"users/login.html",{'registered':registered})
     else:
         user_form = UserForm()
 
@@ -54,11 +55,9 @@ def user_login(request):
                 login(request,user)
                 return redirect('/repositories')
             else:
-               # return HttpResponse("Account not active")
                 return render(request,'users/login.html',{'err':'Account not active!'})
 
         else:
-            #return HttpResponse("Invalid login details supplied!")
             return render(request,'users/login.html',{'error':'Invalid login details supplied!'})
     else:
         return render(request,'users/login.html',{})
@@ -68,15 +67,17 @@ def user_logut(request):
     logout(request)
     return HttpResponseRedirect(reverse('login'))
 
-
 @login_required
 def edit_profile(request):
 
     form = EditUserForm(instance=request.user)
     user = request.user
 
+    app_user = AppUser.objects.get(user=user)
+
     obj_dict ={
-        'form':form
+        'form':form,
+        'profile_picture' : app_user.profile_picture
     }
 
     if request.method == 'POST':
@@ -84,30 +85,25 @@ def edit_profile(request):
         form = EditUserForm(data=request.POST,instance=request.user)
         obj_dict['form']=form
         if form.is_valid():
+
+            if 'profile_picture' in request.FILES:  
+                app_user.profile_picture = request.FILES['profile_picture']
+                obj_dict['profile_picture']=app_user.profile_picture
+                app_user.save()
             
             old_password = form.cleaned_data['old_password']
             new_password = form.cleaned_data['password']
 
 
             if old_password:
-                if request.user.check_password(old_password):                    
-                    if new_password:
-                        user = form.save(commit=False)
-                        user.set_password(new_password)
-                        user.save()
-                        update_session_auth_hash(request, user)
-                        obj_dict['success_message'] = 'Data successfully updated'
-                    else:
-                        obj_dict['error_message'] = 'Invalid value for new password submitted'
-                else:
-                    obj_dict['error_message'] = 'Update failed. Old password is not correct'
+                user = form.save(commit=False)
+                user.set_password(new_password)
+                user.save()
+                update_session_auth_hash(request, user)
+                obj_dict['success_message'] = 'Data successfully updated.'
             else:
-                if not new_password:
-                    user = form.save(commit=False)
-                    user.save()
-                    obj_dict['success_message'] = 'Data successfully updated'
-                else:
-                    obj_dict['error_message'] = 'Please submit value for old password'
-
+                user = form.save(commit=False)
+                user.save()
+                obj_dict['success_message'] = 'Data successfully updated.'
 
     return render(request,'users/edit_profile.html',obj_dict)
