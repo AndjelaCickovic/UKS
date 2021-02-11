@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, HttpResponse
 from repositories_app.models import Repository, RepositoryUser
 from repositories_app.serializers import RepositorySerializer
@@ -24,19 +24,19 @@ def is_owner_or_coowner(request, repository):
     else:
         return False
 
+
 def main(request):
     if request.user.is_authenticated:
         try:
             app_user = AppUser.objects.get(user=request.user)
-            repositories = Repository.objects.filter(members.include(app_user))
+            repositories = Repository.objects.filter(members = app_user)
             dictionary = {'repositories': repositories}
             return render(request, 'repositories_app/repositories.html', context = dictionary)
         except:
-            return False
+            return redirect('/')
     else:
-        return False
+        return redirect('/')
    
-
 def repository(request, repository_id):
     try:
         repository = Repository.objects.get(id = repository_id)
@@ -50,7 +50,8 @@ def repository(request, repository_id):
 
 @login_required
 def add_repository(request):
-    repositories = Repository.objects.all()
+    app_user = AppUser.objects.get(user=request.user)
+    repositories = Repository.objects.filter(members = app_user)
     form = RepositoryForm()
 
     if request.method =='POST' :
@@ -180,5 +181,5 @@ def add_member(request, repository_id):
 
             return HttpResponseRedirect(reverse('repositories_app:view_repository', args = [repository_id]))
             
-    dictionary = {'repository': repository, 'form': form}
+    dictionary = {'repository': repository, 'form': form, 'is_owner' : is_owner}
     return render(request, 'repositories_app/new_member.html', context=dictionary)
