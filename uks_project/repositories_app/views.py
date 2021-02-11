@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, HttpResponse
 from repositories_app.models import Repository, RepositoryUser
 from repositories_app.serializers import RepositorySerializer
@@ -10,25 +10,48 @@ from users.models import AppUser
 from wiki_app.models import Wiki
 
 # Create your views here.
-def main(request):
-    repositories = Repository.objects.all()
-    dictionary = {'repositories': repositories}
-    return render(request, 'repositories_app/repositories.html', context = dictionary)
-
-def repository(request, repository_id):
-    repository = Repository.objects.get(id = repository_id)
-    app_user = AppUser.objects.get(user = request.user)
-    repository_user = RepositoryUser.objects.get(user = app_user, repository = repository)
-    if(repository_user.role == 'Owner'):
-        is_owner = True
+def is_owner_or_coowner(request, repository):
+    if request.user.is_authenticated:
+        try:
+            app_user = AppUser.objects.get(user=request.user)
+            repository_user = RepositoryUser.objects.get(user=app_user, repository=repository)
+            if repository_user.role == 'Owner' or repository_user.role == 'Coowner':
+                return True
+            else:
+                return False
+        except:
+            return False
     else:
-        is_owner = False
+        return False
+
+
+def main(request):
+    if request.user.is_authenticated:
+        try:
+            app_user = AppUser.objects.get(user=request.user)
+            repositories = Repository.objects.filter(members = app_user)
+            dictionary = {'repositories': repositories}
+            return render(request, 'repositories_app/repositories.html', context = dictionary)
+        except:
+            return redirect('/')
+    else:
+        return redirect('/')
+   
+def repository(request, repository_id):
+    try:
+        repository = Repository.objects.get(id = repository_id)
+    except:
+        return HttpResponseRedirect(reverse('repositories_app:view_repositories'))
+    
+    is_owner = is_owner_or_coowner(request, repository)
+
     dictionary = {'repository': repository, 'is_owner' : is_owner }
     return render(request, 'repositories_app/repository.html', context = dictionary)
 
 @login_required
 def add_repository(request):
-    repositories = Repository.objects.all()
+    app_user = AppUser.objects.get(user=request.user)
+    repositories = Repository.objects.filter(members = app_user)
     form = RepositoryForm()
 
     if request.method =='POST' :
@@ -67,7 +90,16 @@ def add_repository(request):
 
 @login_required
 def edit_repository(request, repository_id):
-    repository = Repository.objects.get(id=repository_id)
+    try:
+        repository = Repository.objects.get(id=repository_id)
+    except:
+        return HttpResponseRedirect(reverse('repositories_app:view_repositories'))
+
+    is_owner = is_owner_or_coowner(request, repository)
+
+    if is_owner == False:
+        return HttpResponseRedirect(reverse('repositories_app:view_repositories'))
+    
     form = RepositoryForm(initial = {'name': repository.name, 'description': repository.description, 'is_public': repository.is_public})
 
     if request.method =='POST' :
@@ -86,17 +118,50 @@ def edit_repository(request, repository_id):
 
 @login_required
 def delete_repository(request, repository_id):
-    Repository.objects.filter(id=repository_id).delete()
+    try:
+        repository = Repository.objects.get(id=repository_id)
+    except:
+        return HttpResponseRedirect(reverse('repositories_app:view_repositories'))
+
+    is_owner = is_owner_or_coowner(request, repository)
+
+    if is_owner == False:
+        return HttpResponseRedirect(reverse('repositories_app:view_repositories'))
+
+    repository.delete()
     return HttpResponseRedirect(reverse('repositories_app:view_repositories'))
 
 @login_required
 def delete_member(request, member_id, repository_id):
-    RepositoryUser.objects.filter(id=member_id).delete()
+    try:
+        repository = Repository.objects.get(id=repository_id)
+    except:
+        return HttpResponseRedirect(reverse('repositories_app:view_repositories'))
+
+    is_owner = is_owner_or_coowner(request, repository)
+
+    if is_owner == False:
+        return HttpResponseRedirect(reverse('repositories_app:view_repositories'))
+
+    try:
+        RepositoryUser.objects.filter(id=member_id).delete()
+    except:
+        pass
+    
     return HttpResponseRedirect(reverse('repositories_app:view_repository',args = [repository_id]))
 
 @login_required
 def add_member(request, repository_id):
-    repository = Repository.objects.get(id = repository_id)
+    try:
+        repository = Repository.objects.get(id=repository_id)
+    except:
+        return HttpResponseRedirect(reverse('repositories_app:view_repositories'))
+
+    is_owner = is_owner_or_coowner(request, repository)
+
+    if is_owner == False:
+        return HttpResponseRedirect(reverse('repositories_app:view_repositories'))
+
     serializer = RepositorySerializer(repository)
     existing_members = serializer.data['members']
     form = RepositoryUserForm(my_arg = existing_members)
@@ -116,5 +181,5 @@ def add_member(request, repository_id):
 
             return HttpResponseRedirect(reverse('repositories_app:view_repository', args = [repository_id]))
             
-    dictionary = {'repository': repository, 'form': form}
+    dictionary = {'repository': repository, 'form': form, 'is_owner' : is_owner}
     return render(request, 'repositories_app/new_member.html', context=dictionary)
