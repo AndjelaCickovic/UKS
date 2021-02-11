@@ -5,7 +5,7 @@ function db_ready() {
 import sys
 import psycopg2
 try:
-    conn = psycopg2.connect(dbname="uks_db", user="uks", password="uks", host="db")
+    conn = psycopg2.connect(dbname="uks_db", user="uks", password="uks", host="uks_db")
 except psycopg2.OperationalError:
     sys.exit(-1)
 sys.exit(0)

@@ -1,16 +1,9 @@
 version: "3.9"
    
 services:
-  db:
+  uks_db:
     image: postgres
-    container_name: uks_db
-    ports:
-      - "8001:5432"
-    environment:
-      - POSTGRES_DB=uks_db
-      - POSTGRES_USER=uks
-      - POSTGRES_PASSWORD=uks
-
+    
   web:
     container_name: uks_app
     build: .
@@ -20,7 +13,7 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      - db
+      - uks_db
     environment:
     - POSTGRES_DB=uks_db
     - POSTGRES_USER=uks
