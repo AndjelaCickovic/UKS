@@ -13,3 +13,4 @@ requests==2.25.1
 sqlparse==0.4.1
 urllib3==1.26.3
 yarg==0.1.9
+Pillow==8.1.0
