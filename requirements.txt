@@ -1,9 +1,15 @@
-asgiref @ file:///tmp/build/80754af9/asgiref_1605055780383/work
-certifi==2020.12.5
-Django @ file:///tmp/build/80754af9/django_1609784082548/work
-django-crispy-forms==1.11.0
+Django==3.1.5
 djangorestframework==3.12.2
-psycopg2 @ file:///tmp/build/80754af9/psycopg2_1608147602433/work
-pytz @ file:///tmp/build/80754af9/pytz_1608922264688/work
-sqlparse @ file:///tmp/build/80754af9/sqlparse_1602184451250/work
-
+asgiref==3.3.1
+certifi==2020.12.5
+chardet==4.0.0
+django-crispy-forms==1.11.0
+docopt==0.6.2
+idna==2.10
+pipreqs==0.4.10
+psycopg2==2.8.5
+pytz==2020.5
+requests==2.25.1
+sqlparse==0.4.1
+urllib3==1.26.3
+yarg==0.1.9

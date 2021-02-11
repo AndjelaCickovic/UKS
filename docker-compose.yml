@@ -3,17 +3,25 @@ version: "3.9"
 services:
   db:
     image: postgres
+    container_name: uks_db
+    ports:
+      - "8001:5432"
     environment:
       - POSTGRES_DB=uks_db
       - POSTGRES_USER=uks
       - POSTGRES_PASSWORD=uks
+
   web:
+    container_name: uks_app
     build: .
-    command: python manage.py runserver
-    volumes:
-      - .:/uks_project
+    command: ["./wait_for_db.sh"]
+    expose:
+      - 8000
     ports:
       - "8000:8000"
     depends_on:
       - db
-
+    environment:
+    - POSTGRES_DB=uks_db
+    - POSTGRES_USER=uks
+    - POSTGRES_PASSWORD=uks
