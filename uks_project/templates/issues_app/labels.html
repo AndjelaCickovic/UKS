@@ -5,7 +5,9 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-10">
-                    <a class="btn btn-primary" href="/repositories/repository/{{repository.id}}/issues/add-label" role="button">Add label</a>
+                    {% if in_repo %}
+                        <a class="btn btn-primary" href="/repositories/repository/{{repository.id}}/issues/add-label" role="button">Add label</a>
+                    {% endif %}
                 </div>
             </div>
             <hr>
@@ -27,17 +29,19 @@
                             <tr>
                                 <td style="border-right-width: 1px; border-right-style: solid; border-right-color: black;">{{ label.name }}</td>
                                 <td>&nbsp;{{ label.description }}</td>
-                                <td>
-                                    <ul class="navbar-nav ml-auto">
-                                        <li class="nav-item dropdown">
-                                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
-                                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                                <a class="dropdown-item" href="/repositories/repository/{{repository.id}}/issues/edit-label/{{label.id}}">Edit</a>
-                                                <a class="dropdown-item" href="/repositories/repository/{{repository.id}}/issues/delete-label/{{label.id}}">Delete</a>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </td>
+                                {% if in_repo %}
+                                    <td>
+                                        <ul class="navbar-nav ml-auto">
+                                            <li class="nav-item dropdown">
+                                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
+                                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                                    <a class="dropdown-item" href="/repositories/repository/{{repository.id}}/issues/edit-label/{{label.id}}">Edit</a>
+                                                    <a class="dropdown-item" href="/repositories/repository/{{repository.id}}/issues/delete-label/{{label.id}}">Delete</a>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </td>
+                                {% endif %}
                             </tr>
                         {% endfor %}
                     </table>
