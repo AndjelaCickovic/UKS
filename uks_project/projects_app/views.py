@@ -45,7 +45,6 @@ def main(request, repository_id):
 
 @login_required
 def new_project(request, repository_id):
-    form = ProjectForm()
     try:
         repository = Repository.objects.get(id=repository_id)
     except:
@@ -69,7 +68,6 @@ def new_project(request, repository_id):
             project.status = 'Open'
 
             project.save()
-
             return HttpResponseRedirect(reverse('repositories_app:projects_app:main', kwargs={'repository_id':repository_id}))
     
     return render(request,'projects_app/new_project.html',{'repository': repository,'form': form})

@@ -13,9 +13,9 @@ class ProjectForm(ModelForm):
 
     def clean(self):
         data = self.cleaned_data
-
-        if Project.objects.filter(name=self.cleaned_data['name'],repository=self.cleaned_data['repository']).exists():
-            raise ValidationError('Project with this name already exists in this repository')
+        if(self.is_valid()):
+            if Project.objects.filter(name=self.cleaned_data['name'],repository=self.cleaned_data['repository']).exists():
+                raise ValidationError('Project with this name already exists in this repository')
         
         return data
     

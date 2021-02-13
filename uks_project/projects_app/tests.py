@@ -2,7 +2,10 @@ from django.test import TestCase
 from django.urls import reverse
 from projects_app.models import Project
 from repositories_app.models import Repository
+from projects_app.forms import ProjectForm
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
+
 
 def create_repository():
     rep = Repository(id=1,is_public=True,name='test_repository')
@@ -50,3 +53,29 @@ class ProjectsViewTests(TestCase):
         response = self.client.get(reverse('repositories_app:projects_app:delete_project',kwargs={'project_id':test_project.id,'repository_id':1}))
         exists = Project.objects.filter(id=test_project.id).exists()
         self.assertEquals(exists,False)
+
+class ProjectsFormTests(TestCase):
+
+    def setUp(self):
+        User = get_user_model()
+        user = User.objects.create_user('temporary', 'temporary@gmail.com', 'temporary')
+
+    def test_new_project_valid_form(self):
+        form = ProjectForm(data={'name':'name','description':'desc','repository':create_repository()})
+        self.assertTrue(form.is_valid())
+
+    def test_new_project_invalid_form(self):
+        create_repository()
+        self.client.login(username='temporary', password='temporary')
+        response  = self.client.post(reverse("repositories_app:projects_app:new_project",kwargs={'repository_id':1}),data={'name':'','description':'desc'})
+        self.assertFormError(response,'form','name','This field is required.')
+        
+    # def test_new_project_invalid_name_form(self):
+    #     # create_repository()
+    #     create_project("test_project","test_project_desc",'Closed') 
+    #     self.client.login(username='temporary', password='temporary')
+    #     response  = self.client.post(reverse("repositories_app:projects_app:new_project",kwargs={'repository_id':1}),data={'name':'test_project','description':'desc'})
+
+    #     with self.assertRaisesMessage(ValidationError,"Project with this name already exists in this repository"):
+    #         response  = self.client.post(reverse("repositories_app:projects_app:new_project",kwargs={'repository_id':1}),data={'name':'test_project','description':'desc'})
+
