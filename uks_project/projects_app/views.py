@@ -13,6 +13,7 @@ from django.contrib.auth.decorators import login_required
 import sys
 import io
 
+
 def get_role(request, repository):
     if request.user.is_authenticated:
         try:
@@ -25,19 +26,17 @@ def get_role(request, repository):
         return False
     
 def main(request, repository_id):
-    projects = Project.objects.all().order_by('id')
     try:
         repository = Repository.objects.get(id=repository_id)
     except:
         return redirect('/home')
 
     role = get_role(request, repository)
-
     if repository.is_public == False and role == False:
         return redirect('/repositories')
 
     objects_dict = { 
-        'projects': projects,
+        'projects': repository.projects.all(),
         'repository': repository,
         'role': role
         }
