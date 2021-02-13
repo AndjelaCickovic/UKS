@@ -138,7 +138,7 @@ def close_project(request,project_id, repository_id):
 
     project.status = "Closed"
     project.save()
-
+    
     return HttpResponseRedirect(reverse('repositories_app:projects_app:main', kwargs={'repository_id':repository_id}))
 
 @login_required
