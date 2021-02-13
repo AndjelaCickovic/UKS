@@ -44,3 +44,9 @@ class ProjectsViewTests(TestCase):
         test_project = Project.objects.get(id=test_project.id)
         self.assertEquals(test_project.status,'Open')
     
+    def test_delete_project(self):
+        self.client.login(username='temporary', password='temporary')
+        test_project = create_project("test_project","test_project_desc",'Open')         
+        response = self.client.get(reverse('repositories_app:projects_app:delete_project',kwargs={'project_id':test_project.id,'repository_id':1}))
+        exists = Project.objects.filter(id=test_project.id).exists()
+        self.assertEquals(exists,False)
