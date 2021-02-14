@@ -1,52 +1,67 @@
 <!DOCTYPE html>
 {% extends 'myapp/base.html' %}
 {% block body_block %}
-
-<h1>{{repository.name}}</h1>
-<hr>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container">
-        <ul class="nav navbar-nav">
-            <li><a class="nav-link" href="/repositories/repository/{{repository.id}}">About</a></li>
-            <li><a class="nav-link" href="/repositories/repository/{{repository.id}}/branches">Branches</a></li>
-            <li><a class="nav-link" href="/repositories/repository/{{repository.id}}/issues">Issues</a></li>
-            <li><a class="nav-link" href="/repositories/repository/{{repository.id}}/projects">Projects</a></li>
-            <li><a class="nav-link" href="/repositories/repository/{{repository.id}}/wiki">Wiki</a></li>
-        </ul>
+<br>
+<br>
+<div class="row">
+    <div class="col-md-10">
+        <h1>{{repository.name}}</h1>
     </div>
     {% if is_owner %}
-    <div class="row">
-        <div class="col-md-5">
-            <a class="btn btn-primary" href="/repositories/edit-repository/{{repository.id}}" role="button">Edit repository</a>
-        </div>
-    </div>
+        <a class="btn btn-primary" style="height: 40px;" href="/repositories/edit-repository/{{repository.id}}" role="button">Edit repository</a>
     {% endif %}
-</nav>
-
+</div>
+<hr>
+    <div class="container">
+        <ul class="nav nav-tabs">
+            <li class="nav-item" style="width: 20%; font-size: 30px;">
+                <a class="nav-link" href="/repositories/repository/{{repository.id}}">About</a>
+            </li>
+            <li class="nav-item" style="width: 20%; font-size: 30px;">
+                <a class="nav-link" href="/repositories/repository/{{repository.id}}/branches">Branches</a>
+            </li>
+            <li class="nav-item" style="width: 20%; font-size: 30px;">
+                <a class="nav-link" href="/repositories/repository/{{repository.id}}/issues">Issues</a>
+            </li>
+            <li class="nav-item"  style="width: 20%; font-size: 30px;">
+                <a class="nav-link" href="/repositories/repository/{{repository.id}}/projects">Projects</a>
+            </li>
+            <li class="nav-item"  style="width: 20%; font-size: 30px;">
+                <a class="nav-link" href="/repositories/repository/{{repository.id}}/wiki">Wiki</a></li>
+            </li>
+        </ul>
+    </div>
+<br>
+<br>
 {% block show_block %}
-{{repository.description}}
+<div>
+    {{repository.description}}
+</div>
+<br>
+<br>
 <div class="row">
-    <div class="col-md-5">
-<table>
+    <div class="col-md-7">
+<table class="table table-striped" style="margin-top: 30px">
     <tr>
         <th>Member</th>
         <th>Role</th>
+        <th></th>
     </tr>
     {% for member in repository.users.all %}
-    <tr>
-        <td>{{member.user.user}}</td>
-        <td>{{member.role}}</td>
+    <tr style="height: 62px;">
+        <td style="vertical-align: middle;">{{member.user.user}}</td>
+        <td style="vertical-align: middle;">{{member.role}}</td>
         {% if member.role != 'Owner' and is_owner %}
-        <td><a href="/repositories/repository/{{repository.id}}/delete-member/{{member.id}}">Delete</a></td>
+        <td><a class="btn btn-danger" href="/repositories/repository/{{repository.id}}/delete-member/{{member.id}}">Delete</a></td>
         {% endif %}
     </tr>
     {% endfor %}
 </table>
 </div>
 {% if is_owner %}
-<div class="col-md-7">
+<div class="col-md-5">
     {% block add_block %}
-    <a class="btn btn-primary" href="/repositories/repository/{{repository.id}}/add-member" role="button">Add member</a>
+    <a class="btn btn-success" style="margin-top: 30px;" href="/repositories/repository/{{repository.id}}/add-member" role="button">Add member</a>
     {% endblock %} 
 </div>
 {% endif %}
