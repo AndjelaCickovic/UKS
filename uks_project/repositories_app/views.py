@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from repositories_app.models import Repository, RepositoryUser
 from repositories_app.serializers import RepositorySerializer
 from django.urls import reverse
-from repositories_app.forms import RepositoryForm, RepositoryUserForm
+from repositories_app.forms import RepositoryForm, RepositoryUserForm, EditMemberForm
 from branches_app.models import Branch
 from django.contrib.auth.decorators import login_required
 from users.models import AppUser
@@ -182,4 +182,34 @@ def add_member(request, repository_id):
             return HttpResponseRedirect(reverse('repositories_app:view_repository', args = [repository_id]))
             
     dictionary = {'repository': repository, 'form': form, 'is_owner' : is_owner}
+    return render(request, 'repositories_app/new_member.html', context=dictionary)
+
+def edit_member(request, repository_id, member_id):
+    try:
+        repository = Repository.objects.get(id=repository_id)
+        membership = RepositoryUser.objects.get(id = member_id)
+    except:
+        return HttpResponseRedirect(reverse('repositories_app:view_repository', args = [repository_id]))
+
+    is_owner = is_owner_or_coowner(request, repository)
+
+    if is_owner == False:
+        return HttpResponseRedirect(reverse('repositories_app:view_repository', args = [repository_id]))
+
+    serializer = RepositorySerializer(repository)
+    form = EditMemberForm(instance = membership)
+
+    if request.method =='POST' :
+        form = EditMemberForm(request.POST)
+
+        if form.is_valid(): 
+            membership.role = form.cleaned_data['role']
+            membership.save()
+
+            #repository.members.add(repository_user.user)
+            #repository.save()
+
+            return HttpResponseRedirect(reverse('repositories_app:view_repository', args = [repository_id]))
+            
+    dictionary = {'repository': repository, 'form': form, 'is_owner' : is_owner, 'member' : membership}
     return render(request, 'repositories_app/new_member.html', context=dictionary)

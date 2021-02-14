@@ -13,6 +13,10 @@ class CustomMCF(forms.ModelChoiceField):
     def label_from_instance(self, field):
         return '%s' % field.user
 
+class CustomCF(forms.CharField):
+    def label_from_instance(self, field):
+        return '%s' % field.user
+
 class RepositoryUserForm(ModelForm):
     class Meta:
         model = RepositoryUser
@@ -22,4 +26,9 @@ class RepositoryUserForm(ModelForm):
         super(RepositoryUserForm, self).__init__(*args, **kwargs)
         users= CustomMCF(queryset=AppUser.objects.all().exclude(id__in=my_arg))
         self.fields['user'] = users
+
+class EditMemberForm(ModelForm):
+    class Meta:
+        model = RepositoryUser
+        fields = ['role']
         

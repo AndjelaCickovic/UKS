@@ -11,7 +11,7 @@ class Role(models.TextChoices):
 
 class Repository(models.Model):
     name = models.CharField(max_length = 264)
-    description = models.CharField(max_length = 264, blank = True)
+    description = models.TextField(blank = True, null = True)
     is_public = models.BooleanField()
     members = models.ManyToManyField(AppUser, through = 'RepositoryUser')
 

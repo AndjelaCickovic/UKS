@@ -43,17 +43,29 @@
     <div class="col-md-7">
 <table class="table table-striped" style="margin-top: 30px">
     <tr>
-        <th>Member</th>
-        <th>Role</th>
-        <th></th>
+        <th style="width: 15%;"></th>
+        <th style="width: 35%;">Member</th>
+        <th style="width: 35%;">Role</th>
+        <th style="width: 15%;"></th>
     </tr>
     {% for member in repository.users.all %}
     <tr style="height: 62px;">
+        <td><img src="/media/{{member.user.profile_picture}}" style="max-width:80px;max-height:80px"></td>
         <td style="vertical-align: middle;">{{member.user.user}}</td>
         <td style="vertical-align: middle;">{{member.role}}</td>
+        <td style="vertical-align: middle;">
         {% if member.role != 'Owner' and is_owner %}
-        <td><a class="btn btn-danger" href="/repositories/repository/{{repository.id}}/delete-member/{{member.id}}">Delete</a></td>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="/repositories/repository/{{repository.id}}/edit-member/{{member.id}}">Edit</a>
+                    <a class="dropdown-item" href="/repositories/repository/{{repository.id}}/delete-member/{{member.id}}">Delete</a>
+                </div>
+            </li>
+        </ul>
         {% endif %}
+        </td>
     </tr>
     {% endfor %}
 </table>
