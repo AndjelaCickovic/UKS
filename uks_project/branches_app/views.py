@@ -173,7 +173,6 @@ def new_commit(request,repository_id,branch_id):
         if form_data.is_valid():
             commit = Commit(**form_data.cleaned_data)
             commit.user = AppUser.objects.get(user=request.user)
-            print(commit.user)
             try:
                 commit.save()
             except:
@@ -190,7 +189,6 @@ def new_commit(request,repository_id,branch_id):
 
             return redirect('/repositories/repository/{}/branches/{}/commits'.format(str(repository_id),str(branch_id)))
 
-    print(form)
     return render(request,'branches_app/new_commit.html',obj_dict)
 
 def is_in_role(user, repository):
