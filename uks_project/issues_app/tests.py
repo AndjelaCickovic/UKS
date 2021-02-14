@@ -23,13 +23,13 @@ class LabelsViewTests(TestCase):
 
     def test_no_labels(self):
         create_repository()
-        response = self.client.get(reverse('repositories_app:issues_app:labels', kwargs={'repository_id': 1}))
+        response = self.client.get(reverse('repositories_app:issues_app:view_labels', kwargs={'repository_id': 1}))
         self.assertEquals(response.status_code,200)
         self.assertQuerysetEqual(response.context['test_labels'],[])
 
     def test_labels(self):
         create_label("test_label", "test_label_desc", "#AAAAAA")
-        response = self.client.get(reverse('repositories_app:issues_app:labels', kwargs={'repository_id': 1}))
+        response = self.client.get(reverse('repositories_app:issues_app:view_labels', kwargs={'repository_id': 1}))
         self.assertEquals(response.status_code,200)
         self.assertQuerysetEqual(response.context['test_labels'],['<Label: test_label>'])
     
