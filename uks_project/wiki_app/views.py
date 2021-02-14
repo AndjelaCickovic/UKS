@@ -9,24 +9,26 @@ from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 def get_role(request, repository):
+    try:
+        app_user = AppUser.objects.get(user=request.user)
+        repository_user = RepositoryUser.objects.get(user=app_user, repository=repository)
+        return True
+    except:
+        return False
+
+def check_role(request, repository):
     if request.user.is_authenticated:
-        try:
-            app_user = AppUser.objects.get(user=request.user)
-            repository_user = RepositoryUser.objects.get(user=app_user, repository=repository)
-            return True
-        except:
-            return False
+        return get_role(request,repository)
     else:
         return False
 
-def main(request, repository_id):
-    
+def main(request, repository_id):  
     try:
         repository = Repository.objects.get(id=repository_id)
     except:
         return redirect('/repositories')
     
-    role = get_role(request, repository)
+    role = check_role(request, repository)
     print(role)
 
     if repository.is_public == False and role == False:
@@ -44,7 +46,7 @@ def error(request, repository_id):
     except:
         return redirect('/repositories')
     
-    role = get_role(request, repository)
+    role = check_role(request, repository)
 
     if repository.is_public == False and role == False:
         return redirect('/repositories')
@@ -61,7 +63,7 @@ def page(request,page_id, repository_id):
     except:
         return redirect('/repositories')
     
-    role = get_role(request, repository)
+    role = check_role(request, repository)
 
     if repository.is_public == False and role == False:
         return redirect('/repositories')
@@ -82,7 +84,7 @@ def new_page(request, repository_id):
     try:
         repository = Repository.objects.get(id=repository_id)
     except:
-        return redirect('/repositories/repository/' + str(repository_id) + '/wiki')
+        return redirect('/repositories')
     
     role = get_role(request, repository)
 
@@ -91,7 +93,7 @@ def new_page(request, repository_id):
     elif role == False:
         return redirect('/repositories/repository/' + str(repository_id) + '/wiki')
 
-    form = PageForm()
+    form = PageForm(initial={'wiki':repository.wiki.all()[0]})
 
     if request.method =='POST' :
         form = PageForm(request.POST)
@@ -116,7 +118,7 @@ def edit_page(request, page_id, repository_id):
     try:
         repository = Repository.objects.get(id=repository_id)
     except:
-        return redirect('/repositories/repository/' + str(repository_id) + '/wiki')
+        return redirect('/repositories')
     
     role = get_role(request, repository)
 
@@ -129,10 +131,10 @@ def edit_page(request, page_id, repository_id):
         page = Page.objects.get(id=page_id)
     except:
         return redirect('/repositories/repository/' + str(repository_id) + '/wiki/error')
-    form = PageForm(instance=page)
+    form = PageForm(instance=page, initial={'wiki':repository.wiki.all()[0]})
 
     if request.method =='POST' :
-        form = PageForm(request.POST)
+        form = PageForm(request.POST, instance=page)
 
         if form.is_valid(): 
             page.title = form.cleaned_data['title']
@@ -151,7 +153,7 @@ def delete_page(request, page_id, repository_id):
     try:
         repository = Repository.objects.get(id=repository_id)
     except:
-        return redirect('/repositories/repository/' + str(repository_id) + '/wiki')
+        return redirect('/repositories')
     
     role = get_role(request, repository)
 
@@ -163,9 +165,7 @@ def delete_page(request, page_id, repository_id):
     try:
         page = Page.objects.get(id=page_id)
     except:
-        pages = repository.wiki.all()[0].pages.all()
-
-        return render(request, 'wiki_app/error.html' ,{'pages':pages, 'repository': repository, 'role': role})
+        return redirect('/repositories/repository/' + str(repository_id) + '/wiki/error')
 
     page.delete()
 
