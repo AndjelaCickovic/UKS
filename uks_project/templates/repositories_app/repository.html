@@ -51,9 +51,19 @@
     <tr style="height: 62px;">
         <td style="vertical-align: middle;">{{member.user.user}}</td>
         <td style="vertical-align: middle;">{{member.role}}</td>
+        <td>
         {% if member.role != 'Owner' and is_owner %}
-        <td><a class="btn btn-danger" href="/repositories/repository/{{repository.id}}/delete-member/{{member.id}}">Delete</a></td>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="/repositories/repository/{{repository.id}}/edit-member/{{member.id}}">Edit</a>
+                    <a class="dropdown-item" href="/repositories/repository/{{repository.id}}/delete-member/{{member.id}}">Delete</a>
+                </div>
+            </li>
+        </ul>
         {% endif %}
+        </td>
     </tr>
     {% endfor %}
 </table>
