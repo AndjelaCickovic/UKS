@@ -30,7 +30,7 @@
         {% for project in projects %}
          {% ifequal project.status "Open" %}
             <tr>
-                <td><a style="color:black" href="{{project.id}}">{{project.name}}</a></td>
+                <td><a style="color:green" href="{{project.id}}">{{project.name}}</a></td>
                 <td>{{ project.description }}</td>
                 <td>{{ project.status }}</td>
                 <td>

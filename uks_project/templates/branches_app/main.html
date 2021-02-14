@@ -24,11 +24,11 @@
                     <th>Name</th>
                     <th>Parent branch</th>
                     <th></th>
-                    <th>More</th>
+                    <th></th>
                 </tr>
                 {% for branch in branches %}
                     <tr>
-                        <td><a style="color:black" href="/repositories/repository/{{repository.id}}/branches/{{branch.id}}/commits">{{branch.name}}</a></td>
+                        <td><a style="color:green" href="/repositories/repository/{{repository.id}}/branches/{{branch.id}}/commits">{{branch.name}}</a></td>
                         <td>{{ branch.parent_branch.name}}</td>
                         {% if branch.default  %}
                             <td>default</td>

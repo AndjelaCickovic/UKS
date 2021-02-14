@@ -20,7 +20,7 @@
             {% endif %}
             <div class="card border-dark" style="margin-top:30px" >
                 <div class="card-header" >Commits</div>
-                {% if branch.commits %}
+                {% if branch.commits.all %}
                     {% for commit in branch.commits.all %}
                     <hr style="margin-botoom:0px;margin-top:0px">
                         <div class="card-body" style="margin-top:0px">

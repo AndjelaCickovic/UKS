@@ -13,7 +13,7 @@
                 {% for issue in issues %}
                     <tr>
                         <td>
-                            <a href="/repositories/repository/{{repository.id}}/issues/issue/{{issue.id}}">
+                            <a style="color:green" href="/repositories/repository/{{repository.id}}/issues/issue/{{issue.id}}">
                             {{ issue.name }}
                             </a>
                         </td>
@@ -49,9 +49,5 @@
             {% else %}
             <h3>No issues found!</h3>
             {% endif %}
-        {% comment %} <div class="col-md-5">
-            {% block help_block %}
-            {% endblock %}
-        </div> {% endcomment %}
     </div>
 {% endblock %}
