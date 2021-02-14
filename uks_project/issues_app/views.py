@@ -67,7 +67,7 @@ def add_label(request, repository_id):
     issues = Issue.objects.filter(repository = repository)
     issue_serializer = IssueSerializer(issues, many=True)
     
-    form = LabelForm()
+    form = LabelForm(initial={'repository': repository})
 
     if request.method =='POST' :
         form = LabelForm(request.POST)
@@ -104,7 +104,7 @@ def edit_label(request, repository_id, label_id):
     issue_serializer = IssueSerializer(issues, many=True)
 
     label = Label.objects.get(id=label_id)
-    form = LabelForm(initial = {'name': label.name, 'description': label.description, 'colour': label.colour})
+    form = LabelForm(initial = {'name': label.name, 'description': label.description, 'colour': label.colour, 'repository': repository})
 
     if request.method =='POST' :
         form = LabelForm(request.POST)
@@ -148,7 +148,7 @@ def add_milestone(request, repository_id):
     issues = Issue.objects.filter(repository = repository)
     issue_serializer = IssueSerializer(issues, many=True)
     
-    form = MilestoneForm()
+    form = MilestoneForm(initial={'repository': repository})
 
     if request.method =='POST' :
         form = MilestoneForm(request.POST)
@@ -186,7 +186,7 @@ def edit_milestone(request, repository_id, milestone_id):
     issue_serializer = IssueSerializer(issues, many=True)
     
     milestone = Milestone.objects.get(id=milestone_id)
-    form = MilestoneForm(initial = {'name': milestone.name, 'description': milestone.description, 'dueDate': milestone.dueDate, 'status': milestone.status})
+    form = MilestoneForm(initial = {'name': milestone.name, 'description': milestone.description, 'dueDate': milestone.dueDate, 'status': milestone.status, 'repository': repository})
 
     if request.method =='POST' :
         form = MilestoneForm(request.POST)
