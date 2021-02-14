@@ -20,15 +20,17 @@
              <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
          </form>
          <div class="navbar-collapse collapse justify-content-stretch" id="navbar7">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Account</a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="{% url 'users:edit_profile' %}">Edit profile</a>
-                            <a class="dropdown-item" href="{% url 'users:user_logout' %}">Log out</a>
-                         </div>
+            <ul class="navbar-nav ml-auto">            
+                <li class="nav-item dropdown" >
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="margin-right:50px">
+                        {{user.username}}</a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="width:10px" >
+                            <a class="dropdown-item"  href="{% url 'users:edit_profile' %}">Edit profile</a>
+                            <a class="dropdown-item"  href="{% url 'users:user_logout' %}">Log out</a>
+                        </div>
                 </li>
             </ul>
+            <div></div>
         </div>
  
       {% else %}
