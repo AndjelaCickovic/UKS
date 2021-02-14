@@ -32,9 +32,9 @@ class EditUserForm(UserForm):
     old_password = forms.CharField(widget=forms.PasswordInput(),required=False)
     password = forms.CharField(widget=forms.PasswordInput(),label='New password',required=False)
     confirm_password = forms.CharField(widget=forms.PasswordInput(),required=False)
-    change_profile_picture = forms.ImageField(label='Change profile picture')
+    profile_picture = forms.ImageField(label='Change profile picture',required=False)
 
-    field_order= ['first_name','last_name','email','old_password','password','confirm_password','profile_picture']
+    field_order= ['first_name','last_name','email','old_password','password','confirm_password']
 
     class Meta():
         model = User

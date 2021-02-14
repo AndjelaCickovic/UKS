@@ -26,18 +26,13 @@ def register(request):
             user.set_password(user.password)
             user.save()
 
-            print('saved')
-
             app_user = AppUser.objects.create(user=user)
-
-            print('created')
 
             if 'profile_picture' in request.FILES:  
                 app_user.profile_picture = request.FILES['profile_picture']
 
             app_user.save()
 
-            print('user registered')
             registered = True
             return render(request,"users/login.html",{})
         else:
@@ -62,11 +57,9 @@ def user_login(request):
                 login(request,user)
                 return redirect('/repositories')
             else:
-               # return HttpResponse("Account not active")
                 return render(request,'users/login.html',{'err':'Account not active!'})
 
         else:
-            #return HttpResponse("Invalid login details supplied!")
             return render(request,'users/login.html',{'error':'Invalid login details supplied!'})
     else:
         return render(request,'users/login.html',{})
@@ -76,15 +69,17 @@ def user_logut(request):
     logout(request)
     return HttpResponseRedirect(reverse('login'))
 
-
 @login_required
 def edit_profile(request):
 
     form = EditUserForm(instance=request.user)
     user = request.user
 
+    app_user = AppUser.objects.get(user=user)
+
     obj_dict ={
-        'form':form
+        'form':form,
+        'profile_picture' : app_user.profile_picture
     }
 
     if request.method == 'POST':
@@ -95,6 +90,8 @@ def edit_profile(request):
 
             if 'profile_picture' in request.FILES:  
                 app_user.profile_picture = request.FILES['profile_picture']
+                obj_dict['profile_picture']=app_user.profile_picture
+                app_user.save()
             
             old_password = form.cleaned_data['old_password']
             new_password = form.cleaned_data['password']
