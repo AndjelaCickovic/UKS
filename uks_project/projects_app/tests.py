@@ -15,7 +15,6 @@ def create_repository():
 def create_project(name, description, status):
     return Project.objects.create(name=name,description=description,status=status, repository=create_repository())
 
-# Create your tests here.
 class ProjectsViewTests(TestCase):
     def setUp(self):
         User = get_user_model()
@@ -33,6 +32,23 @@ class ProjectsViewTests(TestCase):
         self.assertEquals(response.status_code,200)
         self.assertQuerysetEqual(response.context['projects'],['<Project: test_project>'])
 
+    def test_valid_project_details(self):
+        test_project = create_project("test_project","test_project_desc",'Open')
+        response = self.client.get(reverse('repositories_app:projects_app:project',kwargs={'repository_id':1,'project_id': test_project.id}))
+        self.assertEquals(response.status_code,200)
+        self.assertQuerysetEqual([response.context['project']],['<Project: test_project>'])
+
+    def test_invalid_project_details(self):
+        response = self.client.get(reverse('repositories_app:projects_app:project',kwargs={'repository_id':1,'project_id': 2}))
+        self.assertEquals(response.status_code,302)
+
+    def test_private_repo_project_details(self):
+        test_project = create_project("test_project","test_project_desc",'Open')      
+        test_project.repository.is_public = False  
+        test_project.repository.save()    
+        response = self.client.get(reverse('repositories_app:projects_app:project',kwargs={'repository_id':1,'project_id': test_project.id}))
+        self.assertEquals(response.status_code,302)
+
     def test_close_project(self):  
         self.client.login(username='temporary', password='temporary')
         test_project = create_project("test_project","test_project_desc",'Open')         
@@ -47,12 +63,17 @@ class ProjectsViewTests(TestCase):
         test_project = Project.objects.get(id=test_project.id)
         self.assertEquals(test_project.status,'Open')
     
-    def test_delete_project(self):
+    def test_delete_valid_project(self):
         self.client.login(username='temporary', password='temporary')
         test_project = create_project("test_project","test_project_desc",'Open')         
         response = self.client.get(reverse('repositories_app:projects_app:delete_project',kwargs={'project_id':test_project.id,'repository_id':1}))
         exists = Project.objects.filter(id=test_project.id).exists()
         self.assertEquals(exists,False)
+
+    def test_delete_invalid_project(self):
+        self.client.login(username='temporary', password='temporary')
+        response = self.client.get(reverse('repositories_app:projects_app:delete_project',kwargs={'project_id':2,'repository_id':1}))
+        self.assertEquals(response.status_code,302)
 
 class ProjectsFormTests(TestCase):
 
@@ -64,10 +85,32 @@ class ProjectsFormTests(TestCase):
         form = ProjectForm(data={'name':'name','description':'desc','repository':create_repository()})
         self.assertTrue(form.is_valid())
 
-    def test_new_project_invalid_form(self):
+    def test_new_project_post_valid_form(self):
+        create_repository()
+        self.client.login(username='temporary', password='temporary')
+        response  = self.client.post(reverse("repositories_app:projects_app:new_project",kwargs={'repository_id':1}),data={'name':'name','description':'desc'})
+        self.assertEquals(response.status_code,200)
+        self.assertFormError(response,'form','name',None)
+        self.assertFormError(response,'form','description',None)
+
+    def test_new_project_post_invalid_form(self):
         create_repository()
         self.client.login(username='temporary', password='temporary')
         response  = self.client.post(reverse("repositories_app:projects_app:new_project",kwargs={'repository_id':1}),data={'name':'','description':'desc'})
+        self.assertEquals(response.status_code,200)
+        self.assertFormError(response,'form','name','This field is required.')
+
+    def test_edit_project_post_valid_form(self):
+        test_project = create_project("test_project","test_project_desc",'Open')         
+        self.client.login(username='temporary', password='temporary')
+        response  = self.client.post(reverse("repositories_app:projects_app:edit_project",kwargs={'repository_id':1,'project_id':test_project.id}),data={'name':'name','description':'desc'})
+        self.assertFormError(response,'form','name',None)
+        self.assertFormError(response,'form','description',None)
+
+    def test_edit_project_post_invalid_form(self):
+        test_project = create_project("test_project","test_project_desc",'Open')         
+        self.client.login(username='temporary', password='temporary')
+        response  = self.client.post(reverse("repositories_app:projects_app:edit_project",kwargs={'repository_id':1,'project_id':test_project.id}),data={'name':'','description':'desc'})
         self.assertFormError(response,'form','name','This field is required.')
         
     # def test_new_project_invalid_name_form(self):
