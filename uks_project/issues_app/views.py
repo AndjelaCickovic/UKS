@@ -53,7 +53,7 @@ def labels(request, repository_id):
     label_serializer = LabelSerializer(labels, many=True)
 
     valid_user = check_if_valid_user(request, repository)
-    dictionary = {'issues': issue_serializer.data, 'labels': label_serializer.data, 'repository': repo_serializer.data, 'in_repo': valid_user}
+    dictionary = {'issues': issue_serializer.data, 'test_labels': labels, 'labels': label_serializer.data, 'repository': repo_serializer.data, 'in_repo': valid_user}
     return render(request, 'issues_app/labels.html', context=dictionary)
 
 @login_required
@@ -107,7 +107,7 @@ def edit_label(request, repository_id, label_id):
     form = LabelForm(initial = {'name': label.name, 'description': label.description, 'colour': label.colour, 'repository': repository})
 
     if request.method =='POST' :
-        form = LabelForm(request.POST)
+        form = LabelForm(request.POST, instance=label)
 
         if form.is_valid(): 
             label.name = form.cleaned_data['name']
@@ -189,7 +189,7 @@ def edit_milestone(request, repository_id, milestone_id):
     form = MilestoneForm(initial = {'name': milestone.name, 'description': milestone.description, 'dueDate': milestone.dueDate, 'status': milestone.status, 'repository': repository})
 
     if request.method =='POST' :
-        form = MilestoneForm(request.POST)
+        form = MilestoneForm(request.POST, instance=milestone)
 
         if form.is_valid():
             milestone.name = form.cleaned_data['name']

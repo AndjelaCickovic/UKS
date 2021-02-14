@@ -14,8 +14,10 @@ class LabelForm(ModelForm):
     def clean(self):
         data = self.cleaned_data
 
-        if Label.objects.filter(name = self.cleaned_data['name'], repository = self.cleaned_data['repository']).exists():
-            raise ValidationError('Label with this name already exists in this repository.')
+        if(self.is_valid()):
+            if Label.objects.filter(name = self.cleaned_data['name'], repository = self.cleaned_data['repository']).exists():
+                if self.instance.name != self.cleaned_data['name']:
+                    raise ValidationError('Label with this name already exists in this repository.')
         
         return data
 
@@ -29,7 +31,8 @@ class MilestoneForm(ModelForm):
         data = self.cleaned_data
 
         if Milestone.objects.filter(name = self.cleaned_data['name'], repository = self.cleaned_data['repository']).exists():
-            raise ValidationError('Milestone with this name already exists in this repository.')
+            if self.instance.name != self.cleaned_data['name']:
+                    raise ValidationError('Milestone with this name already exists in this repository.')
         
         return data
 
