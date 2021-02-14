@@ -53,7 +53,7 @@ def labels(request, repository_id):
     label_serializer = LabelSerializer(labels, many=True)
 
     valid_user = check_if_valid_user(request, repository)
-    dictionary = {'issues': issue_serializer.data, 'test_labels': labels, 'labels': label_serializer.data, 'repository': repo_serializer.data, 'in_repo': valid_user}
+    dictionary = {'issues': issue_serializer.data, 'labels': label_serializer.data, 'repository': repo_serializer.data, 'in_repo': valid_user}
     return render(request, 'issues_app/labels.html', context=dictionary)
 
 @login_required
