@@ -1,33 +1,31 @@
 <!DOCTYPE html>
-{% extends 'issues_app/issues.html' %}
-{% block help_block %}
+{% extends 'repositories_app/repository.html' %}
+{% block show_block %}
     <div class="card">
         <div class="card-body">
             <div class="row">
-                <div class="col-md-10">
+                <div class="col">
+                    <h3 class="card-title">Labels</h3>
+                </div>
+                <div class="col">
                     {% if in_repo %}
-                        <a class="btn btn-primary" href="/repositories/repository/{{repository.id}}/issues/add-label" role="button">Add label</a>
+                        <a class="btn btn-success" style="float:right;margin-top:2%" href="/repositories/repository/{{repository.id}}/issues/add-label" role="button">Add new label</a>
                     {% endif %}
                 </div>
             </div>
             <hr>
-            <div class="row">
-                <h3 class="card-title">
-                    &nbsp;&nbsp;Labels
-                </h3>
-            </div>
             <div class="container">
                 <div class="col-md-12">
                     {% if labels %}
-                    <table class="col-md-12">
-                        <tr style="border-bottom-width: 1; border-bottom-style: solid; border-bottom-color: black;">
-                            <th style="width: 30%; border-right-width: 1px; border-right-style: solid; border-right-color: black;">Name</th>
+                    <table class="table table-striped" style="margin-top: 30px; ">   
+                        <tr>
+                            <th>Name</th>
                             <th style="width: 70%;">Description</th>
                             <th>&nbsp;</th>
                         </tr>
                         {% for label in labels %}
                             <tr>
-                                <td style="border-right-width: 1px; border-right-style: solid; border-right-color: black;">{{ label.name }}</td>
+                                <td>{{ label.name }}</td>
                                 <td>&nbsp;{{ label.description }}</td>
                                 {% if in_repo %}
                                     <td>

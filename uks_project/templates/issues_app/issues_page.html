@@ -1,20 +1,24 @@
 <!DOCTYPE html>
 {% extends 'repositories_app/repository.html' %}
-{% block show_block %}
-    <h1>Issues Page</h1>
+{% block show_block %}  
+    <div class="row">
+        <div class="col">
+            <h1>Issues</h1>
+        </div>
+        <div class="col">
+            {% if in_repo %}
+                <a class="btn btn-success" style="float:right;margin-top:2%" href="/repositories/repository/{{repository.id}}/issues/add-issue" role="button">Add new issue</a>
+            {% endif %}
+        </div>
+    </div>
     <hr>
     <div class="row">
         <div class="col-md-2">
-            {% if in_repo %}
-                <a class="btn btn-primary" href="/repositories/repository/{{repository.id}}/issues/add-issue" role="button">Add issue</a>
-            {% endif %}
+            <a class="btn btn-success" href="/repositories/repository/{{repository.id}}/issues/labels" role="button">View labels</a>
         </div>
         <div class="col-md-2">
-            <a class="btn btn-primary" href="/repositories/repository/{{repository.id}}/issues/labels" role="button">View labels</a>
-        </div>
-        <div class="col-md-2">
-            <a class="btn btn-primary" href="/repositories/repository/{{repository.id}}/issues/milestones" role="button">View milestone</a>
-        </div>
+            <a class="btn btn-success" href="/repositories/repository/{{repository.id}}/issues/milestones" role="button">View milestones</a>
+        </div>  
     </div>
     <hr>
     {% block issues_body %}
