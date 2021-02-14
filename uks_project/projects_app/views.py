@@ -13,6 +13,7 @@ from django.contrib.auth.decorators import login_required
 import sys
 import io
 
+
 def get_role(request, repository):
     if request.user.is_authenticated:
         try:
@@ -25,19 +26,17 @@ def get_role(request, repository):
         return False
     
 def main(request, repository_id):
-    projects = Project.objects.all().order_by('id')
     try:
         repository = Repository.objects.get(id=repository_id)
     except:
         return redirect('/home')
 
     role = get_role(request, repository)
-
     if repository.is_public == False and role == False:
         return redirect('/repositories')
 
     objects_dict = { 
-        'projects': projects,
+        'projects': repository.projects.order_by('id'),
         'repository': repository,
         'role': role
         }
@@ -46,7 +45,6 @@ def main(request, repository_id):
 
 @login_required
 def new_project(request, repository_id):
-    form = ProjectForm()
     try:
         repository = Repository.objects.get(id=repository_id)
     except:
@@ -60,7 +58,7 @@ def new_project(request, repository_id):
     form = ProjectForm(initial={'repository':repository})
 
     if request.method =='POST' :
-        form = ProjectForm(request.POST)
+        form = ProjectForm(request.POST,initial={'repository':repository})
 
         if form.is_valid(): 
             project = Project()
@@ -70,9 +68,8 @@ def new_project(request, repository_id):
             project.status = 'Open'
 
             project.save()
-
             return HttpResponseRedirect(reverse('repositories_app:projects_app:main', kwargs={'repository_id':repository_id}))
-    
+
     return render(request,'projects_app/new_project.html',{'repository': repository,'form': form})
 
 
@@ -112,7 +109,7 @@ def edit_project(request, project_id,repository_id):
     form = ProjectForm(instance=project,initial={'project': project})
 
     if request.method =='POST' :
-        form = ProjectForm(request.POST)
+        form = ProjectForm(request.POST,instance=project,initial={'project':project})
 
         if form.is_valid(): 
             project.name = form.cleaned_data['name']
@@ -139,7 +136,7 @@ def close_project(request,project_id, repository_id):
 
     project.status = "Closed"
     project.save()
-
+    
     return HttpResponseRedirect(reverse('repositories_app:projects_app:main', kwargs={'repository_id':repository_id}))
 
 @login_required
@@ -193,7 +190,7 @@ def new_column(request, repository_id, project_id):
     form = ColumnForm(initial={'project': project})
 
     if request.method =='POST' :
-        form = ColumnForm(request.POST)
+        form = ColumnForm(request.POST,initial={'project': project})
 
         if form.is_valid(): 
             column = Column()
@@ -208,7 +205,8 @@ def new_column(request, repository_id, project_id):
         'repository': repository,
         'project':project, 
         'columns': project.columns.all(),
-        'form': form
+        'form': form,
+        'role': role
     }
     
     return render(request,'projects_app/new_column.html',objects_dict)
@@ -230,7 +228,7 @@ def edit_column(request, repository_id, project_id, column_id):
     form = ColumnForm(instance=column,initial={'project': project})
 
     if request.method =='POST' :
-        form = ColumnForm(request.POST)
+        form = ColumnForm(request.POST,instance=column,initial={'project': project})
 
         if form.is_valid(): 
             column.name = form.cleaned_data['name']
@@ -243,7 +241,8 @@ def edit_column(request, repository_id, project_id, column_id):
         'repository': repository,
         'project':project, 
         'columns': project.columns.all(),
-        'form': form
+        'form': form,
+        'role': role
     }
     
     return render(request,'projects_app/new_column.html',objects_dict)
@@ -297,10 +296,10 @@ def edit_issue(request, repository_id, project_id, issue_id):
     if repository.is_public == False and role == False:
         return redirect('/repositories')
 
-    form = IssueForm(instance=issue)
+    form = IssueForm(instance=issue, repository = repository)
 
     if request.method =='POST' :
-        form = IssueForm(request.POST)
+        form = IssueForm(request.POST, repository = repository)
 
         if form.is_valid(): 
             issue.name = form.cleaned_data['name']
@@ -309,7 +308,11 @@ def edit_issue(request, repository_id, project_id, issue_id):
             issue.save()
             # issue.column = column
             issue.labels.set(form.cleaned_data['labels'])
-            issue.assignees.set(form.cleaned_data['assignees'])
+            assignees = []
+            for user in form.cleaned_data['assignees']:
+                print(user.user)
+                assignees.append(user.user)
+            issue.assignees.set(assignees)
             issue.repository = repository
             issue.save()
             
@@ -319,7 +322,8 @@ def edit_issue(request, repository_id, project_id, issue_id):
         'repository': repository,
         'project':project, 
         'columns': project.columns.all(),
-        'form': form
+        'form': form,
+        'role': role
     }
     return render(request, 'projects_app/new_issue.html', objects_dict)
 
@@ -354,7 +358,8 @@ def change_column_issue(request, repository_id, project_id, issue_id):
         'repository' : repository,
         'project':project, 
         'columns': project.columns.all(),
-        'form': form
+        'form': form,
+        'role': role
     }
     return render(request, 'projects_app/new_issue.html', objects_dict)
 
@@ -391,10 +396,10 @@ def new_issue(request, repository_id, project_id, column_id):
     if repository.is_public == False and role == False:
         return redirect('/repositories')
 
-    form = IssueForm()
+    form = IssueForm(repository= repository)
 
     if request.method =='POST' :
-        form = IssueForm(request.POST)
+        form = IssueForm(request.POST, repository = repository)
 
         if form.is_valid(): 
             issue = Issue()
@@ -404,7 +409,11 @@ def new_issue(request, repository_id, project_id, column_id):
             issue.save()
             issue.column = column
             issue.labels.set(form.cleaned_data['labels'])
-            issue.assignees.set(form.cleaned_data['assignees'])
+            assignees = []
+            for user in form.cleaned_data['assignees']:
+                print(user.user)
+                assignees.append(user.user)
+            issue.assignees.set(assignees)
             issue.repository = repository
             issue.save()
             
@@ -414,6 +423,7 @@ def new_issue(request, repository_id, project_id, column_id):
         'repository': repository,
         'project':project, 
         'columns': project.columns.all(),
-        'form': form
+        'form': form,
+        'role': role
     }
     return render(request, 'projects_app/new_issue.html', objects_dict)
