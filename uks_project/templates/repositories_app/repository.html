@@ -43,15 +43,17 @@
     <div class="col-md-7">
 <table class="table table-striped" style="margin-top: 30px">
     <tr>
-        <th>Member</th>
-        <th>Role</th>
-        <th></th>
+        <th style="width: 15%;"></th>
+        <th style="width: 35%;">Member</th>
+        <th style="width: 35%;">Role</th>
+        <th style="width: 15%;"></th>
     </tr>
     {% for member in repository.users.all %}
     <tr style="height: 62px;">
+        <td><img src="/media/{{member.user.profile_picture}}" style="max-width:80px;max-height:80px"></td>
         <td style="vertical-align: middle;">{{member.user.user}}</td>
         <td style="vertical-align: middle;">{{member.role}}</td>
-        <td>
+        <td style="vertical-align: middle;">
         {% if member.role != 'Owner' and is_owner %}
         <ul class="navbar-nav ml-auto">
             <li class="nav-item dropdown">

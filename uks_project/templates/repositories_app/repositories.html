@@ -18,7 +18,7 @@
                         <td style="vertical-align: middle;"><a href="/repositories/repository/{{repository.id}}">{{ repository.name }}</a></td>
                         <td style="vertical-align: middle;">{{ repository.description }}</td>
                         <td style="vertical-align: middle;">{{ repository.is_public }}</td>
-                        <td><a class="btn btn-danger" href="/repositories/delete-repository/{{repository.id}}">Delete</a></td>
+                        <td style="vertical-align: middle;" ><a class="btn btn-danger" href="/repositories/delete-repository/{{repository.id}}">Delete</a></td>
                     </tr>
                 {% endfor %}
             </table>
