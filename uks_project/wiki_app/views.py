@@ -134,7 +134,7 @@ def edit_page(request, page_id, repository_id):
     form = PageForm(instance=page, initial={'wiki':repository.wiki.all()[0]})
 
     if request.method =='POST' :
-        form = PageForm(request.POST)
+        form = PageForm(request.POST, instance=page)
 
         if form.is_valid(): 
             page.title = form.cleaned_data['title']

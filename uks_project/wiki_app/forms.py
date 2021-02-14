@@ -12,7 +12,9 @@ class PageForm(ModelForm):
     def clean(self):
         data = self.cleaned_data
 
-        if Page.objects.filter(title=self.cleaned_data['title'],wiki=self.cleaned_data['wiki']).exists():
-            raise ValidationError('Page with this name already exists in this wiki')
+        if self.is_valid():
+            if Page.objects.filter(title=self.cleaned_data['title'],wiki=self.cleaned_data['wiki']).exists():
+                if self.instance.title != self.cleaned_data['title']:
+                    raise ValidationError('Page with this title already exists in this wiki')
         
         return data   
