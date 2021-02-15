@@ -42,9 +42,10 @@ def repository(request, repository_id):
         repository = Repository.objects.get(id = repository_id)
     except:
         return HttpResponseRedirect(reverse('repositories_app:view_repositories'))
-    
-    is_owner = is_owner_or_coowner(request, repository)
 
+    is_owner = is_owner_or_coowner(request, repository)
+    if not repository.is_public and not is_owner:
+        return redirect('/repositories')
     dictionary = {'repository': repository, 'is_owner' : is_owner }
     return render(request, 'repositories_app/repository.html', context = dictionary)
 

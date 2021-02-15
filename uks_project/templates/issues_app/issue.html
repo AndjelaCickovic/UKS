@@ -3,23 +3,14 @@
 {% block issues_body %}
     <div class="row">
         <div class="col-md-2">
-            <a class="btn btn-primary" href="/repositories/repository/{{repository.id}}/issues" role="button"><</a>
+            <a class="btn btn-secondary" href="/repositories/repository/{{repository.id}}/issues" role="button"><</a>
         </div>
         <h3 class="card-title">
             {{ issue.name }}
         </h3>
-        <div class="col-md-2">
-            {{ issue.status }}
-        </div>
-        <div class="col-md-2">
-            {% if in_repo %}
-                <a class="btn btn-primary" href="/repositories/repository/{{repository.id}}/issues/edit/{{issue.id}}">Edit</a>
-            {% endif %}
-        </div>
     </div>
     <div class="row">
-        <div class="col-md-7">
-            <table>
+             <table class="table table-striped" style="margin-top:30px;width:96%;margin-left:2% ">
                 <tr>
                     <th>Comment</th>
                     <th>Column</th>
@@ -43,7 +34,6 @@
                     </td>
                 </tr>
             </table>
-        </div>
         <div class="col-md-5">
             {% block edit_block %}
             {% endblock %}

@@ -5,9 +5,14 @@
     <div class="card">
         <div class="card-body">
             <div class="row">
-                <h3 class="card-title">
-                    Member
-                </h3>
+                <div class="col-sm-7">
+                    <h3 class="card-title">
+                        Member
+                    </h3>
+                </div>
+                 <div class='col-sm-3' style="margin-left:5%">
+                        <a href="/repositories/repository/{{repository.id}}"><i class="fa fa-times" aria-hidden="true"></i></a>
+                    </div>
             </div>
             <div class="container">
                 {% if member %}
@@ -22,7 +27,6 @@
                         <div class="col-md-9">
                             <input type="submit" class="btn btn-success" value="Submit">
                         </div>
-                        <a class="btn btn-danger" href="/repositories/repository/{{repository.id}}" role="button">Cancel</a>
                     </div>
                 </form>
             </div>
