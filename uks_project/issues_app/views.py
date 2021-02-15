@@ -37,6 +37,10 @@ def main(request, repository_id):
     issue_serializer = IssueSerializer(issues, many=True)
     
     valid_user = check_if_valid_user(request, repository)
+    
+    if not repository.is_public and not valid_user:
+        return redirect('/repositories')
+
     dictionary = {'issues': issue_serializer.data, 'repository': repo_serializer.data, 'in_repo': valid_user}
     return render(request, 'issues_app/issues.html', context=dictionary)
 
@@ -303,7 +307,7 @@ def edit_issue(request, repository_id, issue_id):
             issue.assignees.set(choosen_assignees)
             issue.save()
 
-            return HttpResponseRedirect(reverse('repositories_app:issues_app:view_issue', kwargs={'repository_id': repository_id, 'issue_id':issue.id}))
+            return HttpResponseRedirect(reverse('repositories_app:issues_app:view_issues', kwargs={'repository_id': repository_id}))
             
     valid_user = check_if_valid_user(request, repository)
     dictionary = {'issue': serializer.data, 'form': form, 'assignees': assignees, 'repository': repo_serializer.data, 'in_repo': valid_user}
