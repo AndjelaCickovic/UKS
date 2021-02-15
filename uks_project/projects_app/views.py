@@ -98,7 +98,7 @@ def project(request, project_id,repository_id):
     repository = get_repository_from_cache(repository_id)
     if not repository:
         return redirect('/repositories')
-    
+
     project = get_project_from_cache(project_id)
     if not project:
         return redirect('/repositories')
@@ -374,7 +374,6 @@ def edit_issue(request, repository_id, project_id, issue_id):
             issue.labels.set(form.cleaned_data['labels'])
             assignees = []
             for user in form.cleaned_data['assignees']:
-                print(user.user)
                 assignees.append(user.user)
             issue.assignees.set(assignees)
             issue.repository = repository
@@ -490,7 +489,6 @@ def new_issue(request, repository_id, project_id, column_id):
             issue.labels.set(form.cleaned_data['labels'])
             assignees = []
             for user in form.cleaned_data['assignees']:
-                print(user.user)
                 assignees.append(user.user)
             issue.assignees.set(assignees)
             issue.repository = repository
@@ -524,7 +522,6 @@ def get_projects_from_cache(repository):
     projects = cache.get(project_key(repository.id))
     if not projects:
         projects = Project.objects.filter(repository=repository).order_by('id')
-        print(projects)
         cache.set(project_key(repository.id),projects)
     return projects
 

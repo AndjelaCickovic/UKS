@@ -11,6 +11,14 @@ from wiki_app.models import Wiki
 from django.db.models import Q
 from django.core.cache import cache
 
+
+def repositories_key(user_id):
+    return "repositories.all."+str(user_id)
+
+def repository_key(id):
+    return "repository."+str(id)
+
+    
 # Create your views here.
 def is_owner_or_coowner(request, repository):
     if request.user.is_authenticated:
@@ -26,11 +34,6 @@ def is_owner_or_coowner(request, repository):
     else:
         return False
 
-def repositories_key(user_id):
-    return "repositories.all."+str(user_id)
-
-def repository_key(id):
-    return "repository."+str(id)
 
 def main(request):
     if request.user.is_authenticated:
