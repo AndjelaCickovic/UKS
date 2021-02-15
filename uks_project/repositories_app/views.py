@@ -3,11 +3,12 @@ from django.http import HttpResponseRedirect, HttpResponse
 from repositories_app.models import Repository, RepositoryUser
 from repositories_app.serializers import RepositorySerializer
 from django.urls import reverse
-from repositories_app.forms import RepositoryForm, RepositoryUserForm, EditMemberForm
+from repositories_app.forms import RepositoryForm, RepositoryUserForm, EditMemberForm, SearchRepositoriesForm
 from branches_app.models import Branch
 from django.contrib.auth.decorators import login_required
 from users.models import AppUser
 from wiki_app.models import Wiki
+from django.db.models import Q
 
 # Create your views here.
 def is_owner_or_coowner(request, repository):
@@ -36,6 +37,25 @@ def main(request):
             return redirect('/')
     else:
         return redirect('/')
+
+def search(request):
+    if request.method == 'POST':
+        form = SearchRepositoriesForm(request.POST)
+        if form.is_valid():
+            q = Q(name__contains = form.cleaned_data['search_name'])
+            
+            if request.user.is_authenticated:
+                try:
+                    app_user = AppUser.objects.get(user=request.user)
+                    q &= (Q(members = app_user) | Q(is_public = True))
+                except:
+                    return redirect('/')
+            else:
+                q &= Q(is_public = True)
+
+            repositories = Repository.objects.filter(q).distinct()
+            dictionary = {'repositories': repositories}
+            return render(request, 'repositories_app/repositories.html', context = dictionary)
    
 def repository(request, repository_id):
     try:

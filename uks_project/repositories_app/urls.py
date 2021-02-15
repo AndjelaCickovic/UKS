@@ -5,6 +5,7 @@ from django.urls import path
 app_name='repositories_app'
 
 urlpatterns = [
+    path('search', views.search, name='search_repositories'),
     path('repository/<int:repository_id>', views.repository, name= 'view_repository'),
     path('repository/<int:repository_id>/issues/', include('issues_app.urls', namespace='issues_app')),
     path('repository/<int:repository_id>/branches/', include('branches_app.urls')),
