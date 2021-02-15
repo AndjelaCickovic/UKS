@@ -19,3 +19,6 @@ class RepositoryUser(models.Model):
     user = models.ForeignKey(AppUser, on_delete = models.CASCADE)
     repository = models.ForeignKey(Repository, related_name = 'users', on_delete = models.CASCADE)
     role = models.CharField(max_length=11, choices=Role.choices)
+
+class SearchRepository(models.Model):
+    search_name = models.CharField(max_length=256)
