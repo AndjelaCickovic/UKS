@@ -29,7 +29,6 @@ def main(request, repository_id):
         return redirect('/repositories')
     
     role = check_role(request, repository)
-    print(role)
 
     if repository.is_public == False and role == False:
         return redirect('/repositories')
