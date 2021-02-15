@@ -4,34 +4,42 @@ from branches_app.forms import BranchForm,EditBranchForm,CommitForm
 from repositories_app.models import Repository,RepositoryUser
 from django.contrib.auth.decorators import login_required
 from users.models import AppUser 
+from django.core.cache import cache
+
+
+def branches_key(repository_id):
+    return "branches.all." + str(repository_id)
+
+def branch_key(id):
+    return "branch."+str(id)
+
+def repository_key(id):
+    return "repository."+str(id)
 
 # Create your views here.
 def main(request, repository_id):
 
-    try:
-        repository = Repository.objects.get(id=repository_id)
-    except:
+    repository = get_repository_from_cache(repository_id)
+    if not repository:
         return redirect('/repositories')
     
     if not repository.is_public and not is_in_role(request.user,repository):
         return redirect('/repositories')
 
-    branches = Branch.objects.filter(repository=repository)
-    obj_dict = {'branches':branches,'repository':repository,'can_edit':is_in_role(request.user,repository)}
+    branches = get_branches_from_cache(repository)
 
-    print(repository.is_public or is_in_role(request.user,repository))
+    obj_dict = {'branches':branches,'repository':repository,'can_edit':is_in_role(request.user,repository)}
 
     return render(request,'branches_app/main.html',obj_dict)
 
 @login_required
 def new_branch(request,repository_id):
 
-    try:
-        repository = Repository.objects.get(id=repository_id)
-    except:
+    repository = get_repository_from_cache(repository_id)
+    if not repository:
         return redirect('/repositories')
 
-    branches = Branch.objects.filter(repository=repository)
+    branches = get_branches_from_cache(repository)
 
     if not repository.is_public and not is_in_role(request.user,repository):
         return redirect('/repositories')
@@ -60,6 +68,7 @@ def new_branch(request,repository_id):
                 obj_dict['error_add']='Adding branch failed. Branch with that name already exists.'
                 return render(request,'branches_app/new_branch.html',obj_dict)
 
+            remove_branches_from_cache(repository_id)
             return redirect('/repositories/repository/{}/branches'.format(str(repository_id)))
 
     return render(request,'branches_app/new_branch.html',obj_dict)
@@ -67,20 +76,19 @@ def new_branch(request,repository_id):
 @login_required
 def edit_branch(request,repository_id,branch_id):
 
-    try:
-        repository = Repository.objects.get(id=repository_id)
-    except:
+    repository = get_repository_from_cache(repository_id)
+    if not repository:
         return redirect('/repositories')
 
     if not repository.is_public and not is_in_role(request.user,repository):
         return redirect('/repositories')
 
-    branches = Branch.objects.filter(repository=repository)
+    branches = get_branches_from_cache(repository)
 
-    try:
-        branch = Branch.objects.get(id=branch_id)
-    except:
+    branch = get_branch_from_cache(branch_id)
+    if not branch:
         return redirect('repositories/repository/{}/branches'.format(str(repository_id)))
+
 
     form = EditBranchForm(instance=branch)
 
@@ -103,6 +111,9 @@ def edit_branch(request,repository_id,branch_id):
                 obj_dict['error']='Updating branch name failed. Branch with that name already exists.'
                 return render(request,'branches_app/new_branch.html',obj_dict)
 
+            remove_branch_from_cache(branch_id)
+            remove_branches_from_cache(repository_id)
+
             return redirect('/repositories/repository/{}/branches'.format(str(repository_id)))
 
     return render(request,'branches_app/new_branch.html',obj_dict)
@@ -110,14 +121,12 @@ def edit_branch(request,repository_id,branch_id):
 @login_required
 def delete_branch(request,repository_id,branch_id):
 
-    try:
-        repository = Repository.objects.get(id=repository_id)
-    except:
+    repository = get_repository_from_cache(repository_id)
+    if not repository:
         return redirect('/repositories')
 
-    try:
-        branch = Branch.objects.get(id=branch_id)
-    except:
+    branch = get_branch_from_cache(branch_id)
+    if not branch:
         return redirect('/repositories/repository/{}/branches'.format(str(repository_id)))
 
     if not repository.is_public and not is_in_role(request.user,repository):
@@ -134,23 +143,22 @@ def delete_branch(request,repository_id,branch_id):
         return render(request,'branches_app/main.html',obj_dict)
 
     branch.delete()
+    remove_branch_from_cache(branch_id)
+    remove_branches_from_cache(repository_id)
     return redirect('/repositories/repository/{}/branches'.format(str(repository_id)))
 
 def commits(request, repository_id, branch_id):
    
-    try:
-        repository = Repository.objects.get(id=repository_id)
-    except:
+    repository = get_repository_from_cache(repository_id)
+    if not repository:
         return redirect('/repositories')
-
-    try:
-        branch = Branch.objects.get(id=branch_id)
-    except:
-        return redirect('/repositories/repository/{}/branches'.format(str(repository_id)))
-
 
     if not repository.is_public and not is_in_role(request.user,repository):
         return redirect('/repositories')
+
+    branch = get_branch_from_cache(branch_id)
+    if not branch:
+        return redirect('/repositories/repository/{}/branches'.format(str(repository_id)))
 
     obj_dict = {
         'branch': branch,
@@ -163,14 +171,12 @@ def commits(request, repository_id, branch_id):
 @login_required
 def new_commit(request,repository_id,branch_id):
 
-    try:
-        repository = Repository.objects.get(id=repository_id)
-    except:
+    repository = get_repository_from_cache(repository_id)
+    if not repository:
         return redirect('/repositories')
 
-    try:
-        branch = Branch.objects.get(id=branch_id)
-    except:
+    branch = get_branch_from_cache(branch_id)
+    if not branch:
         return redirect('repositories/repository/{}/branches'.format(str(repository_id)))
 
     if not repository.is_public and not is_in_role(request.user,repository):
@@ -207,6 +213,9 @@ def new_commit(request,repository_id,branch_id):
                 obj_dict['error_add']='Adding commit to branch {} failed.'.format(branch.name)
                 return render(request,'branches_app/new_commit.html',obj_dict)
 
+            remove_branch_from_cache(branch_id)
+            remove_branches_from_cache(repository_id)
+
             return redirect('/repositories/repository/{}/branches/{}/commits'.format(str(repository_id),str(branch_id)))
 
     return render(request,'branches_app/new_commit.html',obj_dict)
@@ -220,3 +229,37 @@ def is_in_role(user, repository):
         return RepositoryUser.objects.filter(user=app_user, repository=repository).exists()
     else:
         return False
+
+def get_repository_from_cache(repository_id):
+    repository = cache.get(repository_key(repository_id))
+    if not repository:
+        try:
+            repository = Repository.objects.get(id=repository_id)
+        except:
+            return None
+        cache.set(repository_key(repository_id),repository)
+    return repository
+
+def get_branches_from_cache(repository):
+    branches = cache.get(branch_key(repository.id))
+    if not branches:
+        branches = Branch.objects.filter(repository=repository)
+        cache.set(branch_key(repository.id),branches)
+    return branches
+
+def remove_branches_from_cache(repository_id):
+    cache.delete(branch_key(repository_id))
+
+def get_branch_from_cache(branch_id):
+    branch = cache.get(branch_key(branch_id))
+    if not branch:
+        try:
+            branch = Branch.objects.get(id=branch_id)
+        except:
+            return None
+        cache.set(branch_key(branch_id),branch)
+    return branch
+
+def remove_branch_from_cache(branch_id):
+    cache.delete(branch_key(branch_id))
+
