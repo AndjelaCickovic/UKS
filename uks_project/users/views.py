@@ -21,7 +21,7 @@ def register(request):
         user_form = UserForm(request.POST)
 
         if user_form.is_valid():
-
+            print('USER')
             user = user_form.save()
             user.set_password(user.password)
             user.save()
