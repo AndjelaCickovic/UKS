@@ -34,9 +34,7 @@ def register(request):
             app_user.save()
 
             registered = True
-            return render(request,"users/login.html",{})
-        else:
-            print(user_form.errors)
+            return render(request,"users/login.html",{'registered':registered})
     else:
         user_form = UserForm()
 
@@ -98,24 +96,14 @@ def edit_profile(request):
 
 
             if old_password:
-                if request.user.check_password(old_password):                    
-                    if new_password:
-                        user = form.save(commit=False)
-                        user.set_password(new_password)
-                        user.save()
-                        update_session_auth_hash(request, user)
-                        obj_dict['success_message'] = 'Data successfully updated'
-                    else:
-                        obj_dict['error_message'] = 'Invalid value for new password submitted'
-                else:
-                    obj_dict['error_message'] = 'Update failed. Old password is not correct'
+                user = form.save(commit=False)
+                user.set_password(new_password)
+                user.save()
+                update_session_auth_hash(request, user)
+                obj_dict['success_message'] = 'Data successfully updated.'
             else:
-                if not new_password:
-                    user = form.save(commit=False)
-                    user.save()
-                    obj_dict['success_message'] = 'Data successfully updated'
-                else:
-                    obj_dict['error_message'] = 'Please submit value for old password'
-
+                user = form.save(commit=False)
+                user.save()
+                obj_dict['success_message'] = 'Data successfully updated.'
 
     return render(request,'users/edit_profile.html',obj_dict)
