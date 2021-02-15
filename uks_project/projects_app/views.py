@@ -104,6 +104,7 @@ def edit_project(request, project_id,repository_id):
     role = get_role(request, repository)
 
     if repository.is_public == False and role == False:
+        print("usao")
         return redirect('/repositories')
 
     form = ProjectForm(instance=project,initial={'project': project})

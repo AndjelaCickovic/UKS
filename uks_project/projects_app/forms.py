@@ -16,7 +16,7 @@ class ProjectForm(ModelForm):
         if(self.is_valid()):
             if Project.objects.filter(name=self.cleaned_data['name'],repository=self.cleaned_data['repository']).exists():
                 if self.instance.name!= self.cleaned_data['name']:
-                    raise ValidationError('Project with this name already exists in this repository')
+                    raise ValidationError({'name':['Project with this name already exists in this repository']})
         
         return data
     
@@ -32,7 +32,7 @@ class ColumnForm(ModelForm):
 
         if Column.objects.filter(name=self.cleaned_data['name'],project=self.cleaned_data['project']).exists():
             if self.instance.name!= self.cleaned_data['name']:
-                raise ValidationError('Column with this name already exists in this project')
+                raise ValidationError({'name': ['Column with this name already exists in this project']})
         
         return data    
 

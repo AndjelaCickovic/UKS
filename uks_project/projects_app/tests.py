@@ -88,10 +88,10 @@ class ProjectsFormTests(TestCase):
     def test_new_project_post_valid_form(self):
         create_repository()
         self.client.login(username='temporary', password='temporary')
-        response  = self.client.post(reverse("repositories_app:projects_app:new_project",kwargs={'repository_id':1}),data={'name':'name','description':'desc'})
-        self.assertEquals(response.status_code,200)
-        self.assertFormError(response,'form','name',None)
-        self.assertFormError(response,'form','description',None)
+        response  = self.client.post(reverse("repositories_app:projects_app:new_project",kwargs={'repository_id':1}),data={'name':'name','description':'desc','repository':1})
+        exists = Project.objects.filter(name='name').exists()
+        self.assertTrue(exists)
+        self.assertEquals(response.status_code,302)
 
     def test_new_project_post_invalid_form(self):
         create_repository()
@@ -100,25 +100,30 @@ class ProjectsFormTests(TestCase):
         self.assertEquals(response.status_code,200)
         self.assertFormError(response,'form','name','This field is required.')
 
-    def test_edit_project_post_valid_form(self):
+    def test_edit_project_name_post_valid_form(self):
         test_project = create_project("test_project","test_project_desc",'Open')         
         self.client.login(username='temporary', password='temporary')
-        response  = self.client.post(reverse("repositories_app:projects_app:edit_project",kwargs={'repository_id':1,'project_id':test_project.id}),data={'name':'name','description':'desc'})
-        self.assertFormError(response,'form','name',None)
-        self.assertFormError(response,'form','description',None)
+        response  = self.client.post(reverse("repositories_app:projects_app:edit_project",kwargs={'repository_id':1,'project_id':test_project.id}),data={'name':'changed_name','description':'desc','repository':test_project.repository.id})
+        test_project = Project.objects.get(id=test_project.id)
+        self.assertEquals(test_project.name,'changed_name')
+        self.assertEquals(response.status_code,302)
 
-    def test_edit_project_post_invalid_form(self):
+    def test_edit_project_description_post_valid_form(self):
         test_project = create_project("test_project","test_project_desc",'Open')         
         self.client.login(username='temporary', password='temporary')
-        response  = self.client.post(reverse("repositories_app:projects_app:edit_project",kwargs={'repository_id':1,'project_id':test_project.id}),data={'name':'','description':'desc'})
+        response  = self.client.post(reverse("repositories_app:projects_app:edit_project",kwargs={'repository_id':1,'project_id':test_project.id}),data={'name':'test_project','description':'changed_description','repository':test_project.repository.id})
+        test_project = Project.objects.get(id=test_project.id)
+        self.assertEquals(test_project.description,'changed_description')
+        self.assertEquals(response.status_code,302)
+
+    def test_edit_project_post_invalid_form_name_empty(self):
+        test_project = create_project("test_project","test_project_desc",'Open')         
+        self.client.login(username='temporary', password='temporary')
+        response  = self.client.post(reverse("repositories_app:projects_app:edit_project",kwargs={'repository_id':1,'project_id':test_project.id}),data={'name':'','description':'desc','repository':test_project.repository.id})
         self.assertFormError(response,'form','name','This field is required.')
         
-    # def test_new_project_invalid_name_form(self):
-    #     # create_repository()
-    #     create_project("test_project","test_project_desc",'Closed') 
-    #     self.client.login(username='temporary', password='temporary')
-    #     response  = self.client.post(reverse("repositories_app:projects_app:new_project",kwargs={'repository_id':1}),data={'name':'test_project','description':'desc'})
-
-    #     with self.assertRaisesMessage(ValidationError,"Project with this name already exists in this repository"):
-    #         response  = self.client.post(reverse("repositories_app:projects_app:new_project",kwargs={'repository_id':1}),data={'name':'test_project','description':'desc'})
-
+    def test_new_project_invalid_form_name_nonunique(self):
+        test_project = create_project("test_project","test_project_desc",'Closed') 
+        self.client.login(username='temporary', password='temporary')
+        response  = self.client.post(reverse("repositories_app:projects_app:new_project",kwargs={'repository_id':1}),data={'name':'test_project','description':'desc','repository':test_project.repository.id})
+        self.assertFormError(response,'form','name','Project with this name already exists in this repository')
