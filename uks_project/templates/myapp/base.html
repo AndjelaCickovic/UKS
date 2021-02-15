@@ -15,9 +15,10 @@
 
      {% if user.is_authenticated %}
         <a href="{% url 'repositories_app:view_repositories' %}" class="navbar-brand">HOME</a>
-         <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-             <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
+         <form class="form-inline my-2 my-lg-0" action="/repositories/search" method="POST">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="search_name" name="search_name">
+            {% csrf_token %}
+            <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
          </form>
          <div class="navbar-collapse collapse justify-content-stretch" id="navbar7">
             <ul class="navbar-nav ml-auto">            
@@ -33,10 +34,16 @@
             <div></div>
         </div>
  
-      {% else %}
+        {% else %}
+            <a href="/home" class="navbar-brand">HOME</a>
+            <form class="form-inline my-2 my-lg-0" action="/repositories/search" method="POST">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="search_name" name="search_name">
+                {% csrf_token %}
+                <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
+            </form>
             <a href="{% url 'users:register' %}" class="navbar-brand ml-auto">Register</a>
             <a href="{% url 'users:user_login' %}" class="navbar-brand ">Log in</a>
-       {% endif %}
+        {% endif %}
     </nav>
 
         <div class="container">
