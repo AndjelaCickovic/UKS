@@ -23,7 +23,7 @@ def check_if_app_user(request):
     return request.user.is_authenticated
 
 def check_if_valid_user(request, repository):
-    return check_if_app_user(request) and (check_if_in_repository(request, repository) or repository.is_public)
+    return check_if_app_user(request) and check_if_in_repository(request, repository)
 
 # Create your views here.
 def main(request, repository_id):

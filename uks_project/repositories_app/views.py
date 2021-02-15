@@ -133,7 +133,7 @@ def edit_repository(request, repository_id):
             
             return HttpResponseRedirect(reverse('repositories_app:view_repository', args = [repository_id]))
             
-    dictionary = {'form': form}
+    dictionary = {'form': form, 'repository': repository}
     return render(request, 'repositories_app/edit_repository.html', context=dictionary)
 
 @login_required
