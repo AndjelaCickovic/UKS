@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from repositories_app.models import Repository, RepositoryUser
+from repositories_app.models import Repository, RepositoryUser, SearchRepository
 from users.models import AppUser
 from repositories_app import views
 
@@ -32,3 +32,7 @@ class EditMemberForm(ModelForm):
         model = RepositoryUser
         fields = ['role']
         
+class SearchRepositoriesForm(ModelForm):
+    class Meta:
+        model = SearchRepository
+        fields = ['search_name']
