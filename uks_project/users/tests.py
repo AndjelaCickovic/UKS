@@ -59,4 +59,14 @@ class UsersFormTest(TestCase):
 
         self.assertFormError(response,'user_form','username','A user with that username already exists.')
 
-    
+    def test_login_user_valid_form(self):
+        response  = self.client.post(reverse("users:user_login",kwargs={}),data={'username':'test','password':'test'})
+        self.assertEquals(response.status_code,302)
+
+    def test_login_user_invalid_username_form(self):
+        response  = self.client.post(reverse("users:user_login",kwargs={}),data={'username':'testt','password':'test'})
+        self.assertContains(response,'Invalid login details supplied!')
+
+    def test_login_user_invalid_password_form(self):
+        response  = self.client.post(reverse("users:user_login",kwargs={}),data={'username':'test','password':'tesst'})
+        self.assertContains(response,'Invalid login details supplied!')
