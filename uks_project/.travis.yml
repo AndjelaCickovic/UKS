@@ -1,0 +1,11 @@
+language: python
+python: 
+  - "3.9.1"
+install:
+  - pip install -r requirements.txt
+script:
+  - python uks_project/manage.py test issues_app projects_app users wiki_app
+branches:
+  only:
+  - main
+  - development
