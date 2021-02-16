@@ -6,9 +6,9 @@ python:
 install:
   - pip install -r requirements.txt
 env:
-  - DATABASE_NAME=uks_db
-  - DATABASE_USER=postgres
-  - DATABASE_PASSWORD= 
+  - DATABASE_NAME='uks_db'
+  - DATABASE_USER='postgres'
+  - DATABASE_PASSWORD='' 
 before_script:
   - psql -c 'create database uks_db;' -U postgres
 script:
