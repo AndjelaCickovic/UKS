@@ -24,6 +24,17 @@ def is_owner_or_coowner(request, repository):
     else:
         return False
 
+def is_member(request, repository):
+    if request.user.is_authenticated:
+        try:
+            app_user = AppUser.objects.get(user=request.user)
+            repository_user = RepositoryUser.objects.get(user=app_user, repository=repository)
+            return True
+        except:
+            return False
+    else:
+        return False
+
 
 def main(request):
     if request.user.is_authenticated:
@@ -43,8 +54,8 @@ def repository(request, repository_id):
     except:
         return HttpResponseRedirect(reverse('repositories_app:view_repositories'))
 
-    is_owner = is_owner_or_coowner(request, repository)
-    if not repository.is_public and not is_owner:
+    is_member = is_member(request, repository)
+    if not repository.is_public and not is_memebr:
         return redirect('/repositories')
     dictionary = {'repository': repository, 'is_owner' : is_owner }
     return render(request, 'repositories_app/repository.html', context = dictionary)
