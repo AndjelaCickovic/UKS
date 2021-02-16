@@ -6,9 +6,14 @@
     <div class="card">
         <div class="card-body">
             <div class="row">
-                <h3 class="card-title">
-                    Edit repository
-                </h3>
+                <div class="col-sm-10">
+                    <h3 class="card-title">
+                        Edit repository
+                    </h3>
+                </div>
+                <div class='col-sm-1' style="margin-left:5%">
+                    <a href="/repositories/repository/{{repository.id}}"><i class="fa fa-times" aria-hidden="true"></i></a>
+                </div>
             </div>
             <div class="container">
                 <form method="POST">
@@ -16,7 +21,6 @@
                     {% csrf_token %}
                     <div class="row">
                         <input type="submit" class="btn btn-success" value="Save">
-                        <a style="margin-left:1%" class="btn btn-secondary" href="/repositories/" role="button">Cancel</a>
                     </div>
                 </form>
             </div>
