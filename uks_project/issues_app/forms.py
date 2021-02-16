@@ -30,8 +30,9 @@ class MilestoneForm(ModelForm):
     def clean(self):
         data = self.cleaned_data
 
-        if Milestone.objects.filter(name = self.cleaned_data['name'], repository = self.cleaned_data['repository']).exists():
-            if self.instance.name != self.cleaned_data['name']:
+        if self.is_valid():
+            if Milestone.objects.filter(name = self.cleaned_data['name'], repository = self.cleaned_data['repository']).exists():
+                if self.instance.name != self.cleaned_data['name']:
                     raise ValidationError('Milestone with this name already exists in this repository.')
         
         return data

@@ -180,7 +180,7 @@ def milestones(request, repository_id):
     milestone_serializer = MilestoneSerializer(milestones, many=True)
 
     valid_user = check_if_valid_user(request, repository)
-    dictionary = {'issues': issue_serializer.data, 'milestones': milestone_serializer.data, 'repository': repo_serializer.data, 'in_repo': valid_user}
+    dictionary = {'issues': issue_serializer.data, 'test_milestones': milestones, 'milestones': milestone_serializer.data, 'repository': repo_serializer.data, 'in_repo': valid_user}
     return render(request, 'issues_app/milestones.html', context=dictionary)
 
 @login_required
