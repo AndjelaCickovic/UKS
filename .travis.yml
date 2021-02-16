@@ -7,7 +7,7 @@ install:
   - pip install -r requirements.txt
 before_script:
   - psql -c 'create database uks_db;' -U postgres
-  - psql -c 'create role uks login superuser password 'uks';' -U postgres
+  - psql uks_db -c 'create role uks login superuser password 'uks';'
 script:
   - python uks_project/manage.py test issues_app projects_app users wiki_app
 branches:
