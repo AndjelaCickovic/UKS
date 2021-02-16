@@ -1,8 +1,15 @@
 language: python
-python: 
-  - "3.9.1"
+services:
+  - postgresql
+python:   - "3.9.1"
 install:
   - pip install -r requirements.txt
+env:
+  - DATABASE_NAME=uks_db
+  - DATABASE_USER=postgres
+  - DATABASE_PASSWORD= 
+before_script:
+  - psql -c 'create database uks_db;' -U postgres
 script:
   - python uks_project/manage.py test issues_app projects_app users wiki_app
 branches:
