@@ -4,7 +4,7 @@ python:
 install:
   - pip install -r requirements.txt
 script:
-  - python uks_project/manage.py test issues_app projects_app users wiki_app
+  - python manage.py test issues_app projects_app users wiki_app
 branches:
   only:
   - main
