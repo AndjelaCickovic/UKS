@@ -84,16 +84,12 @@ WSGI_APPLICATION = 'uks_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-os.environ['DATABASE_NAME'] = 'uks_db'
-os.environ['DATABASE_USER'] = 'uks'
-os.environ['DATABASE_PASSWORD'] = 'uks'
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ['DATABASE_NAME'],
-        'USER': os.environ['DATABASE_USER'],
-        'PASSWORD': os.environ['DATABASE_PASSWORD'],
+        'NAME': 'uks_db',
+        'USER': 'uks',
+        'PASSWORD': 'uks',
         'HOST': 'localhost',
         'PORT': '',
     }
