@@ -5,7 +5,7 @@ from repositories_app.models import Repository
 from projects_app.forms import ProjectForm
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
-
+from django.core.cache import cache
 
 def create_repository():
     rep = Repository(id=1,is_public=True,name='test_repository')
@@ -17,6 +17,7 @@ def create_project(name, description, status):
 
 class ProjectsViewTests(TestCase):
     def setUp(self):
+        cache.clear()
         User = get_user_model()
         user = User.objects.create_user('temporary', 'temporary@gmail.com', 'temporary')
 
@@ -44,9 +45,12 @@ class ProjectsViewTests(TestCase):
 
     def test_private_repo_project_details(self):
         test_project = create_project("test_project","test_project_desc",'Open')      
-        test_project.repository.is_public = False  
-        test_project.repository.save()    
-        response = self.client.get(reverse('repositories_app:projects_app:project',kwargs={'repository_id':1,'project_id': test_project.id}))
+        repository = Repository()
+        repository.id = 2;
+        repository.is_public = False;
+        repository.name="repo"
+        test_project.repository = repository
+        response = self.client.get(reverse('repositories_app:projects_app:project',kwargs={'repository_id':2,'project_id': test_project.id}))
         self.assertEquals(response.status_code,302)
 
     def test_close_project(self):  
@@ -78,6 +82,7 @@ class ProjectsViewTests(TestCase):
 class ProjectsFormTests(TestCase):
 
     def setUp(self):
+        cache.clear()
         User = get_user_model()
         user = User.objects.create_user('temporary', 'temporary@gmail.com', 'temporary')
 
