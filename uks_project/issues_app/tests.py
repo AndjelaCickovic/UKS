@@ -5,6 +5,7 @@ from repositories_app.models import Repository
 from issues_app.forms import LabelForm, MilestoneForm
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
+from django.core.cache import cache
 from django.utils import timezone
 
 def create_repository():
@@ -23,6 +24,7 @@ def create_milestone():
 # Create your tests here.
 class LabelsViewTests(TestCase):
     def setUp(self):
+        cache.clear()
         User = get_user_model()
         user = User.objects.create_user('temp', 'temp@gmail.com', 'temp')
 
@@ -52,6 +54,7 @@ class LabelsViewTests(TestCase):
 
 class LabelsFormTests(TestCase):
     def setUp(self):
+        cache.clear()
         User = get_user_model()
         user = User.objects.create_user('temp', 'temp@gmail.com', 'temp')
 

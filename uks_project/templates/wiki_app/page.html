@@ -14,14 +14,6 @@
                         <br/>
                         <p>{{ page.message }}</p>  
                     </div>
-                    <div class="col">
-                    	{% if role %}
-                            <div class="text-right">
-                            <a class="btn btn-light" href="/repositories/repository/{{repository.id}}/wiki/page/{{page.id}}/edit" role="button">Edit</a>
-                             <a class="btn btn-danger" href="/repositories/repository/{{repository.id}}/wiki/page/{{page.id}}/delete" role="button">Delete</a>
-                            </div>
-                        {% endif %}
-                    </div>
                 </div>
             </div>
         </div>

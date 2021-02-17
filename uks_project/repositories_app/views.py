@@ -9,7 +9,16 @@ from django.contrib.auth.decorators import login_required
 from users.models import AppUser
 from wiki_app.models import Wiki
 from django.db.models import Q
+from django.core.cache import cache
 
+
+def repositories_key(user_id):
+    return "repositories.all."+str(user_id)
+
+def repository_key(id):
+    return "repository."+str(id)
+
+    
 # Create your views here.
 def is_owner_or_coowner(request, repository):
     if request.user.is_authenticated:
@@ -25,17 +34,30 @@ def is_owner_or_coowner(request, repository):
     else:
         return False
 
+def is_member(request, repository):
+    if request.user.is_authenticated:
+        try:
+            app_user = AppUser.objects.get(user=request.user)
+            repository_user = RepositoryUser.objects.get(user=app_user, repository=repository)
+            return True
+        except:
+            return False
+    else:
+        return False
+
 
 def main(request):
     if request.user.is_authenticated:
         try:
             app_user = AppUser.objects.get(user=request.user)
-            repositories = Repository.objects.filter(members = app_user)
+            repositories = get_repositories_from_cache(app_user)
             dictionary = {'repositories': repositories}
             return render(request, 'repositories_app/repositories.html', context = dictionary)
         except:
+            print('except first')
             return redirect('/')
     else:
+        print('except')
         return redirect('/')
 
 def search(request):
@@ -58,13 +80,13 @@ def search(request):
             return render(request, 'repositories_app/repositories.html', context = dictionary)
    
 def repository(request, repository_id):
-    try:
-        repository = Repository.objects.get(id = repository_id)
-    except:
+    
+    repository = get_repository_from_cache(repository_id)
+    if not repository:
         return HttpResponseRedirect(reverse('repositories_app:view_repositories'))
 
-    is_owner = is_owner_or_coowner(request, repository)
-    if not repository.is_public and not is_owner:
+    is_member = is_member(request, repository)
+    if not repository.is_public and not is_memebr:
         return redirect('/repositories')
     dictionary = {'repository': repository, 'is_owner' : is_owner }
     return render(request, 'repositories_app/repository.html', context = dictionary)
@@ -72,7 +94,7 @@ def repository(request, repository_id):
 @login_required
 def add_repository(request):
     app_user = AppUser.objects.get(user=request.user)
-    repositories = Repository.objects.filter(members = app_user)
+    repositories = get_repositories_from_cache(app_user)
     form = RepositoryForm()
 
     if request.method =='POST' :
@@ -104,6 +126,7 @@ def add_repository(request):
             wiki.repository = repository
             wiki.save()
 
+            remove_repositories_from_cache(app_user.id)
             return HttpResponseRedirect(reverse('repositories_app:view_repositories'))
             
     dictionary = {'repositories': repositories, 'form': form}
@@ -111,14 +134,16 @@ def add_repository(request):
 
 @login_required
 def edit_repository(request, repository_id):
-    try:
-        repository = Repository.objects.get(id=repository_id)
-    except:
+    
+    app_user = AppUser.objects.get(user=request.user)
+    repository = get_repository_from_cache(repository_id)
+    if not repository:
         return HttpResponseRedirect(reverse('repositories_app:view_repositories'))
 
     is_owner = is_owner_or_coowner(request, repository)
 
     if is_owner == False:
+        print('not owner')
         return HttpResponseRedirect(reverse('repositories_app:view_repositories'))
     
     form = RepositoryForm(initial = {'name': repository.name, 'description': repository.description, 'is_public': repository.is_public})
@@ -132,6 +157,8 @@ def edit_repository(request, repository_id):
             repository.is_public = form.cleaned_data['is_public']
             repository.save()
             
+            remove_repository_from_cache(repository_id)
+            remove_repositories_from_cache(app_user.id)
             return HttpResponseRedirect(reverse('repositories_app:view_repository', args = [repository_id]))
             
     dictionary = {'form': form, 'repository': repository}
@@ -139,9 +166,10 @@ def edit_repository(request, repository_id):
 
 @login_required
 def delete_repository(request, repository_id):
-    try:
-        repository = Repository.objects.get(id=repository_id)
-    except:
+    
+    app_user = AppUser.objects.get(user=request.user)
+    repository = get_repository_from_cache(repository_id)
+    if not repository:
         return HttpResponseRedirect(reverse('repositories_app:view_repositories'))
 
     is_owner = is_owner_or_coowner(request, repository)
@@ -150,13 +178,16 @@ def delete_repository(request, repository_id):
         return HttpResponseRedirect(reverse('repositories_app:view_repositories'))
 
     repository.delete()
+    remove_repository_from_cache(repository_id)
+    remove_repositories_from_cache(app_user.id)
     return HttpResponseRedirect(reverse('repositories_app:view_repositories'))
 
 @login_required
 def delete_member(request, member_id, repository_id):
-    try:
-        repository = Repository.objects.get(id=repository_id)
-    except:
+    
+    app_user = AppUser.objects.get(user=request.user)
+    repository = get_repository_from_cache(repository_id)
+    if not repository:
         return HttpResponseRedirect(reverse('repositories_app:view_repositories'))
 
     is_owner = is_owner_or_coowner(request, repository)
@@ -166,6 +197,8 @@ def delete_member(request, member_id, repository_id):
 
     try:
         RepositoryUser.objects.filter(id=member_id).delete()
+        remove_repository_from_cache(repository_id)
+        remove_repositories_from_cache(app_user.id)
     except:
         pass
     
@@ -173,9 +206,10 @@ def delete_member(request, member_id, repository_id):
 
 @login_required
 def add_member(request, repository_id):
-    try:
-        repository = Repository.objects.get(id=repository_id)
-    except:
+    
+    app_user = AppUser.objects.get(user=request.user)
+    repository = get_repository_from_cache(repository_id)
+    if not repository:
         return HttpResponseRedirect(reverse('repositories_app:view_repositories'))
 
     is_owner = is_owner_or_coowner(request, repository)
@@ -199,6 +233,8 @@ def add_member(request, repository_id):
 
             repository.members.add(repository_user.user)
             repository.save()
+            remove_repository_from_cache(repository_id)
+            remove_repositories_from_cache(app_user.id)
 
             return HttpResponseRedirect(reverse('repositories_app:view_repository', args = [repository_id]))
             
@@ -206,15 +242,20 @@ def add_member(request, repository_id):
     return render(request, 'repositories_app/new_member.html', context=dictionary)
 
 def edit_member(request, repository_id, member_id):
-    try:
-        repository = Repository.objects.get(id=repository_id)
-        membership = RepositoryUser.objects.get(id = member_id)
-    except:
-        return HttpResponseRedirect(reverse('repositories_app:view_repository', args = [repository_id]))
+
+    app_user = AppUser.objects.get(user=request.user)
+    repository = get_repository_from_cache(repository_id)
+    if not repository:
+        return HttpResponseRedirect(reverse('repositories_app:view_repositories'),args=[repository_id])
 
     is_owner = is_owner_or_coowner(request, repository)
 
     if is_owner == False:
+        return HttpResponseRedirect(reverse('repositories_app:view_repository', args = [repository_id]))
+
+    try:
+        membership = RepositoryUser.objects.get(id = member_id)
+    except:
         return HttpResponseRedirect(reverse('repositories_app:view_repository', args = [repository_id]))
 
     serializer = RepositorySerializer(repository)
@@ -230,7 +271,36 @@ def edit_member(request, repository_id, member_id):
             #repository.members.add(repository_user.user)
             #repository.save()
 
+            remove_repository_from_cache(repository_id)
+            remove_repositories_from_cache(app_user.id)
+
             return HttpResponseRedirect(reverse('repositories_app:view_repository', args = [repository_id]))
             
     dictionary = {'repository': repository, 'form': form, 'is_owner' : is_owner, 'member' : membership}
     return render(request, 'repositories_app/new_member.html', context=dictionary)
+
+def get_repository_from_cache(repository_id):
+    repository = cache.get(repository_key(repository_id))
+    if not repository:
+        try:
+            repository = Repository.objects.get(id=repository_id)
+        except:
+            return None
+        cache.set(repository_key(repository_id),repository)
+    return repository
+
+def get_repositories_from_cache(app_user):
+    repositories = cache.get(repositories_key(app_user.id))
+    if not repositories:
+        try:
+            repositories = Repository.objects.filter(members = app_user)
+        except:
+            return None
+        cache.set(repositories_key(app_user.id),repositories)
+    return repositories
+
+def remove_repository_from_cache(repository_id):
+    cache.delete(repository_key(repository_id))
+
+def remove_repositories_from_cache(user_id):
+    cache.delete(repositories_key(user_id))

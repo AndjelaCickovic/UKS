@@ -4,12 +4,17 @@
 <br>
 <br>
 <div class="row">
-    <div class="col-md-10">
+    <div class="col-md-9">
         <h1>{{repository.name}}</h1>
     </div>
     {% if is_owner %}
+    <div class="col-md-2">
         <a class="btn btn-success" style="height: 40px;" href="/repositories/edit-repository/{{repository.id}}" role="button">Edit repository</a>
-    {% endif %}
+    </div>
+    <div class="col-md-1">
+        <a class="btn btn-danger" style="height: 40px;"  href="/repositories/delete-repository/{{repository.id}}">Delete</a>
+    </div>
+       {% endif %}
 </div>
 <hr>
     <div class="container">
