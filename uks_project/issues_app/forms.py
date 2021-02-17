@@ -4,12 +4,13 @@ from issues_app.models import Label, Milestone, Issue
 from users.models import AppUser
 from projects_app.models import Column
 from django.core.exceptions import ValidationError
+from django.forms.widgets import TextInput
 
 class LabelForm(ModelForm):
     class Meta:
         model = Label
         fields = ['name', 'description', 'colour', 'repository']
-        widgets = {'repository': forms.HiddenInput()}
+        widgets = {'repository': forms.HiddenInput(), 'colour': TextInput(attrs={'type': 'color'})}
 
     def clean(self):
         data = self.cleaned_data
