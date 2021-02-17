@@ -14,7 +14,7 @@
     <div class="col-md-1">
         <a class="btn btn-danger" style="height: 40px;"  href="/repositories/delete-repository/{{repository.id}}">Delete</a>
     </div>
-       {% endif %}
+    {% endif %}
 </div>
 <hr>
     <div class="container">
@@ -39,11 +39,10 @@
 <br>
 <br>
 {% block show_block %}
-<div>
-    {{repository.description}}
+<div class="row">
+    &nbsp;&nbsp;&nbsp;&nbsp;{{repository.description}}
 </div>
-<br>
-<br>
+<hr>
 <div class="row">
     <div class="col-md-7">
 <table class="table table-striped" style="margin-top: 30px">

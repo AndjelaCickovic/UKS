@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 {% extends 'repositories_app/repository.html' %}
 {% block show_block %}
-<h1>Projects</h1>
-<br>
-{% if role %}
-    <a class="btn btn-success" style="float:right" href="new/" role="button">Add new project</a>
-{% endif %}
- <br> 
+<div class="row">
+    <div class="col">
+        <h1>Projects</h1>
+    </div>
+    <div class="col">
+        {% if role %}
+            <a class="btn btn-success" style="float:right;margin-top:2%" href="new/" role="button">Add new project</a>
+        {% endif %}
+    </div>
+</div>
+<hr>
 <div class="container">
     <ul class="nav nav-tabs">
     <li class="nav-item">

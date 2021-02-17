@@ -241,14 +241,14 @@ def get_repository_from_cache(repository_id):
     return repository
 
 def get_branches_from_cache(repository):
-    branches = cache.get(branch_key(repository.id))
+    branches = cache.get(branches_key(repository.id))
     if not branches:
         branches = Branch.objects.filter(repository=repository)
-        cache.set(branch_key(repository.id),branches)
+        cache.set(branches_key(repository.id),branches)
     return branches
 
 def remove_branches_from_cache(repository_id):
-    cache.delete(branch_key(repository_id))
+    cache.delete(branches_key(repository_id))
 
 def get_branch_from_cache(branch_id):
     branch = cache.get(branch_key(branch_id))
