@@ -28,7 +28,7 @@ SECRET_KEY = '9iwg)q!@syiccb=9-v7&_j@#(gt7o+3q*=isi+t&3bv!%r=&06'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0']
+ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1']
 
 
 # Application definition
@@ -90,8 +90,8 @@ DATABASES = {
         'NAME': 'uks_db',
         'USER': 'uks',
         'PASSWORD': 'uks',
-        'HOST': 'uks_db',
-        'PORT': '5432',
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
 
