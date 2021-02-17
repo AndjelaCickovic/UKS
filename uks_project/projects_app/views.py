@@ -519,14 +519,14 @@ def get_repository_from_cache(repository_id):
     return repository
 
 def get_projects_from_cache(repository):
-    projects = cache.get(project_key(repository.id))
+    projects = cache.get(projects_key(repository.id))
     if not projects:
         projects = Project.objects.filter(repository=repository).order_by('id')
-        cache.set(project_key(repository.id),projects)
+        cache.set(projects_key(repository.id),projects)
     return projects
 
 def remove_projects_from_cache(repository_id):
-    cache.delete(project_key(repository_id))
+    cache.delete(projects_key(repository_id))
 
 def get_project_from_cache(project_id):
     project = cache.get(project_key(project_id))
