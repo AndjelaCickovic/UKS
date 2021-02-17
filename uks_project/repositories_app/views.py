@@ -85,9 +85,11 @@ def repository(request, repository_id):
     if not repository:
         return HttpResponseRedirect(reverse('repositories_app:view_repositories'))
 
-    is_member = is_member(request, repository)
-    if not repository.is_public and not is_memebr:
+    is_member_value = is_member(request, repository)
+    if not repository.is_public and not is_member_value:
         return redirect('/repositories')
+    
+    is_owner = is_owner_or_coowner(request, repository)
     dictionary = {'repository': repository, 'is_owner' : is_owner }
     return render(request, 'repositories_app/repository.html', context = dictionary)
 

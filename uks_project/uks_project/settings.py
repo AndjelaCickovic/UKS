@@ -84,13 +84,15 @@ WSGI_APPLICATION = 'uks_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+host = os.getenv('POSTGRES_DB', 'localhost')
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'uks_db',
         'USER': 'uks',
         'PASSWORD': 'uks',
-        'HOST': 'localhost',
+        'HOST': host,
         'PORT': '',
     }
 }
