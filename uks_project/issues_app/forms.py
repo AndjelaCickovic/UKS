@@ -23,6 +23,7 @@ class LabelForm(ModelForm):
         return data
 
 class MilestoneForm(ModelForm):
+    dueDate = forms.DateField(widget=forms.SelectDateWidget())
     class Meta:
         model = Milestone
         fields = ['name', 'dueDate', 'description', 'status', 'repository']
