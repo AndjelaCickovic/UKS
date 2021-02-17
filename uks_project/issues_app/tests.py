@@ -94,6 +94,7 @@ class LabelsFormTests(TestCase):
         
 class MilestoneViewTests(TestCase):
     def setUp(self):
+        cache.clear()
         User = get_user_model()
         user = User.objects.create_user('temp', 'temp@gmail.com', 'temp')
 
@@ -123,6 +124,7 @@ class MilestoneViewTests(TestCase):
 
 class MilestoneFormTests(TestCase):
     def setUp(self):
+        cache.clear()
         User = get_user_model()
         user = User.objects.create_user('temp', 'temp@gmail.com', 'temp')
 

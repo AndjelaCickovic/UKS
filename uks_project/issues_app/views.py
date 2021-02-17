@@ -220,8 +220,11 @@ def add_milestone(request, repository_id):
 
 @login_required
 def delete_milestone(request, repository_id, milestone_id):
-    
     milestone = get_milestone_from_cache(milestone_id)
+
+    if not milestone:
+        return redirect('/repositories')
+        
     milestone.delete()
     remove_milestone_from_cache(milestone_id)
 
