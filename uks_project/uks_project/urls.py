@@ -19,14 +19,14 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 from users import views as users_views
-from myapp import views
+from base_app import views
 
 
 
 urlpatterns = [
     url(r'^users/',include('users.urls')),
-    url(r'^myapp/',include('myapp.urls')),
-    url(r'^$',users_views.user_login,name='login'),
+    url(r'^base_app/',include('base_app.urls')),
+    url(r'^$',views.index,name='index'),
     url(r'^home',views.index,name='index'),
     url(r'^issues/', include('issues_app.urls')),
     url(r'^wiki/', include('wiki_app.urls')),

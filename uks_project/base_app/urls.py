@@ -1,8 +1,8 @@
 from django.conf.urls import url,include
-from myapp import views
+from base_app import views
 
 #TEMPLATE TAGGING
-app_name='myapp'
+app_name='base_app'
 
 urlpatterns = [
     url(r'^index/$', views.index, name='index')

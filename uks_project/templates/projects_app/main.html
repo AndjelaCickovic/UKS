@@ -12,6 +12,8 @@
     </div>
 </div>
 <hr>
+
+{% if projects %}
 <div class="container">
     <ul class="nav nav-tabs">
     <li class="nav-item">
@@ -24,7 +26,6 @@
 
     <div class="tab-content">
     <div class="tab-pane container active" id="open">
-{% if projects %}
     <table class="table table-striped" style="margin-top: 30px">
         <tr>
             <th>Name</th>
@@ -57,6 +58,7 @@
         {% endfor %}
     </table>
     {% else %}
+    <br>
     <h3>This repository doesn't have any project </h3>
     {% endif %}
     </div>

@@ -13,7 +13,7 @@
                 <form method="POST">
                     {{form|crispy}}
                     {% csrf_token %}
-                    <input type="submit" class="btn btn-success" value="Save">
+                    <input type="submit" class="btn btn-success" value="Submit">
                     <a class="btn btn-secondary" href="/repositories/repository/{{repository.id}}/issues" role="button">Cancel</a>
                 </form>
             </div>

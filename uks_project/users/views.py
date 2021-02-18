@@ -64,7 +64,7 @@ def user_login(request):
 @login_required
 def user_logut(request):
     logout(request)
-    return HttpResponseRedirect(reverse('login'))
+    return HttpResponseRedirect(reverse('users:user_login'))
 
 @login_required
 def edit_profile(request):
