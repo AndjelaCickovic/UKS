@@ -6,9 +6,6 @@
 <div class="card">
         <div class="card-body">
             <div class="row">
-                <div class="col-md-2">
-                    <a href="/repositories/repository/{{repository.id}}/projects/{{project.id}}"><i class="fa fa-times" aria-hidden="true"></i></a>
-                </div>
                 <h3 class="card-title">
                     Issue
                 </h3>
@@ -18,6 +15,7 @@
                     {{form|crispy}}
                     {% csrf_token %}
                     <input type="submit" class="btn btn-success" value="Submit">
+                    <a class="btn btn-secondary" href="/repositories/repository/{{repository.id}}/projects/{{project.id}}" role="button">Cancel</a>
                 </form>
             </div>
         </div>

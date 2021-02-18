@@ -26,7 +26,7 @@ from myapp import views
 urlpatterns = [
     url(r'^users/',include('users.urls')),
     url(r'^myapp/',include('myapp.urls')),
-    url(r'^$',users_views.user_login,name='login'),
+    url(r'^$',views.index,name='index'),
     url(r'^home',views.index,name='index'),
     url(r'^issues/', include('issues_app.urls')),
     url(r'^wiki/', include('wiki_app.urls')),
