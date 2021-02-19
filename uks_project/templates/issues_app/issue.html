@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+{% extends 'issues_app/issues_page.html' %}
+{% block issues_body %}
+    <div class="row">
+        <h3 class="card-title">
+            &nbsp;&nbsp;&nbsp;&nbsp;{{ issue.name }}
+        </h3>
+    </div>
+    <div class="row">
+             <table class="table table-striped" style="margin-top:30px;width:96%;margin-left:2% ">
+                <tr>
+                    <th>Comment</th>
+                    <th>Column</th>
+                    <th>Labels</th>
+                    <th>Milestone</th>
+                    <th>Assignees</th>
+                </tr>
+                <tr>
+                    <td>{{ issue.comment }}</td>
+                    <td>{{ issue.column.name }}</td>
+                    <td>
+                        {% for label in issue.labels %}
+                            {{ label.name }},
+                        {% endfor %}
+                    </td>
+                    <td>{{ issue.milestone.name }}</td>
+                    <td>
+                        {% for user in assignees %}
+                            {{ user.user }}, 
+                        {% endfor %}
+                    </td>
+                </tr>
+            </table>
+        <div class="col-md-5">
+            {% block edit_block %}
+            {% endblock %}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+
+{% extends 'base_app/base.html' %}
+{% load crispy_forms_tags %}
+{% block body_block%}
+<div class="jumbotron">
+     <div class="page-header">
+        <h1 style="margin-left:37%">Log in</h1>      
+    </div>
+    <br/>
+    {% if error %}
+        <div class="alert alert-danger" style="margin-left:20%;margin-right:30%;text-align:center" role="alert">{{error}}</div>
+        <br/>
+    {% endif %}
+    <form action="{% url 'users:user_login' %}" method="post">
+        {% csrf_token %}
+        <div style="margin-left:30%">
+        <label for="username">Username:</label>
+        <input type="text" name="username" placeholder="Enter Username">
+
+        <br/><br/>
+
+        <label for="password">Password:</label>
+        <input type="password" name="password">
+
+        <br/><br/>
+
+        <input style="margin-left:15%" class="btn btn-success" type="submit" value="Submit">
+        </div>
+    </form>
+
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+{% extends 'base_app/base.html' %}
+{% load crispy_forms_tags %}
+    {% block body_block %}
+        <div class="card" style="width:40%;margin-left:30%;margin-top:2%">
+            <div class="card-body">
+                <div class="container">
+                    <div class="page-header">
+                        <img src="/media/{{profile_picture}}" style="max-width:80px;max-height:80px" >
+                        <h1 style="text-align:center;display:inline-block;margin-left:2%">{{user.username}}</h1>      
+                    </div>
+                    <br/>
+                    {% if success_message%}
+                        <div class="alert alert-success" role="alert">{{success_message}}</div>
+                    {% endif %}
+                    {% if error_message%}
+                        <div class="alert alert-danger" role="alert">{{error_message}}</div>
+                    {% endif %}
+                    <form method="POST" enctype="multipart/form-data">                     
+                        {% csrf_token %}
+                        {{form|crispy}}
+                        <input type="submit" class="btn btn-success" style="margin-left:37%" value="Submit">
+                    </form>
+                </div>
+            </div>
+        </div>    
+    {% endblock %}

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+{% extends 'branches_app/commits.html' %}
+{% load crispy_forms_tags %}
+    {% block column_block %}
+        <div class="card" style="margin-left:15%">
+            <div class="card-body">
+                <div class="row">
+                    <div class='col-sm-7'>
+                    <h3 class="card-title">
+                        {{title}}
+                    </h3>
+                    </div>
+                </div>
+                <div class="container" >
+                    {% if error_add %}
+                        <div class="alert alert-danger" role="alert">{{error_add}}</div>
+                    {% endif %}
+                    <form method="POST">
+                        {{form|crispy}}
+                        {% csrf_token %}
+                        <input type="submit" class="btn btn-success" value="Submit">
+                        <a class="btn btn-secondary" href="/repositories/repository/{{repository.id}}/branches/{{branch.id}}/commits" role="button">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+    {% endblock %}

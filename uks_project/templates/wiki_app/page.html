@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+{% extends 'wiki_app/main.html' %}
+    {% block page_block %}
+        <div class="card" style="background-color:#d3d3d3">
+            <div class="card-body" >
+                <div class="row">
+                    <div class="col">
+                        <div class="row">
+                            <h3 class="card-title">
+                                {{ page.title }}
+                            </h3>
+                        </div>
+                        <p>{{ page.content }}</p>    
+                        <br/>
+                        <p>{{ page.message }}</p>  
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    {% endblock %}

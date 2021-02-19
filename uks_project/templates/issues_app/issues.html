@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+{% extends 'issues_app/issues_page.html' %}
+{% block issues_body %}
+    <div class="row">
+        {% if issues %}
+        <table class="table table-striped" style="margin-top:30px;width:80%;margin-left:10% ">
+            <tr>
+                <th>Name</th>
+                <th>Labels</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+            {% for issue in issues %}
+                <tr>
+                    <td>
+                        <a style="color:green" href="/repositories/repository/{{repository.id}}/issues/issue/{{issue.id}}">
+                        {{ issue.name }}
+                        </a>
+                    </td>
+                    <td>
+                        {% for label in issue.labels %}
+                            {{ label.name }},
+                        {% endfor %}
+                    </td>
+                    <td>{{ issue.status }}</td>
+                    {% if in_repo %}
+                        <td>
+                            <ul class="navbar-nav ml-auto">
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" href="/repositories/repository/{{repository.id}}/issues/change-status/{{issue.id}}">
+                                            {% if issue.status == 'Open' %}
+                                                Close
+                                            {% else %}
+                                                Reopen
+                                            {% endif %}
+                                        </a>
+                                        <a class="dropdown-item" href="/repositories/repository/{{repository.id}}/issues/edit/{{issue.id}}">Edit</a>
+                                        <a class="dropdown-item" href="/repositories/repository/{{repository.id}}/issues/delete/{{issue.id}}">Delete</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+        <h3>This repository doesn't have any issues</h3>
+        {% endif %}
+    </div>
+{% endblock %}

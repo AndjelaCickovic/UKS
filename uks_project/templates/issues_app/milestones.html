@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+{% extends 'repositories_app/repository.html' %}
+{% block show_block %}
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col">
+                    <h1>Milestones</h1>
+                </div>
+                <div class="col">
+                    {% if in_repo %}
+                        <a class="btn btn-success" style="float:right;margin-top:2%" href="/repositories/repository/{{repository.id}}/issues/add-milestone" role="button">Add milestone</a>
+                    {% endif %}
+                </div>
+            </div>
+            <hr>
+            <div class="container">
+                <div class="row">
+                    {% if milestones %}
+                    <table class="table table-striped" style="margin-top: 30px; ">    
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Due date</th>
+                            <th>Status</th>
+                            <th>&nbsp;</th>
+                        </tr>
+                        {% for milestone in milestones %}
+                            <tr>
+                                <td>{{ milestone.name }}</td>
+                                <td>&nbsp;{{ milestone.description }}</td>
+                                <td>{{ milestone.dueDate }}</td>
+                                <td>{{ milestone.status }}</td>
+                                {% if in_repo %}
+                                    <td>
+                                        <ul class="navbar-nav ml-auto">
+                                            <li class="nav-item dropdown">
+                                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
+                                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                                    <a class="dropdown-item" href="/repositories/repository/{{repository.id}}/issues/change-status-milestone/{{milestone.id}}">
+                                                        {% if milestone.status == 'Open' %}
+                                                            Close
+                                                        {% else %}
+                                                            Reopen
+                                                        {% endif %}
+                                                    </a>
+                                                    <a class="dropdown-item" href="/repositories/repository/{{repository.id}}/issues/edit-milestone/{{milestone.id}}">Edit</a>
+                                                    <a class="dropdown-item" href="/repositories/repository/{{repository.id}}/issues/delete-milestone/{{milestone.id}}">Delete</a>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                    </table>
+                    {% else %}
+                    <h4>This repository doesn't have any milestones</h4>
+                    {% endif %}
+            </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+{% extends 'base_app/base.html' %}
+{% block body_block %}
+<br>
+<br>
+<div class="row">
+    <div class="col-md-9">
+        <h1>{{repository.name}}</h1>
+    </div>
+    {% if is_owner %}
+    <div class="col-md-2">
+        <a class="btn btn-success" style="height: 40px;" href="/repositories/edit-repository/{{repository.id}}" role="button">Edit repository</a>
+    </div>
+    <div class="col-md-1">
+        <a class="btn btn-danger" style="height: 40px;"  href="/repositories/delete-repository/{{repository.id}}">Delete</a>
+    </div>
+    {% endif %}
+</div>
+<hr>
+    <div class="container">
+        <ul class="nav nav-tabs ">
+            <li class="nav-item" style="width: 20%; font-size: 30px;">
+                <a class="nav-link" style="color:gray;text-align:center" href="/repositories/repository/{{repository.id}}">About</a>
+            </li>
+            <li class="nav-item" style="width: 20%; font-size: 30px;">
+                <a class="nav-link" style="color:gray;text-align:center" href="/repositories/repository/{{repository.id}}/branches">Branches</a>
+            </li>
+            <li class="nav-item" style="width: 20%; font-size: 30px;">
+                <a class="nav-link" style="color:gray;text-align:center" href="/repositories/repository/{{repository.id}}/issues">Issues</a>
+            </li>
+            <li class="nav-item"  style="width: 20%; font-size: 30px;">
+                <a class="nav-link" style="color:gray;text-align:center" href="/repositories/repository/{{repository.id}}/projects">Projects</a>
+            </li>
+            <li class="nav-item"  style="width: 20%; font-size: 30px;">
+                <a class="nav-link" style="color:gray;text-align:center" href="/repositories/repository/{{repository.id}}/wiki">Wiki</a></li>
+            </li>
+        </ul>
+    </div>
+<br>
+<br>
+{% block show_block %}
+<div class="row">
+    &nbsp;&nbsp;&nbsp;&nbsp;{{repository.description}}
+</div>
+<hr>
+<div class="row">
+    <div class="col-md-7">
+<table class="table table-striped" style="margin-top: 30px">
+    <tr>
+        <th style="width: 15%;"></th>
+        <th style="width: 35%;">Member</th>
+        <th style="width: 35%;">Role</th>
+        <th style="width: 15%;"></th>
+    </tr>
+    {% for member in repository.users.all %}
+    <tr style="height: 62px;">
+        <td><img src="/media/{{member.user.profile_picture}}" style="max-width:80px;max-height:80px"></td>
+        <td style="vertical-align: middle;">{{member.user.user}}</td>
+        <td style="vertical-align: middle;">{{member.role}}</td>
+        <td style="vertical-align: middle;">
+        {% if member.role != 'Owner' and is_owner %}
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="/repositories/repository/{{repository.id}}/edit-member/{{member.id}}">Edit</a>
+                    <a class="dropdown-item" href="/repositories/repository/{{repository.id}}/delete-member/{{member.id}}">Delete</a>
+                </div>
+            </li>
+        </ul>
+        {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+</div>
+{% if is_owner %}
+<div class="col-md-5">
+    {% block add_block %}
+    <a class="btn btn-success" style="margin-top: 30px;" href="/repositories/repository/{{repository.id}}/add-member" role="button">Add member</a>
+    {% endblock %} 
+</div>
+{% endif %}
+</div>
+{% endblock %}
+
+
+
+
+
+{% endblock %}

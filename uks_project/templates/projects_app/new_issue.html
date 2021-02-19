@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+
+{% extends 'projects_app/project.html' %}
+{% load crispy_forms_tags %}
+    {% block column_block %}
+<div class="card">
+        <div class="card-body">
+            <div class="row">
+                <h3 class="card-title">
+                    Issue
+                </h3>
+            </div>
+            <div class="container">
+                <form method="POST">
+                    {{form|crispy}}
+                    {% csrf_token %}
+                    <input type="submit" class="btn btn-success" value="Submit">
+                    <a class="btn btn-secondary" href="/repositories/repository/{{repository.id}}/projects/{{project.id}}" role="button">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endblock %}

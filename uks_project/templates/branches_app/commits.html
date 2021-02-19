@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+{% extends 'repositories_app/repository.html' %}
+    {% block show_block %}
+
+    <div class='row' style='margin-top:3%;margin-bottom:3%'>
+        <div class='col-md-7'>
+            <div class='row'>
+                <div class='col'>
+                    <h3>Branch name: <b>{{ branch.name }}</b></h3>
+                </div>
+                <div class='col'>
+                    {% if can_edit%}
+                        <a class="btn btn-success" style="float:right;margin-top:2%" href="/repositories/repository/{{repository.id}}/branches/add-commit/{{branch.id}}" role="button">Add new commit</a>
+                    {%endif%}
+                </div>
+            </div>
+            <br> 
+            {% if error %}
+                <div class="alert alert-danger" style='margin-top:3%' role="alert">{{error}}</div>
+            {% endif %}
+            <div class="card border-dark" style="margin-top:30px" >
+                <div class="card-header" >Commits</div>
+                {% if branch.commits.all %}
+                    {% for commit in branch.commits.all %}
+                    <hr style="margin-botoom:0px;margin-top:0px">
+                        <div class="card-body" style="margin-top:0px">
+                            <h5 class="card-title">{{commit.name}}</h5>
+                            {%if commit.description%}
+                                <p class="card-text" style="margin-top:1px">{{commit.description}}</p>
+                            {%endif%}
+                            <footer class="blockquote-footer">{{commit.user.user.first_name}} {{commit.user.user.last_name}} <cite title="Source Title">authored on {{commit.date}}</cite></footer>
+                        </div>
+                    {% endfor %}
+                {%else%}
+                    <h7 style="margin-top:3%">There are no any commits on this branch.</h7>
+                {%endif%}
+            </div>
+        </div>
+        <div class='col-md-5'>
+            {% block column_block %}
+            {% endblock %}
+         </div>
+    </div>
+
+
+    {% endblock %}
