@@ -26,9 +26,14 @@ def repository_key(id):
 def issue_key(id):
     return "issue."+str(id)
 
+def issues_key(id):
+    return "issues.all."+str(id)
+
 def column_key(id):
     return "column."+str(id)
 
+def columns_key(id):
+    return "columns.all."+str(id)
 
 def get_role(request, repository):
     if request.user.is_authenticated:
@@ -243,6 +248,8 @@ def new_column(request, repository_id, project_id):
             column.project = project 
 
             column.save()
+
+            remove_columns_from_cache(repository_id)
             remove_project_from_cache(project_id)
             remove_projects_from_cache(repository_id)
 
@@ -283,6 +290,7 @@ def edit_column(request, repository_id, project_id, column_id):
 
             column.save()
             remove_column_from_cache(column_id)
+            remove_columns_from_cache(repository_id)
             remove_project_from_cache(project_id)
             remove_projects_from_cache(repository_id)
 
@@ -315,6 +323,7 @@ def delete_column(request, repository_id, project_id, column_id):
 
     column.delete()
     remove_column_from_cache(column_id)
+    remove_columns_from_cache(repository_id)
     remove_project_from_cache(project_id)
     remove_projects_from_cache(repository_id)
 
@@ -340,7 +349,9 @@ def remove_issue(request, repository_id, project_id, issue_id):
     issue.save()
     
     remove_issue_from_cache(issue_id)
+    remove_issues_from_cache(repository_id)
     remove_column_from_cache(column_id)
+    remove_columns_from_cache(repository_id)
     remove_project_from_cache(project_id)
     remove_projects_from_cache(repository_id)
 
@@ -372,15 +383,18 @@ def edit_issue(request, repository_id, project_id, issue_id):
             issue.status = form.cleaned_data['status']
             issue.save()
             issue.labels.set(form.cleaned_data['labels'])
+            issue.milestone = form.cleaned_data['milestone']
             assignees = []
             for user in form.cleaned_data['assignees']:
-                assignees.append(user.user)
+                assignees.append(user.id)
             issue.assignees.set(assignees)
             issue.repository = repository
             issue.save()
 
             remove_issue_from_cache(issue_id)
+            remove_issues_from_cache(repository_id)
             remove_column_from_cache(issue.column.id)
+            remove_columns_from_cache(repository_id)
             remove_project_from_cache(project_id)
             remove_projects_from_cache(repository_id)
             
@@ -421,7 +435,9 @@ def change_column_issue(request, repository_id, project_id, issue_id):
             issue.save()
 
             remove_issue_from_cache(issue_id)
+            remove_issues_from_cache(repository_id)
             remove_column_from_cache(issue.column.id)
+            remove_columns_from_cache(repository_id)
             remove_project_from_cache(project_id)
             remove_projects_from_cache(repository_id)
             
@@ -453,7 +469,9 @@ def delete_issue(request, repository_id, project_id, issue_id):
     column_id = issue.column.id
     issue.delete()
     remove_issue_from_cache(issue_id)
+    remove_issues_from_cache(repository_id)
     remove_column_from_cache(column_id)
+    remove_columns_from_cache(repository_id)
     remove_project_from_cache(project_id)
     remove_projects_from_cache(repository_id)
             
@@ -487,16 +505,19 @@ def new_issue(request, repository_id, project_id, column_id):
             issue.save()
             issue.column = column
             issue.labels.set(form.cleaned_data['labels'])
+            issue.milestone = form.cleaned_data['milestone']
             assignees = []
             for user in form.cleaned_data['assignees']:
-                assignees.append(user.user)
+                assignees.append(user.id)
             issue.assignees.set(assignees)
             issue.repository = repository
             issue.save()
             
             remove_column_from_cache(column_id)
+            remove_columns_from_cache(repository_id)
             remove_project_from_cache(project_id)
             remove_projects_from_cache(repository_id)
+            remove_issues_from_cache(repository_id)
             return HttpResponseRedirect(reverse('repositories_app:projects_app:project', kwargs={'project_id': project_id,'repository_id':repository_id}))
             
     objects_dict = {
@@ -554,6 +575,9 @@ def get_column_from_cache(column_id):
 def remove_column_from_cache(column_id):
     cache.delete(column_key(column_id))
 
+def remove_columns_from_cache(repository_id):
+    cache.delete(columns_key(repository_id))
+
 def get_issue_from_cache(issue_id):
     issue = cache.get(issue_key(issue_id))
     if not issue:
@@ -566,3 +590,6 @@ def get_issue_from_cache(issue_id):
 
 def remove_issue_from_cache(issue_id):
     cache.delete(issue_key(issue_id))
+
+def remove_issues_from_cache(repository_id):
+    cache.delete(issues_key(repository_id))
