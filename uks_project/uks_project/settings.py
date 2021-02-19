@@ -97,10 +97,12 @@ DATABASES = {
     }
 }
 
+location = os.getenv('CACHE_LOCATION', '127.0.0.1:11211')
+
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': '127.0.0.1:11211',
+        'LOCATION': location,
         'TIMEOUT' : 60*15
     }
 }

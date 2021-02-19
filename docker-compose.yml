@@ -2,8 +2,19 @@ version: "3.9"
    
 services:
   uks_db:
-    image: postgres
+    image: postgres:latest
+    environment:
+    - POSTGRES_DB=uks_db
+    - POSTGRES_USER=uks
+    - POSTGRES_PASSWORD=uks
+    - CACHE_LOCATION=memcached
     
+  memcached:
+    image: memcached
+    entrypoint:
+      - memcached
+      - -m 64
+  
   web:
     container_name: uks_app
     build: .
@@ -14,7 +25,9 @@ services:
       - "8000:8000"
     depends_on:
       - uks_db
+      - memcached
     environment:
     - POSTGRES_DB=uks_db
     - POSTGRES_USER=uks
     - POSTGRES_PASSWORD=uks
+    - CACHE_LOCATION=memcached
