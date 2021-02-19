@@ -41,7 +41,7 @@ class MilestoneForm(ModelForm):
 
 class CustomMMCF(forms.ModelMultipleChoiceField):
     def label_from_instance(self, field):
-        return '%s' % field.user.user
+        return '%s' % field.user
 
 class IssueForm(ModelForm):
     class Meta:
@@ -53,4 +53,4 @@ class IssueForm(ModelForm):
         super(IssueForm, self).__init__(*args, **kwargs)
         self.fields['labels'] = forms.ModelMultipleChoiceField(queryset = repo.labels.all(), required = False)
         self.fields['milestone'] = forms.ModelChoiceField(queryset = repo.milestones.all(), required = False)
-        self.fields['assignees'] = CustomMMCF(queryset = repo.users.all(), widget = forms.CheckboxSelectMultiple, required = False)
+        self.fields['assignees'] = CustomMMCF(queryset = repo.members.all(), widget = forms.CheckboxSelectMultiple, required = False)
