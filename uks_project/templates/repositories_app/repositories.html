@@ -28,8 +28,10 @@
         </div>
         <div class="col-md-5">
             {% block add_block %}
+            {% if is_logged_in %}
                 <a class="btn btn-success" style="margin-top: 30px;" href="/repositories/add-repository" role="button">Add repository</a>
-            {% endblock %} 
+            {% endif %}
+            {% endblock %}
         </div>
     </div>
 

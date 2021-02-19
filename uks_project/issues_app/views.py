@@ -226,6 +226,7 @@ def delete_milestone(request, repository_id, milestone_id):
         return redirect('/repositories')
         
     milestone.delete()
+    remove_milestones_from_cache(repository_id)
     remove_milestone_from_cache(milestone_id)
 
     return HttpResponseRedirect(reverse('repositories_app:issues_app:view_milestones', kwargs={'repository_id':repository_id}))
@@ -329,7 +330,7 @@ def add_issue(request, repository_id):
             assignees = []
             for user in form.cleaned_data['assignees']:
                 print(user.user)
-                assignees.append(user.user)
+                assignees.append(user.id)
             issue.assignees.set(assignees)
             issue.repository = repository
             issue.save()
@@ -372,7 +373,7 @@ def edit_issue(request, repository_id, issue_id):
             issue.milestone = form.cleaned_data['milestone']
             choosen_assignees = []
             for user in form.cleaned_data['assignees']:
-                choosen_assignees.append(user.user)
+                choosen_assignees.append(user.id)
             issue.assignees.set(choosen_assignees)
             issue.save()
 

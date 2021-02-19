@@ -51,7 +51,7 @@ def main(request):
         try:
             app_user = AppUser.objects.get(user=request.user)
             repositories = get_repositories_from_cache(app_user)
-            dictionary = {'repositories': repositories}
+            dictionary = {'repositories': repositories, 'is_logged_in': request.user.is_authenticated}
             return render(request, 'repositories_app/repositories.html', context = dictionary)
         except:
             print('except first')
@@ -76,7 +76,7 @@ def search(request):
                 q &= Q(is_public = True)
 
             repositories = Repository.objects.filter(q).distinct()
-            dictionary = {'repositories': repositories}
+            dictionary = {'repositories': repositories, 'is_logged_in': request.user.is_authenticated}
             return render(request, 'repositories_app/repositories.html', context = dictionary)
    
 def repository(request, repository_id):
